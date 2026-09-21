@@ -979,3 +979,139 @@ stage_0_2_c_height:
     sonuca bakilarak ayarlanamamistir. Bu, Bolum 12.2'nin istedigi anlamda
     gercek bir on-kayittir ve git gecmisi bunu kanitlar: bu commit, 3DBAG
     indirme commit'inden ONCEDIR.
+
+# ============================================================================
+#  GIRDI KALITE KAPISI — AHN LAZ (Karar D-015, AGENTS.md Bolum 12.12)
+#  MUHURLENDI 2026-09-21, HESAPTAN ONCE. Veri indirilmisti ama yogunluk
+#  HENUZ OLCULMEMISTI; bu blok olcum sonucuna bakilarak yazilmamistir.
+# ============================================================================
+input_gate_ahn:
+  decision_ref: D-015
+  status: SEALED
+  sealed_at: "2026-09-21"
+  applies_to: "data/raw/ahn/AHN5_T/*.LAZ"
+  evaluation_area: "B alani (raporlama A'da, ama girdi kalitesi B'de olculur)"
+
+  # --- Olcum yontemi (hesaptan once sabitlendi) ---
+  method:
+    grid_cell_m: 10
+    statistic: median
+    statistic_rationale: >
+      Ortalama YANILTIR: su yuzeyi lazer donusu vermez ve ortalamayi asagi ceker.
+      A icinde 2,62 ha su var (CBS kara alani 107 ha, geometrik alan 109,62 ha).
+      Medyan bu hucrelere karsi dayaniklidir.
+    cells_counted: "merkezi B icinde kalan 10x10 m hucreler"
+    points_counted: "TUM siniflar (resmi spesifikasyon degerleri de tum donusler uzerindendir)"
+    also_reported:
+      - p10_density
+      - fraction_cells_below_hard_gate_pct
+      - fraction_cells_below_expectation_pct
+      - zero_return_cells_pct       # su/golge bosluklari
+      - building_class_density      # ayrica, LOD2 icin kritik olan alt kume
+      - class_distribution          # sinif kodlari VERIDEN okunur, ASPRS VARSAYILMAZ
+      - total_points
+      - bbox_coverage_gaps
+
+  # --- KADEME 1: SERT KAPI (resmi belgeye dayali) ---
+  hard_gate:
+    id: "0-E"
+    metric: median_point_density_pts_m2
+    comparator: ">="
+    threshold: 10.0
+    unit: pts_m2
+    status: LOCKED
+    on_fail: "FAIL — Bolum 12.6 uygulanir, Asama 1'e GECILMEZ"
+    source: >
+      ahn.nl resmi kwaliteitsbeschrijving: "Voor het AHN4 zal de puntdichtheid
+      ongeveer 10-14 punten per vierkante meter zijn." 10 bu araligin TABANIDIR.
+    source_verified_at: "2026-09-21"
+    rationale: >
+      AHN5 icin resmi spesifikasyon YOKTUR (belge yalnizca AHN1-AHN4'u kapsar).
+      Uygulanabilir tek belgelenmis sayi AHN4'un tabanidir ve AHN5'in ondan kotu
+      olmasi beklenmez. Bu yuzden 10, gercek bir kapi degeri olarak degil
+      REGRESYON ALARMI olarak konulmustur: altina duserse veri beklenmedik
+      bicimde bozuk demektir.
+
+  # --- KADEME 2: BEKLENTI (kendi olcumumuze dayali) ---
+  expectation:
+    id: "0-F"
+    metric: median_point_density_pts_m2
+    comparator: ">="
+    threshold: 20.0
+    unit: pts_m2
+    status: LOCKED
+    on_fail: "UYARI — arastirilir ve raporlanir; FAIL DEGILDIR, Asama 1 engellenmez"
+    source: >
+      BIZIM OLCUMUMUZ: kaartblad 37EN1 AHN5 tamami 917.040.516 nokta /
+      (5000 m x 6250 m) = 29,3 nokta/m2 (lasinfo basligindan, 2026-09-21).
+    source_is_not: >
+      AGENTS.md Bolum 2'deki "AHN5 Randstad: >=20 nokta/m2" ifadesi DEGILDIR.
+      O ifade kaynaksizdir; resmi kwaliteitsbeschrijving AHN5'i hic kapsamaz
+      (olculdu 2026-09-21). Kaynaksiz bir iddiayi esige cevirmek M-005'in
+      yasakladigi seydir. 20 degeri, olculen 29,3'un altinda guvenli bir
+      beklenti sinirı olarak secilmistir.
+    rationale: >
+      Sert kapi (10) gercek veriye gore cok gevsek kalir ve yerel seyreklik
+      sorunlarini yakalamaz. Beklenti kademesi bu boslugu doldurur ama
+      kaynagi zayif oldugu icin FAIL uretmez, UYARI uretir.
+
+  # --- Sinif dagilimi: esik yok, kayit zorunlu ---
+  class_distribution:
+    threshold: none
+    requirement: "Bulunan her sinif kodu ve sayisi DATA_LOG.md'ye yazilir"
+    rationale: >
+      Sinif kodlari veriden OKUNUR. lasinfo basligi 37EN1 icin classification
+      araligini 1..26 olarak gosterdi; ASPRS standardi varsayilmaz cunku AHN
+      kendi ek siniflarini kullanabilir (ornek 26).
+    lod2_note: >
+      LOD2 rekonstruksiyonu icin kritik olan alt kume BINA sinifidir; genel
+      yogunluk yuksek ama bina sinifi seyrek olabilir. Bu yuzden bina sinifi
+      yogunlugu AYRICA raporlanir (esik yok, Asama 1'de yorumlanacak).
+
+  # --- Kapsama boslugu ---
+  coverage:
+    metric: zero_return_cells_pct
+    threshold: none
+    requirement: "Sifir donuslu hucre orani raporlanir ve mekansal dagilimi not edilir"
+    rationale: >
+      Su yuzeyleri dogal olarak sifir donus verir; bu bir hata DEGILDIR.
+      Ancak sifir donuslu hucreler SU DISINDA kumeleniyorsa bu bir veri
+      boslugudur ve Asama 1'de o binalarda rekonstruksiyon basarisiz olur.
+      Ayrim Asama 1'de BGT su katmaniyla yapilacak; 0.3'te yalnizca oran kaydedilir.
+
+  # --- BINA BAZLI CATI YOGUNLUGU (kullanici talimati; ESIK DEGIL, raporlanir) ---
+  per_building_density:
+    threshold: none
+    scope: "A alanindaki panden (status filtreli, centroid kurali)"
+    definition: >
+      Bir pandin ayakizi POLIGONU icine dusen nokta sayisi / ayakizi alani (m2).
+      Kesisim degil ICINE DUSME; ayakizi disindaki noktalar sayilmaz.
+    reported:
+      - median_roof_density_pts_m2
+      - p10_roof_density_pts_m2
+      - buildings_below_10_pts_m2_count
+    output_csv: reports/ahn_point_density_by_building.csv
+    csv_columns:
+      - bag_id                 # identificatie
+      - footprint_area_m2
+      - point_count
+      - roof_density_pts_m2
+      - below_10               # true/false
+      - has_dwellings          # aantal_verblijfsobjecten > 0
+    csv_scope_note: >
+      CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
+      "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
+      karsilastirmasi icin daha kullanislidir (basarisiz rekonstruksiyonlar esik
+      ustundeki binalarda da cikabilir — o durumda neden girdi DEGILDIR ve bu da
+      bir bulgudur). `below_10` sutunu istenen alt kumeyi verir.
+    purpose: >
+      AGENTS.md Bolum 12.12'nin somut uygulamasi. Asama 1'de basarisiz
+      rekonstruksiyon listesi (reports/failed_buildings.csv) bu CSV ile
+      KARSILASTIRILACAK:
+        - basarisiz VE dusuk yogunluklu  -> neden muhtemelen GIRDI
+        - basarisiz AMA yeterli yogunluklu -> neden muhtemelen YONTEM
+      Bu ayrim sonradan yapilamaz; girdi kalitesi o zamana kadar olculmemis olur.
+    why_no_threshold: >
+      Esik konulmadi cunku dusuk catı yogunlugu tek basina bir HATA DEGILDIR —
+      kucuk veya egimli catili binalarda dogal olarak az nokta duser. Deger,
+      Asama 1 sonuclariyla BIRLIKTE yorumlandiginda anlam kazanir.
