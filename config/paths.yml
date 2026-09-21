@@ -73,3 +73,26 @@ config:
   paths: config/paths.yml
   units: config/units.yml
   acceptance_criteria: config/acceptance_criteria.yml
+
+# --- Dogrulanmis uzak servisler (Asama 0.2a, 2026-09-21) ---
+# Endpoint ve katman adlari GetCapabilities / DescribeFeatureType ile FIILEN
+# dogrulanmistir; tahmin edilmemistir (MISTAKES.md M-001, M-002).
+remote_sources:
+  cbs_wijkenbuurten:
+    wfs: "https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0"
+    version: "2.0.0"
+    layers:
+      wijken: "wijkenbuurten:wijken"
+      buurten: "wijkenbuurten:buurten"
+    crs: "EPSG:28992"
+    filter_encoding: ogc_fes_2_0    # CQL_FILTER DESTEKLENMIYOR — sessizce yok sayilir (M-004)
+    dataset_year: 2025
+  bag:
+    wfs: "https://service.pdok.nl/lv/bag/wfs/v2_0"
+    version: "2.0.0"
+    layers:
+      pand: "bag:pand"
+      verblijfsobject: "bag:verblijfsobject"
+    crs: "EPSG:28992"
+    count_default: 1000            # sayfalama zorunlu
+    filter_encoding: ogc_fes_2_0

@@ -21,6 +21,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-001 | 2026-09-21 | 0.1 | Dogrulanmamis paket surumu yazildi | KAPALI | 0 |
 | M-002 | 2026-09-21 | 0.1 | conda-forge'da olmayan paket adi varsayildi | KAPALI | 0 |
 | M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | KAPALI | 0 |
+| M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
 
 ---
 
@@ -163,3 +164,53 @@ beklenen degere donuyor mu?
 | RD(84000, 447000) -> WGS84 | lon 4.353121, lat 52.006822 — Delft, dogru konum |
 
 **Durum:** KAPALI (duzeltme yazildi, otomatiklestirildi ve fiilen dogrulandi)
+
+---
+
+## M-004 · [2026-09-21] · Asama 0.2a
+
+**Ne oldu:**
+PDOK CBS WFS'ine `CQL_FILTER=gemeentenaam='Delft'` parametresiyle sorgu atildi.
+Servis parametreyi **sessizce yok saydi**, HTTP 200 dondu ve **61,7 MB** ile
+Hollanda'nin TUM wijken katmani indi. Ayni hata `cql_filter` (kucuk harf) ile
+tekrarlandi ve 2,9 MB daha indi.
+
+**Kok neden:**
+Bu PDOK WFS'i GeoServer CQL eklentisini sunmuyor; yalnizca standart **OGC Filter
+Encoding** (`filter=<fes:Filter>...`) destekliyor. Desteklenmeyen parametre hata
+dondurmuyor, **yok sayiliyor** — istek gecerli bir "filtresiz GetFeature" olarak
+islenip tum katmani donduruyor.
+
+**Neden tehlikeli:**
+1. **HTTP 200 basari sanildi.** M-002'nin ayni kaliba sahip tekrari: cikis kodu /
+   durum kodu, istenen isin yapildiginin kaniti degil.
+2. **D-006'nin korudugu hata sinifinin ta kendisi.** D-006 "hicbir veri kumesi ulke
+   geneli indirilmez" diyor. Sessizce yok sayilan bir bbox/filtre, bu karari
+   kullanici hicbir sey yanlis yapmadan ihlal ettirir.
+3. Asama 0.3'te ayni sey AHN veya BAG'de olsaydi, 31 GB'lik diskte onlarca GB'lik
+   ulke geneli indirme baslar ve diski doldururdu.
+
+**Turetilen kural (uc parcali):**
+1. **Her WFS/API sorgusuna daima bir ust sinir konur** (`count=N`, `maxFeatures`,
+   `Range` vb.). Filtre calismazsa zarar sinirli kalir.
+2. **Filtrenin uygulandigi ciktidan DOGRULANIR**, istekten degil: donen kayitlarin
+   filtre kosulunu gercekten sagladigi kontrol edilir. Saglamiyorsa indirme
+   gecersizdir ve `data/raw/`'a yazilmaz.
+3. **Indirme oncesi beklenen boyut kontrol edilir** (HTTP `Content-Length` veya
+   ozellik sayisi sorgusu `resultType=hits`). Beklenenden buyukse indirme yapilmaz,
+   durum raporlanir.
+
+**Nerede uygulanir:** `src/00_acquisition/` altindaki tum indirme scriptleri
+
+**Otomatik kontrol:**
+`src/qa/check_compliance.py` (Asama 0.5) — `DATA_LOG.md`'deki her kayit icin: sorgu
+parametresi yazilmis mi, donen ozellik sayisi beklenen mertebede mi, filtre
+dogrulamasi yapilmis mi?
+
+**Ek bulgu (ayni oturumda dogrulandi):** Ad tahmin etmek de ayni tuzak.
+`wijknaam='Voorhof'` sorgusu 0 kayit dondu; CBS'teki gercek ad **"Wijk 24 Voorhof"**.
+Filtre dogru calistigi icin bu sessiz degil gurultulu bir hataydi — kural 2 sayesinde
+yakalandi.
+
+**Durum:** KAPALI (OGC Filter Encoding'e gecildi, `count` siniri ve cikti dogrulamasi
+uygulandi; bos indirmeler `data/raw/`'a yazilmadi)

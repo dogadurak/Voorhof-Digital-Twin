@@ -7,6 +7,9 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
+> **SONRAKI BOS ID: D-008**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
+
 | ID | Tarih | Konu | Durum |
 |---|---|---|---|
 | D-001 | 2026-09-21 | Python ortami: conda-forge | ONAYLANDI |
@@ -15,6 +18,7 @@
 | D-004 | 2026-09-21 | Depo adi | ONAYLANDI |
 | D-005 | 2026-09-21 | Asama 0 raporu elle yazilir | ONAYLANDI |
 | D-006 | 2026-09-21 | Indirmeler B alani bbox'i ile sinirlanir | ONAYLANDI |
+| D-007 | 2026-09-21 | AOI merkezi kural tabanli secilir + kor karsilastirma | ONAYLANDI |
 
 ---
 
@@ -180,5 +184,112 @@ eksik veriyle devam edilmez.
 **Risk:** bbox hatali daraltilirsa kenar binalar eksik kalir ve golgeleme yine
 sistematik olarak iyimser cikar. Bu, yonü bilinen bir hatadir; yukaridaki 0.4
 kontrolu bunun icin vardir.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-007 · [2026-09-21] · AOI merkezi kural tabanli secilir, kor karsilastirmayla dogrulanir
+
+> **Numaralandirma notu:** Kullanici bu karari "D-005" olarak istemisti; o numara
+> Aşama 0 raporunun elle yazilmasi karari icin kullanilmisti. Referansi kirmamak
+> icin **D-007** olarak kaydedildi. Icerik kullanicinin talimatiyla aynidir.
+> Tekrari onlemek icin dosyanin basina "SONRAKI BOS ID" satiri eklendi.
+
+**Karar:** Asama 0.2'de A alaninin merkezi QGIS'te gozle secilmez. Merkez,
+config'te kilitli kurallarla **hesaplanir**; kullanici sonucu gorsel dogrular.
+Asama iki parcaya ayrilir:
+
+- **0.2a (ajan):** resmi sinir indirilir, aday izgarasi uretilir, metrikler hesaplanir,
+  en iyi 3 aday raporlanir.
+- **0.2b (kullanici):** 3 aday QGIS'te hava fotografiyla kontrol edilir, biri secilir.
+  C alani (150 m) secilen A icinde kullanici tarafindan belirlenir.
+
+**Gerekce:** Gozle secim tekrarlanabilir degildir ve gerekcesi belgelenemez. Kural
+tabanli secim hem tekrarlanabilir hem de kriterleri sonuctan once kilitli (Bolum 12.2).
+
+### Kor karsilastirma protokolu
+
+Kullanici QGIS'te **bagimsiz olarak** kendi merkezini secer ve **ajanin ciktisini
+gormeden once** commit'ler. Iki yontemin yakinsamasi (veya ayrismasi) bir bulgudur
+ve bu dosyaya yazilir.
+
+Zamanlama (kullanici karari 2026-09-21): 0.2a'nin aday **uretmeyen** adimlari
+(sema dogrulama, config, indirme) hemen yapilir; **aday hesabi kullanicinin secimi
+commit'lendikten SONRA** calistirilir. Boylece kullanicinin secimi yapildigi anda
+ajanin ciktisi hicbir bicimde var olmaz.
+
+### Kilitlenen parametreler (hesaptan ONCE — Bolum 12.2)
+
+| Parametre | Deger |
+|---|---|
+| Kare kenari | 600 m |
+| Izgara adimi | 25 m |
+| Bina sayisi araligi | 400-700 |
+| woonfunctie orani | >= %90 |
+| Voorhof ici alan orani | >= %80 |
+| **Sayim kurali** | **pand centroid kare icinde** (kesisim DEGIL) |
+| bouwjaar 1960-1975 | raporlanir + skora girer |
+| Siralama | bilesik skor, esit agirlik (1/3 woonfunctie + 1/3 bouwjaar + 1/3 Voorhof ici) |
+| Aday minimum ayrikligi | >= 300 m |
+| CRS | EPSG:28992 |
+
+Bu parametreler `config/acceptance_criteria.yml` -> `stage_0_2` altinda tutulur ve
+**aday hesabindan once ayri bir commit ile muhurlenir**. Boylece esiklerin sonuclardan
+once sabitlendigi git gecmisinden kanitlanir; beyana dayanmaz.
+
+### Yeni veri kaynagi onayi (Bolum 1 kural 3 / Bolum 12.11)
+
+**CBS Wijken en Buurten** AGENTS.md Bolum 4'teki 12 kaynakta yoktur. Bu kararla
+resmi kaynak olarak eklenir:
+
+| Alan | Deger (dogrulandi 2026-09-21) |
+|---|---|
+| Servis | `https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0` |
+| Katmanlar | `wijkenbuurten:wijken`, `wijkenbuurten:buurten` |
+| CRS | EPSG:28992 (DefaultCRS) |
+| Surum | 2025 (2023 ve 2024 de mevcut; en guncel secildi) |
+| Filtre | OGC Filter Encoding. **CQL_FILTER DESTEKLENMIYOR** (bkz. M-004) |
+
+**Voorhof resmi kimligi (olculdu):** `WK050324` — **"Wijk 24 Voorhof"**.
+Dikkat: ad "Voorhof" degildir; tam esleme sorgusu 0 kayit dondurur.
+
+### Olculen baglam ve planin sonuclari
+
+| Olcum | Deger |
+|---|---|
+| Voorhof kara alani | 124 ha |
+| bbox | 1113 m (D-B) x 1828 m (K-G) |
+| buurt sayisi | 9 |
+| **Bedrijventerrein Voorhof + Vulcanusweg** | **17 ha = %14 sanayi/is alani** |
+
+Iki sonuc:
+
+1. **`assumptions.md` S-1 varsayimi ("Voorhof %90+ konut") wijk duzeyinde olculebilir
+   bicimde tartismalidir.** A alani bu bolgelerden kacinabilir, ama varsayim
+   duzeltilmeden birakilamaz — S-1 guncellenecek ve raporun Limitations bolumune girecek.
+2. bbox genisligi 1113 m oldugundan 600 m karelerin merkezleri x ekseninde ~500 m
+   araliga sikisir; 300 m ayriklikla uc aday buyuk olcude kuzey-guney dizilecektir.
+
+### BAG indirme kapsami — plandaki eksigin duzeltilmesi
+
+Merkezi Voorhof icinde olan bir 600 m kare, sinirdan **300 m disari tasabilir**
+(kriter zaten %20'ye kadar tasmaya izin veriyor). Bu nedenle BAG indirmesi Voorhof
+bbox'i degil, **bbox + 300 m tampon** ile yapilir. Aksi halde kenardaki adaylarin
+bina sayimi eksik cikar ve secim sistematik olarak merkeze kayar.
+
+**Not (D-006 ile iliski):** Bu tampon 0.2a'ya ozguduir. Asama 0.3'teki proje verisi
+indirmeleri D-006 uyarinca secilen **B alani** bbox'i ile sinirlanir.
+
+### Onemli epistemik sonuc — kriter 0-B artik bagimsiz kontrol DEGIL
+
+`config/acceptance_criteria.yml` kriter **0-B**'de "400-700 bina" bir **akil
+saglamasi** olarak yazilmisti: sayim aralik disinda cikarsa AOI sorgulanir. Bu kararla
+AOI, bu araliga girecek sekilde **secilmektedir**.
+
+Sonuc: **Asama 0 raporunda "bina sayisi beklenen aralikta, demek ki AOI dogru"
+denemez.** Bu dongusel olur. Kriter 0-B bundan sonra bir tutarlilik kaydidir,
+bagimsiz dogrulama degildir. Not `acceptance_criteria.yml` ve
+`docs/validation_protocol.md` icine islenmistir.
 
 **Onay:** Kullanici, 2026-09-21.

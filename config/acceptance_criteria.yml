@@ -87,9 +87,16 @@ stage_0:
       threshold: true
       status: LOCKED
       sanity_range: "400-700 (Bolum 3)"
+      independent: false
       note: >
         sanity_range bir ESIK DEGILDIR, akil saglamasidir. Sayim bu araligin disinda
         cikarsa AOI siniri veya filtre sorgulanir; sayi degistirilmez.
+      circularity_warning: >
+        DIKKAT (Karar D-007): AOI merkezi, bu araliga girecek sekilde SECILMEKTEDIR
+        (stage_0_2 kriteri 0.2-A). Bu nedenle 0-B ARTIK BAGIMSIZ KONTROL DEGILDIR.
+        Raporda "bina sayisi beklenen aralikta, demek ki AOI dogru" DENEMEZ — dongusel
+        olur. 0-B bir tutarlilik kaydidir; AOI'nin bagimsiz dogrulamasi kullanicinin
+        QGIS'teki gorsel kontrolu (0.2b) ve kor karsilastirmadir.
     - id: "0-C"
       description: "Eksik veya bozuk dosya yok"
       metric: corrupt_file_count
@@ -330,3 +337,115 @@ stage_5:
       note: >
         Bolum 7: bir bilesenin lisansi web arayuzunun yayinini engelliyorsa YAYIN
         ASAMASINA GECILMEZ, durum raporlanir.
+
+# ============================================================================
+#  ASAMA 0.2a — AOI aday secimi (Karar D-007)
+#  Bu blok ADAY HESABINDAN ONCE ayri bir commit ile muhurlenmistir.
+#  Esiklerin sonuclardan once sabitlendigi git gecmisinden kanitlanabilir.
+# ============================================================================
+stage_0_2:
+  name: "AOI aday secimi"
+  source: "Karar D-007, kullanici onayi 2026-09-21"
+  method: rule_based_grid_search
+
+  # --- Arama alani ---
+  study_area:
+    source: "CBS Wijken en Buurten 2025 (PDOK WFS)"
+    wijkcode: "WK050324"
+    wijknaam: "Wijk 24 Voorhof"
+    note: "Ad 'Voorhof' DEGIL 'Wijk 24 Voorhof'. Tam esleme sorgusu 0 kayit donduru (M-004)."
+    crs: "EPSG:28992"
+
+  # --- Izgara ve kare ---
+  grid:
+    spacing_m: 25
+    square_side_m: 600
+    candidate_origin: "Izgara noktalari Voorhof poligonu ICINDE olmak zorunda"
+    crs: "EPSG:28992"
+
+  # --- SAYIM KURALI (kullanicinin acik talimati) ---
+  counting_rule:
+    method: pand_centroid_in_square
+    description: >
+      Bir BAG pand, yalnizca CENTROID'i 600 m karenin icindeyse sayilir.
+      Kesisim (intersects) KULLANILMAZ. Gerekce: kesisim kurali sinirdaki binalari
+      birden fazla adaya saydirir ve kenar karelerin sayimini sisirir.
+    geometry_source: "BAG pand geometrisi, EPSG:28992"
+
+  # --- Filtre kriterleri: adayin GECMESI icin hepsi saglanmali ---
+  criteria:
+    - id: "0.2-A"
+      description: "Karedeki BAG pand sayisi (centroid kurali)"
+      metric: building_count
+      comparator: "between"
+      threshold: [400, 700]
+      status: LOCKED
+      source: "AGENTS.md Bolum 3"
+    - id: "0.2-B"
+      description: "woonfunctie orani"
+      metric: woonfunctie_ratio_pct
+      comparator: ">="
+      threshold: 90.0
+      unit: pct
+      status: LOCKED
+      source: "AGENTS.md Bolum 2 (%90+ konut)"
+      computation: >
+        gebruiksdoel BAG PAND uzerinde DEGIL, VERBLIJFSOBJECT uzerindedir.
+        Oran, pand -> verblijfsobject join'i ile hesaplanir (Bolum 12.3 hiyerarsisi).
+        Join oncesi ve sonrasi satir sayisi loglanir (Bolum 14.6 sessiz veri kaybi).
+    - id: "0.2-C"
+      description: "Karenin Voorhof siniri icinde kalan alan orani"
+      metric: inside_wijk_area_pct
+      comparator: ">="
+      threshold: 80.0
+      unit: pct
+      status: LOCKED
+
+  # --- Raporlanan ama filtrelemeyen metrikler ---
+  reported_metrics:
+    - metric: bouwjaar_1960_1975_ratio_pct
+      unit: pct
+      note: "Filtre DEGIL, ama bilesik skora girer (asagi). AGENTS.md Bolum 2 arsetip kohortu."
+    - metric: total_verblijfsobjecten
+    - metric: mean_bouwjaar
+
+  # --- SIRALAMA (hesaptan once kilitli) ---
+  ranking:
+    method: composite_score
+    formula: "(woonfunctie_ratio_pct + bouwjaar_1960_1975_ratio_pct + inside_wijk_area_pct) / 3"
+    weights:
+      woonfunctie_ratio_pct: 0.3333333333
+      bouwjaar_1960_1975_ratio_pct: 0.3333333333
+      inside_wijk_area_pct: 0.3333333333
+    note: >
+      Esit agirlik, kullanici onayi 2026-09-21. Gerekce: AGENTS.md Bolum 2 uc kriteri
+      ayni anda istiyor — konut dokusu (PC6 karsilastirmasi icin), tek yapim-yili
+      kohortu (arsetip icin), sinir icinde kalma (homojenlik).
+
+  # --- Aday ayrikligi ---
+  candidate_separation:
+    min_distance_m: 300
+    rationale: >
+      600 m kenarli karelerin en fazla %50 ortusmesi demek. Bu kisit olmadan en iyi 3
+      aday komsu izgara hucreleri olur ve "3 aday arasindan secim" illuzyon olurdu.
+    n_candidates: 3
+    if_insufficient: >
+      300 m ayriklikla 3 aday bulunamazsa DAHA AZ aday raporlanir. Ayriklik esigi
+      sonuc gorulduikten sonra DUSURULMEZ (Bolum 12.2).
+
+  # --- Cikti ---
+  outputs:
+    candidates_dir: aoi/candidates
+    report: reports/00_stage_0_2a_candidates.md
+    blind_protocol: >
+      Aday ciktilari, kullanicinin QGIS'te bagimsiz sectigi merkez commit'lenene kadar
+      repoya YAZILMAZ ve kullaniciya GOSTERILMEZ (Karar D-007).
+
+  # --- Indirme kapsami ---
+  download_extent:
+    rule: "Voorhof bbox + 300 m tampon"
+    rationale: >
+      Merkezi Voorhof icinde olan bir 600 m kare sinirdan 300 m disari tasabilir.
+      Tamponsuz indirme kenar adaylarin bina sayimini eksik gosterir ve secimi
+      sistematik olarak merkeze kaydirir.
+    note: "Bu tampon 0.2a'ya ozgudur. Asama 0.3 indirmeleri D-006 uyarinca B alani bbox'i ile sinirlanir."
