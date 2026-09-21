@@ -11,3 +11,4 @@ sira,bag_id,alt_grup,footprint_area_m2,has_verblijfsobject,gebruiksdoel,bouwjaar
 10,0503100000039608,A_kucuk,13.77,false,,2001,Pand in gebruik,1249,0.0000,0.0633,84572.7,445184.0,depo/kulube (berging),,
 11,0503100000039629,A_kucuk,2.81,false,,2022,Pand in gebruik,224,0.0000,0.1562,84470.2,445613.4,depo/kulube (berging),,
 12,0503100000039630,A_kucuk,2.06,false,,2016,Pand in gebruik,197,0.0000,0.1574,84458.2,445616.5,depo/kulube (berging),,
+13,0503100000038177,AMACLI - yeniden yapim sinamasi,819.92,true,"winkelfunctie,woonfunctie",2025,Pand in gebruik,62165,0.7855,0.0017,83993.6,445725.6,"bouwjaar 2025 ama sinif 6 orani 0,785 — yani Subat 2023'te o ayakizinde bir bina VARDI. Bundan ""bouwjaar guvenilmez"" sonucunu cikarmistim; bu bir CIKARIMDI (Bol",,

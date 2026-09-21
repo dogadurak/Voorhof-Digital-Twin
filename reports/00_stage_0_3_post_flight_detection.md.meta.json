@@ -1,0 +1,30 @@
+{
+  "run_id": "RUN-2026-09-21-023",
+  "git_commit": "d4cf95b-dirty",
+  "created_utc": "2026-09-21T20:02:08Z",
+  "output": {
+    "path": "reports/00_stage_0_3_post_flight_detection.md",
+    "sha256": "f30ba3b2a4a0408caede5255f532044ecfd9568b6ec1d3a3e6ac4586269ee57c",
+    "size_bytes": 4859
+  },
+  "inputs": [],
+  "parameters": {
+    "n_panden_B": 4035,
+    "n_in_A": 1259,
+    "candidates": 30,
+    "candidate_area_m2": 5870.468682500059,
+    "partial": 60,
+    "rebuild": 50,
+    "ambiguous_bouwjaar": 39,
+    "K1": 0.02,
+    "K2": 0.7,
+    "K3": 1.0,
+    "R1": 2023
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Esikler config'ten okundu; muhur commit'i d4cf95b (D-022)."
+}

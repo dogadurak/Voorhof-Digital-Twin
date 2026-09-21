@@ -248,6 +248,17 @@ def _write_visual_check(logger, panden, geoms, areas, is_zero, big_zero,
     n_small = min(int(cfg["n_small"]), len(small_pool))
     chosen += rng.sample(small_pool, n_small)
 
+    # --- AMACLI (purposive) ornekler ---
+    # Rastgele cekilisten SONRA eklenir ve havuzda olmadiklari icin seed'i
+    # BOZMAZLAR (havuz = sifir grubundaki kucuk yapilar). Ayri etiketlenir.
+    all_ids = {f["properties"]["identificatie"]: j for j, f in enumerate(panden)}
+    purposive = []
+    for item in (cfg.get("purposive_include") or []):
+        bid = str(item["bag_id"])
+        if bid not in all_ids:
+            raise RuntimeError(f"purposive_include: {bid} panden listesinde yok")
+        purposive.append((all_ids[bid], item))
+
     csv_path = resolve("reports.dir") / "visual_check_sample.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
@@ -256,13 +267,18 @@ def _write_visual_check(logger, panden, geoms, areas, is_zero, big_zero,
                     "point_count", "building_class_ratio", "ground_class_ratio",
                     "merkez_x_rd", "merkez_y_rd",
                     "CIKARIM", "GOZLEM_kullanici", "NOT_kullanici"])
-        for n, i in enumerate(chosen, 1):
+        seq = [(i, None) for i in chosen] + purposive
+        for n, (i, item) in enumerate(seq, 1):
             pr = panden[i]["properties"]
             cen = geoms[i].centroid
-            inference = ("ucus sonrasi yapildi (bina yoktu)" if big_zero[i]
-                         else "depo/kulube (berging)")
-            w.writerow([n, pr["identificatie"],
-                        "B_buyuk" if big_zero[i] else "A_kucuk",
+            if item is not None:
+                grp = item.get("label", "AMACLI")
+                inference = " ".join(str(item["reason"]).split())[:160]
+            else:
+                grp = "B_buyuk" if big_zero[i] else "A_kucuk"
+                inference = ("ucus sonrasi yapildi (bina yoktu)" if big_zero[i]
+                             else "depo/kulube (berging)")
+            w.writerow([n, pr["identificatie"], grp,
                         f"{areas[i]:.2f}",
                         "true" if (pr.get("aantal_verblijfsobjecten") or 0) > 0 else "false",
                         pr.get("gebruiksdoel") or "", pr.get("bouwjaar") or "",
@@ -270,9 +286,14 @@ def _write_visual_check(logger, panden, geoms, areas, is_zero, big_zero,
                         f"{cls6_ratio[i]:.4f}", f"{cls2_ratio[i]:.4f}",
                         f"{cen.x:.1f}", f"{cen.y:.1f}",
                         inference, "", ""])
-    logger.info("Gorsel dogrulama | orneklem: %d bina (%d buyuk + %d kucuk, "
-                "seed=%d) -> %s", len(chosen), len(always), n_small, seed,
-                csv_path.name)
+    logger.info("Gorsel dogrulama | orneklem: %d bina (%d buyuk + %d rastgele "
+                "kucuk + %d AMACLI, seed=%d) -> %s",
+                len(chosen) + len(purposive), len(always), n_small,
+                len(purposive), seed, csv_path.name)
+    for i, item in purposive:
+        logger.info("  AMACLI | %s | %s",
+                    panden[i]["properties"]["identificatie"],
+                    " ".join(str(item["question"]).split())[:110])
     logger.info("  ETIKETLER: %s", " / ".join(cfg["labels"]))
 
 

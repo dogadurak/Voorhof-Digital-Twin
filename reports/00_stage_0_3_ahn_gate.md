@@ -1,6 +1,6 @@
 # Asama 0.3 — AHN girdi kalite kapisi
 
-**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-022`
+**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-024`
 
 > **VERI DONEMI (D-020).** Bu projede **geometri** AHN5 ucus donemini
 > (**2023-02-08 / 2023-02-14**, LAZ `gps_time`'dan olculdu) temsil eder;

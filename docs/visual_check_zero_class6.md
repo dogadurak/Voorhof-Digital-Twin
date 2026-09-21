@@ -13,7 +13,7 @@ bağlanmayacaktır.
 
 1. `aoi/qa/zero_class6_buildings.geojson` dosyasını QGIS'e yükle (EPSG:28992,
    67 bina). Arka plan: **PDOK Luchtfoto 8 cm** (güncel).
-2. `reports/visual_check_sample.csv` içindeki **12 binayı** sırayla aç.
+2. `reports/visual_check_sample.csv` içindeki **13 binayı** sırayla aç (13 numara AMAÇLI örnektir, aşağıya bak).
    Koordinatlar `merkez_x_rd` / `merkez_y_rd` sütunlarında (RD New).
 3. Her biri için aşağıdaki tabloya **GÖZLEM** yaz. Etiketler:
    **`depo/kulube`** · **`ev`** · **`baska`** · **`goruntude yok`**
@@ -41,6 +41,56 @@ bağlanmayacaktır.
 | 10 | `0503100000039608` | A küçük | 13,8 | 2001 | 0,063 | depo/kulübe | | |
 | 11 | `0503100000039629` | A küçük | 2,8 | 2022 | 0,156 | depo/kulübe | | |
 | 12 | `0503100000039630` | A küçük | 2,1 | 2016 | 0,157 | depo/kulübe | | |
+| **13** | **`0503100000038177`** | **AMAÇLI** | **819,9** | **2025** | 0,002 | **aşağıya bak** ⚠️ | | |
+
+---
+
+## 13 numara — AMAÇLI örnek, rastgele çekilişin parçası DEĞİL
+
+> **Seed bozulmadı.** Rastgele havuz yalnızca sıfır grubundaki küçük
+> yapılardan oluşur; bu bina o havuzda değil (sınıf 6 oranı 0,785), bu yüzden
+> listeye eklenmesi 3-12 numaralı çekilişi **değiştirmez**. Ayrı etiketlidir.
+
+**Neden burada:** `0503100000038177`, bouwjaar **2025** olmasına rağmen sınıf 6
+oranı **0,785** — yani Şubat 2023'te o ayakizinde bir bina **vardı**. Bundan
+"bouwjaar güvenilmez" sonucunu çıkarmıştım. **Bu bir ÇIKARIMDI** (§12.13).
+Alternatif açıklama: **yıkılıp yeniden yapılma** (sloop-nieuwbouw). İkisi çok
+farklı sonuçlar doğurur.
+
+**Ölçülen ek sinyaller (2026-09-21, doğrulamadan önce kaydedildi):**
+
+| Metrik | Değer | Ne diyor |
+|---|---|---|
+| `building_class_ratio` | 0,785 | ayakizinde gerçek bir çatı var |
+| `ground_class_ratio` | **0,002** | lazer yere neredeyse hiç ulaşmamış |
+| tek dönüşlü yoğunluk (>2 m) | **69,58 p/m²** | katı çatı, bitki örtüsü değil |
+| **`class6_footprint_coverage`** | **0,988** | eski çatı, yeni ayakizinin **%98,8'ini** örtüyor |
+
+**Bu ne demek:** Şubat 2023'te bugünkü ayakizinin neredeyse tamamını kaplayan
+katı çatılı bir bina vardı. Yani ayakizi **değişmemiş**.
+
+**Ama bu soruyu KAPATMIYOR.** Yüksek örtüşme iki senaryoyla da uyumludur:
+1. Bina hep aynıydı, `bouwjaar 2025` bir **kayıt/tadilat** olayıdır → benim
+   çıkarımım doğru.
+2. Bina **aynı ayakizi üzerinde** yıkılıp yeniden yapıldı → çıkarımım yanlış,
+   Aşama 1'de 2023 geometrisi 2025 binasına giydirilir (sessiz hata).
+
+`class6_footprint_coverage` bu ikisini **ayıramaz** — ancak farklı ayakizli
+yeniden yapımı yakalar. Ayrımı yapacak olan **görsel kontroldür**.
+
+**SORU:** 2023 hava fotoğrafı ile güncel (2025/2026) hava fotoğrafında
+**aynı bina mı?** Çatı biçimi, kat sayısı, cephe düzeni karşılaştırılmalı.
+
+- **Aynıysa** → `bouwjaar` kayıt pratiği meselesidir, çıkarım doğrulanır.
+- **Farklıysa** → yeniden yapımdır; `rebuild_suspect` kuralı (D-022) gerçek
+  bir riski yakalamış olur ve aynı ayakizi üzerindeki yeniden yapımlar için
+  **görsel kontrol dışında bir yöntemimiz olmadığı** ortaya çıkar — bu
+  başlı başına bir sınırlama kaydıdır.
+
+**Bağlam:** B alanında `bouwjaar >= 2023` olup uçuş sonrası aday olmayan
+**50 bina** var (10.377 m², alanın %1,73'ü). **39'unda `bouwjaar == 2023`**
+ve bu **belirsizdir** (BAG yıl verir, uçuş Şubat'ta). Bu bina o 50'nin
+içindeki en büyük örneklerden biridir ve belirsiz değildir (2025).
 
 ---
 
@@ -116,6 +166,9 @@ ayrımını tek sayıyla verir. Tutmazsa, ayrım başka bir yolla kurulmalıdır
 **İki okul güncel Luchtfoto'da görünüyor mu?** ☐ İkisi de ☐ Biri ☐ Hiçbiri
 
 **`ground_class_ratio` tahmini tuttu mu?** ☐ Evet ☐ Hayır
+
+**13 numara (`0503100000038177`) — 2023 ve güncel fotoğrafta aynı bina mı?**
+☐ Aynı ☐ Farklı ☐ Karar veremedim
 
 **P-012 için sonuç:**
 
