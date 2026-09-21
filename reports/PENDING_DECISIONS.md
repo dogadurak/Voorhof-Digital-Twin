@@ -13,6 +13,7 @@
 | ~~P-003~~ | 0.3 | ~~Disk alani yetersizligi~~ | — | **KAPANDI 2026-09-21** |
 | P-004 | 1 | AHN z-fark esigi (Kriter 1-C) | Asama 1 baslangici | Asama 0 sonunda |
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
+| P-006 | 0.2a | woonfunctie ve bina sayimi paydalari | **Aday hesabi (0.2a adim 4-5)** | **YUKSEK** |
 
 ---
 
@@ -168,3 +169,71 @@ sayisal esik vermiyor. Ajan bu sayilari kendi basina yazamaz (Bolum 12.11).
   almalidir.
 
 **Bu karar verilmeden ilerlenemeyen isler:** Asama 3 kapanisi (cekirdek cikti).
+
+---
+
+## [2026-09-21] [0.2a] P-006 — woonfunctie orani ve bina sayimi hangi payda uzerinden?
+
+**Durum: ADAY HESABINI BLOKLUYOR.** Karar verilmeden hesaplanamaz (Bolum 12.11:
+metrik tanimi kullanici onayina baglidir). Bkz. MISTAKES.md M-005.
+
+**Olculen gercek** (indirilen bbox geneli — kare bazinda hicbir hesap yapilmadi):
+
+| Olcum | Deger |
+|---|---|
+| Toplam pand | 7.704 |
+| Toplam verblijfsobject (VBO) | 19.346 |
+| **aantal_verblijfsobjecten = 0 olan pand** | **3.124 (%40,6)** — garaj, trafo, depo, otopark |
+| woonfunctie orani, **pand** duzeyi | **%50,5** |
+| woonfunctie orani, **VBO** duzeyi | **%93,2** |
+| bouwjaar 1960-1975, pand duzeyi | %22,2 |
+| bouwjaar 1960-1975, VBO duzeyi | %48,5 |
+| Coklu islevli VBO (virgullu) | 61 (%0,32) |
+| VBO -> pand join eslesmesi | 19.345/19.346 (%100,0) |
+
+### Soru 1 — woonfunctie orani hangi birim uzerinden? (kriter 0.2-B, esik >=%90)
+
+- **A — VBO duzeyi** *(ajanin onerisi)*: karedeki panden'a bagli VBO'lardan
+  woonfunctie olanlarin orani. Gerekce: bbox genelinde %93,2, yani **>=%90 esigi
+  anlamli ve ayirt edici**. Ayrica gercek konut yogunlugunu yansitir — 200 daireli
+  bir blok 1 pand ama 200 konuttur.
+- **B — pand duzeyi**: karedeki panden'dan gebruiksdoel'u woonfunctie olanlarin orani.
+  **UYARI: bbox genelinde %50,5.** Yardimci yapilar paydayi sisirdigi icin **>=%90
+  esigi hicbir karede saglanamaz**; 0.2a sifir aday uretir.
+- **C — yardimci yapilari dislayan pand duzeyi**: yalnizca aantal_verblijfsobjecten > 0
+  olan panden uzerinden. Ara cozum; secilirse esik yeniden degerlendirilmeli.
+
+### Soru 2 — bina sayimi hangi panden'i kapsiyor? (kriter 0.2-A, aralik 400-700)
+
+- **A — TUM panden** *(ajanin onerisi)*: yardimci yapilar dahil. Indirilen alanda
+  yogunluk 1.852 pand/km2; 600x600 m = 0,36 km2 -> **kare basina ~667 pand**, yani
+  AGENTS.md Bolum 3'un verdigi **400-700 araligina dogal olarak oturuyor**. Bu, Bolum
+  3'teki sayinin tum panden'i kastettigine dair gucli bir isarettir.
+- **B — yalnizca konut birimi iceren panden**: yogunluk ~935/km2 -> kare basina ~337,
+  **400 alt sinirinin altinda kalir**. Secilirse 400-700 araligi da yeniden
+  degerlendirilmelidir.
+
+### Soru 3 — coklu islevli VBO'lar nasil sayilsin?
+
+61 kayit (%0,32) "woonfunctie,winkelfunctie" gibi virgullu deger tasiyor.
+
+- **A — woonfunctie ICERIYORSA say** *(ajanin onerisi)*: %93,3
+- **B — tam olarak woonfunctie ise say**: %93,2
+
+Fark **0,09 puan**; sonucu degistirmez. Yine de kural yazilmali — yazilmazsa bir
+sonraki oturum farkli davranir ve sonuc tekrarlanamaz olur.
+
+### Ajanin toplu onerisi: 1-A + 2-A + 3-A
+
+Bu kombinasyon hem AGENTS.md Bolum 3'un bina araligiyla hem Bolum 2'nin "%90+ konut"
+ifadesiyle tutarli tek kombinasyondur.
+
+**Bu, esigin sonuca gore ayarlanmasi DEGILDIR (Bolum 12.2 ihlali degil).** Esikler
+(400-700 ve >=%90) degismiyor; **hangi buyuklugun olculdugu** tanimlaniyor. Tanim,
+kare bazinda hicbir hesap yapilmadan yalnizca bbox geneli dagilimlara bakilarak
+netlestirildi; aday skoru uretilmemistir.
+
+### Bu karar verilmeden ilerlenemeyen isler
+
+Asama 0.2a adim 4-5 (aday uretimi ve siralama). **Kullanicinin QGIS secimi bu karardan
+bagimsizdir ve beklemez.**

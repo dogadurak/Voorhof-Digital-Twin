@@ -22,6 +22,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-002 | 2026-09-21 | 0.1 | conda-forge'da olmayan paket adi varsayildi | KAPALI | 0 |
 | M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | KAPALI | 0 |
 | M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
+| M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | ACIK | 0 |
 
 ---
 
@@ -214,3 +215,55 @@ yakalandi.
 
 **Durum:** KAPALI (OGC Filter Encoding'e gecildi, `count` siniri ve cikti dogrulamasi
 uygulandi; bos indirmeler `data/raw/`'a yazilmadi)
+
+---
+
+## M-005 · [2026-09-21] · Asama 0.2a
+
+**Ne oldu:**
+Kullanicinin 0.2 planini degerlendirirken "gebruiksdoel BAG pand uzerinde DEGIL,
+verblijfsobject uzerindedir" denildi ve bu **olgu olarak** muhurlenen config'e yazildi
+(stage_0_2 -> kriter 0.2-B -> computation). Veri indirildiginde PDOK'un bag:pand
+katmaninin gebruiksdoel, bouwjaar ve aantal_verblijfsobjecten alanlarini **tasidigi**
+goruldu.
+
+**Kok neden:**
+BAG'in kavramsal veri modeli ile PDOK WFS'inin sundugu sema karistirildi. Kavramsal
+modelde gebruiksdoel gercekten verblijfsobject ozniteligidir; PDOK bu WFS'te veriyi
+denormalize edip pand'a da tasimistir. Iddia, servisin DescribeFeatureType ciktisi
+veya bir ornek kaydi **gorulmeden** yazildi.
+
+**M-001/M-002 ile ayni kok neden: dogrulanmadan yazmak. UCUNCU TEKRAR.**
+Bolum 14.5 geregi bu adim artik insan disiplinine birakilmaz, otomatik kontrole baglanir.
+
+**Neden fark edilmedi:**
+Sema dogrulamasi yapildi ama yalnizca **katman adi** duzeyinde (GetCapabilities).
+**Oznitelik** duzeyinde dogrulama CBS katmani icin yapildi, BAG icin atlandi.
+Kismi dogrulama, tam dogrulama sanildi.
+
+**Sonucu — yanlis gerekce, dogru yontem:**
+Olcum, verblijfsobject kullanmanin dogru secim oldugunu gosterdi ama **bambaska bir
+nedenle**: pand'larin %40,6'si (3.124 adet) aantal_verblijfsobjecten = 0 olan yardimci
+yapilardir (garaj, trafo, depo, otopark) ve gebruiksdoel'leri bostur. Pand duzeyinde
+woonfunctie orani bu yuzden %50,5'te kalir ve **>=%90 esigi hicbir karede saglanamaz** —
+kriter matematiksel olarak uygulanamaz hale gelirdi.
+
+Gerekce duzeltilmeden birakilamaz: sonraki oturum yanlis gerekceye dayanip yanlis
+genelleme yapabilir.
+
+**Turetilen kural:**
+Bir veri kaynaginin semasi hakkindaki her iddia, o kaynagin **kendi ciktisindan**
+dogrulanir; kavramsal veri modeli bilgisi yeterli degildir. Uygulama: her yeni katman
+icin indirmeden once DescribeFeatureType veya count=1 ile ornek kayit cekilir,
+oznitelik listesi loglanir ve DATA_LOG.md'ye yazilir.
+
+**Nerede uygulanir:** src/00_acquisition/ tum indirme scriptleri,
+config/acceptance_criteria.yml icindeki her computation notu
+
+**Otomatik kontrol:**
+src/qa/check_compliance.py (Asama 0.5) — config'te bir oznitelik adi geciyorsa,
+o oznitelik ilgili ham dosyada gercekten var mi?
+
+**Durum:** ACIK — config'teki yanlis gerekce duzeltilmeyi bekliyor. Duzeltme metrik
+tanimini da etkiledigi icin kullanici onayina baglidir (Bolum 12.11); bkz.
+reports/PENDING_DECISIONS.md -> P-006.
