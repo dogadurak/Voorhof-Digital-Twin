@@ -27,6 +27,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-007 | 2026-09-21 | 0.3 | Mekansal predicate yonu varsayildi, tum binalar 0 nokta saydi | KAPALI | 0 |
 | M-008 | 2026-09-21 | 0.3 | Config'de `decision_ref: D-015` vardi ama o D kaydi hic yazilmamisti | KAPALI | 0 |
 | M-009 | 2026-09-21 | 0.3 | Olcum metrigi, olcmesi gereken seyi olcmuyordu (tum siniflar sayildi) | KAPALI | 0 |
+| M-010 | 2026-09-21 | 0.3 | Medyanla genelleme, gruptaki en onemli vakalari gizledi; sutun adi da yanlisti | KAPALI | 0 |
 
 ---
 
@@ -481,3 +482,61 @@ Stedin PC6 kapsama metrikleri.
 67 binada oran **tam 0**, ve bunlar agac altindaki konutlar degil, kucuk
 konut-disi yardimci yapilar. Yani metrik yalnizca ongorulen kor noktayi degil,
 **ongorulmeyen bir baskasini** da acti. Ayrinti: D-016.
+
+---
+
+## M-010 · [2026-09-21] · Asama 0.3
+
+**Ne oldu — iki katmanli:**
+
+**(a) Yanlis sutun adi.** CSV'de `has_dwellings` adli bir sutun vardi ve
+`aantal_verblijfsobjecten > 0` olmasini "konut" sayiyordu. Bir
+verblijfsobject okul, dukkan veya ofis de olabilir. Sonuc: raporda **iki okul
+"konut: evet"** olarak listelendi.
+
+**(b) Medyanla genelleme.** Sinif 6 orani sifir cikan 67 binayi medyan
+degerlerle ozetledim (ayakizi medyani 8,0 m2, %3 konut, bouwjaar medyani
+2014) ve **"kucuk, konut olmayan yardimci yapilar"** diye tek bir gruba
+indirgedim. Gercekte grupta **996 m2 ve 1.665 m2'lik iki okul** vardi ve
+bunlar enerji analizi icin kritikti. Medyan onlari sayisal olarak dogru
+bicimde gizledi: 67 binanin 64'u gercekten kucuktu.
+
+**Kok neden:**
+Bir dagilimin **merkezini** ozetlemek ile **icindekileri** aciklamak ayni sey
+degildir. Ozet istatistik, kucuk ama onemli bir alt kume oldugunda onu
+**tanim geregi** siler. Uzerine (a)'daki yanlis etiket geldi ve alt kumenin
+tek gorunur isareti ("konut") da yanlis yone isaret etti.
+
+**Neden onemli:**
+Genelleme yanlis olsa bile **tutarli** gorunuyordu: kucuk + konut disi +
+yeni = yardimci yapi. Ic tutarlilik, dogrulugun kaniti DEGILDIR. Kullanici
+listeye tek tek bakmasaydi iki okul Asama 1'e aciklanmadan girecekti.
+
+**Turetilen kural:**
+Bir alt grup icin ozet istatistik (medyan, ortalama, oran) raporlanirken
+**ayni grubun uc degerleri de listelenir**. Ozellikle: grubun en buyuk /
+en cok noktali / en yuksek etkili **ilk 3 uyesi** ozetin yaninda tek tek
+gosterilir. "Grup sunlardan olusuyor" cumlesi, yalnizca grubun **tum**
+uyeleri o tanima uyuyorsa yazilir; uymayan varsa alt gruba ayrilir.
+
+Ek kural (a icin): bir sutun adi bir **iddiadir**. `has_dwellings` adi,
+`aantal_verblijfsobjecten > 0` hesabina karsilik gelmiyordu. Sutun adi ile
+hesaplanan ifade arasindaki denklik, sutun yazilirken dogrulanir.
+
+**Nerede uygulanir:** `src/00_acquisition/verify_ahn_quality.py` (alt grup
+ayrimi + `has_verblijfsobject` / `gebruiksdoel` sutunlari), her ozet
+istatistik raporu
+
+**Otomatik kontrol:** `src/qa/check_compliance.py` (Asama 0.5) bu ikisini
+tam olarak denetleyemez (anlamsal), ama sutun adi -> ifade eslesmesi icin
+CSV yazan scriptlerde sutun adlarinin bir sozlukten gelmesi saglanacak.
+
+**Durum:** KAPALI
+- `has_dwellings` -> `has_verblijfsobject`; `gebruiksdoel`, `bouwjaar`,
+  `status` sutunlari eklendi
+- Sifir grubu iki alt gruba ayrildi (buyuk >= 100 m2 / kucuk < 100 m2) ve
+  buyuk olanlar raporda **tek tek** listeleniyor
+- Iki bina ayri bir raporda incelendi:
+  `reports/00_stage_0_3_zero_ratio_investigation.md`
+- Bulgu: ikisi de **okul**, ikisi de AHN5 ucusundan (Subat 2023) **sonra**
+  yapilmis; girdi kalitesi sorunu degil **zamansal uyusmazlik**

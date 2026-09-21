@@ -1,11 +1,11 @@
 {
-  "run_id": "RUN-2026-09-21-019",
-  "git_commit": "0efe40b-dirty",
-  "created_utc": "2026-09-21T18:35:23Z",
+  "run_id": "RUN-2026-09-21-021",
+  "git_commit": "e801a66-dirty",
+  "created_utc": "2026-09-21T18:58:26Z",
   "output": {
     "path": "reports/00_stage_0_3_ahn_gate.md",
-    "sha256": "9a43c1071bad6a24b60ee1dc84d7ed4b96890292ecf0dfb6f2b0b6cbb2fd83b9",
-    "size_bytes": 7146
+    "sha256": "65d6d1ab4ce3a3e4c1842bdec6783a487483a8ccb4a69a07da27da7919d45b60",
+    "size_bytes": 9266
   },
   "inputs": [],
   "parameters": {

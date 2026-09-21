@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-018**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-019**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -918,3 +918,51 @@ Bolum 5):
 
 **Onay:** Kullanici talimati ("Sinif 26 ve 14'u de AHN belgelerinden dogrula,
 Asama 1 oncesi kapansin"), 2026-09-21.
+
+---
+
+## D-018 · [2026-09-21] · Sifir oran grubu iki alt gruba ayrilir; zemin orani sutunu eklenir
+
+**Karar:** `building_class_ratio` sifir cikan binalar **tek bir grup olarak
+raporlanmaz**. Ayakizi buyuklugune gore ikiye ayrilir ve buyuk olanlar
+**tek tek** listelenir. Ayrica CSV'ye `ground_class_points` /
+`ground_class_ratio` (ayakizi icindeki sinif 2 noktalari) eklenir.
+
+| Alt grup | n | Tanim | Mekanizma |
+|---|---|---|---|
+| A | 64 | < 100 m2, `gebruiksdoel` **tamamen bos** | AHN siniflandirmasi bina saymamis |
+| B | 3 | >= 100 m2 | **ucus sirasinda o ayakizinda bina yoktu** (2'si) / alcak yapi maaiveld sayilmis (1'i) |
+
+100 m2 **bir kabul kriteri degildir**, raporlama ayrimidir; veride dogal
+bosluk oradadir (sifir grubunda 28,5 m2 ile 109,0 m2 arasi bostur).
+
+**Gerekce:** Onceki raporda 67 bina medyanlarla ozetlenmis ve "kucuk yardimci
+yapilar" diye genellenmisti. Grupta 996 m2 ve 1.665 m2'lik **iki okul** vardi
+(MISTAKES.md M-010). Ozet istatistik onlari tanim geregi gizledi.
+
+**Inceleme sonucu** (`reports/00_stage_0_3_zero_ratio_investigation.md`):
+
+| | `0503100000038184` | `0503100000041285` |
+|---|---|---|
+| gebruiksdoel | onderwijsfunctie | onderwijsfunctie, sportfunctie |
+| bouwjaar / status | 2023 / in gebruik | 2026 / **niet ingemeten** |
+| ayakizi ici zemin (sinif 2) orani | **%98,9** | **%62,1** |
+| >8 m noktalarin cok donuslu orani | %100 | **%99,8** (kontrol binasi: %2,4) |
+| 3DBAG kaydi | **yok** | **yok** |
+| Sonuc | **Subat 2023'te bos arazi** | **Subat 2023'te agaclik/acik alan** |
+
+**AHN5 ucus tarihi 2023-02-08/14** olarak LAZ `gps_time` alanindan olculdu
+(baslik bayragi yanlis; ayrinti raporda).
+
+**`bouwjaar` filtre olarak KULLANILMAZ:** A'da `bouwjaar >= 2023` olan 9
+panddan 4'unun sinif 6 orani 0,57-0,82 arasindadir; `0503100000038177`
+bouwjaar **2025** olmasina ragmen orani 0,785'tir. Dogru belirteç dogrudan
+olcumdur (`building_class_ratio`, `ground_class_ratio`).
+
+**Asama 1'e baglayici etkisi:** bu yapilarin basarisizligi `failed_buildings`
+karsilastirmasinda **ucuncu kategori — kaynak/zaman uyusmazligi** olarak
+etiketlenir; "girdi yogunlugu" veya "yontem" sayilmaz. Esik ve filtre
+kurallari Asama 1 basinda, **hesaptan once** muhurlenir (P-013).
+
+**Onay:** Kullanici talimati, 2026-09-21 ("Asama 1'e bu iki bina
+aciklanmadan gecme").

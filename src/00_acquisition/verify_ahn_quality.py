@@ -108,6 +108,12 @@ def main() -> int:
     # "cati noktasi" gibi gorunur ve yogunluk tam da rekonstruksiyonun
     # bozulacagi binalarda IYI cikar (kullanici talimati 2026-09-21).
     building_points_cls6 = np.zeros(len(geoms), dtype=np.int64)
+    # Ayakizi icindeki ZEMIN (sinif 2) noktalari. Yuksek zemin orani, o
+    # ayakizinde UCUS ANINDA BINA OLMADIGININ dogrudan gostergesidir: lazer
+    # yere ulasmissa ustunde cati yoktur. 2026-09-21 incelemesinde iki buyuk
+    # yapinin bu yolla aciklanmasi uzerine eklendi (bkz. reports/
+    # 00_stage_0_3_zero_ratio_investigation.md).
+    building_points_cls2 = np.zeros(len(geoms), dtype=np.int64)
     logger.info("A binasi (status filtreli, centroid): %d", len(geoms))
 
     class_counter: collections.Counter = collections.Counter()
@@ -166,6 +172,9 @@ def main() -> int:
                         is_b6 = cls_near[hit[0]] == 6
                         if is_b6.any():
                             np.add.at(building_points_cls6, hit[1][is_b6], 1)
+                        is_g = cls_near[hit[0]] == 2
+                        if is_g.any():
+                            np.add.at(building_points_cls2, hit[1][is_g], 1)
 
             total_points += file_points
             logger.info("%s | %d nokta B bbox icinde", path.name, file_points)
@@ -173,12 +182,13 @@ def main() -> int:
     logger.info("Toplam islenen nokta (B bbox): %d", total_points)
     return _report(logger, run_id, gate, counts, building_counts, cell,
                    bminx, bminy, area_b, panden, geoms, building_points,
-                   building_points_cls6, class_counter, total_points, hard, expect)
+                   building_points_cls6, building_points_cls2,
+                   class_counter, total_points, hard, expect)
 
 
 def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
             area_b, panden, geoms, building_points, building_points_cls6,
-            class_counter, total_points, hard, expect) -> int:
+            building_points_cls2, class_counter, total_points, hard, expect) -> int:
     """Olculen degerleri esiklerle karsilastirir ve raporu yazar."""
     from shapely.geometry import Point
 
@@ -231,19 +241,34 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
         building_points_cls6.astype(float), building_points.astype(float),
         out=np.full(len(geoms), np.nan), where=building_points > 0,
     )
+    cls2_ratio = np.divide(
+        building_points_cls2.astype(float), building_points.astype(float),
+        out=np.full(len(geoms), np.nan), where=building_points > 0,
+    )
     csv_path = resolve("reports.dir") / "ahn_point_density_by_building.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
+        # DIKKAT: onceki surumde `has_dwellings` adli bir sutun vardi ve
+        # aantal_verblijfsobjecten > 0 olmasini "konut" sayiyordu. YANLISTI:
+        # bir VBO okul, dukkan veya ofis de olabilir. Sutun
+        # `has_verblijfsobject` olarak duzeltildi ve gercek kullanim islevi
+        # `gebruiksdoel` olarak ayrica yazilir (MISTAKES.md M-010).
         w.writerow(["bag_id", "footprint_area_m2", "point_count",
-                    "roof_density_pts_m2", "below_10", "has_dwellings",
-                    "building_class_points", "building_class_ratio"])
-        for f, a, n, d, n6, r in zip(panden, areas, building_points, roof_dens,
-                                     building_points_cls6, cls6_ratio):
+                    "roof_density_pts_m2", "below_10",
+                    "has_verblijfsobject", "gebruiksdoel", "bouwjaar", "status",
+                    "building_class_points", "building_class_ratio",
+                    "ground_class_points", "ground_class_ratio"])
+        for f, a, n, d, n6, r, n2, r2 in zip(
+                panden, areas, building_points, roof_dens,
+                building_points_cls6, cls6_ratio, building_points_cls2, cls2_ratio):
             p = f["properties"]
             w.writerow([p["identificatie"], f"{a:.2f}", int(n), f"{d:.2f}",
                         "true" if d < 10 else "false",
                         "true" if (p.get("aantal_verblijfsobjecten") or 0) > 0 else "false",
-                        int(n6), "" if np.isnan(r) else f"{r:.4f}"])
+                        p.get("gebruiksdoel") or "", p.get("bouwjaar") or "",
+                        p.get("status") or "",
+                        int(n6), "" if np.isnan(r) else f"{r:.4f}",
+                        int(n2), "" if np.isnan(r2) else f"{r2:.4f}"])
 
     b_median = float(np.median(roof_dens))
     b_p10 = float(np.percentile(roof_dens, 10))
@@ -288,6 +313,24 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
                 100.0 * has_vbo[mask].mean(),
                 int(np.median(bouwjaar[mask])))
 
+    # Alt grup ayrimi: 100 m2 esigi bir KABUL KRITERI DEGILDIR, yalnizca
+    # raporlama icin buyuk/kucuk ayrimidir. Verideki bosluk buradadir:
+    # sifir grubunda 28,5 m2 ile 109,0 m2 arasinda hic bina yoktur.
+    big_zero = is_zero & (areas >= 100)
+    small_zero = is_zero & (areas < 100)
+    n_big_zero, n_small_zero = int(big_zero.sum()), int(small_zero.sum())
+    big_zero_rows = "\n".join(
+        ["| bag_id | ayakizi m2 | bouwjaar | status | gebruiksdoel |",
+         "|---|---|---|---|---|"] +
+        [f"| `{panden[i]['properties']['identificatie']}` | {areas[i]:.1f} | "
+         f"{panden[i]['properties'].get('bouwjaar')} | "
+         f"{panden[i]['properties'].get('status')} | "
+         f"{panden[i]['properties'].get('gebruiksdoel') or '(islev yok)'} |"
+         for i in np.argsort(-areas * big_zero)[:n_big_zero]]
+    )
+    logger.info("  ALT GRUP | buyuk (>=100 m2): %d | kucuk (<100 m2): %d",
+                n_big_zero, n_small_zero)
+
     z_area, z_small, z_n, z_vbo, z_year = _profile(is_zero)
     o_area, o_small, o_n, o_vbo, o_year = _profile(defined & ~is_zero)
     small_all = areas < 50
@@ -320,8 +363,8 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
     lowest_rows = "\n".join(
         f"| `{panden[i]['properties']['identificatie']}` | {areas[i]:.1f} | "
         f"{int(building_points[i]):,} | {int(building_points_cls6[i]):,} | "
-        f"**{cls6_ratio[i]:.3f}** | {roof_dens[i]:.2f} | "
-        f"{'evet' if (panden[i]['properties'].get('aantal_verblijfsobjecten') or 0) > 0 else 'hayir'} |"
+        f"**{cls6_ratio[i]:.3f}** | {cls2_ratio[i]:.3f} | "
+        f"{(panden[i]['properties'].get('gebruiksdoel') or '(islev yok)')[:34]} |"
         for i in lowest
     )
 
@@ -396,7 +439,7 @@ tum noktalar. Ikisi de ayni `within` sorgusundan gelir.
 gore bozulmustur: ayni oranda icinde daha cok nokta bulunan bina Asama 1 icin
 daha buyuk risktir. Tam liste CSV'dedir.
 
-| bag_id | ayakizi m2 | toplam nokta | sinif 6 nokta | oran | p/m2 | konut |
+| bag_id | ayakizi m2 | toplam nokta | sinif 6 nokta | sinif 6 orani | zemin orani | gebruiksdoel |
 |---|---|---|---|---|---|---|
 {lowest_rows}
 
@@ -425,11 +468,43 @@ sinif 6 orani medyani **{small_ratio_med:.3f}**, buyuklerinki
 **{large_ratio_med:.3f}** — neredeyse esit. Sorun kucukluk degil, bu belirli
 alt gruptur.
 
-AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes zonder fundering" gibi
-nesnelerin **"overig" (=1)** siniflandirilmasini emreder. Bu yapilar BAG'de
-**vardir**, yani kural birebir uymuyor; AHN5'in siniflandirici davranisi
-belgelenmemistir (bkz. `docs/ahn_class_codes.md`). **Sebep Asama 1'de
-kapatilacaktir**; burada varsayim yazilmaz.
+#### Sifir grubu TEK BIR SEY DEGILDIR — iki alt gruba ayrilir
+
+Yukaridaki medyanlar yaniltici bir genelleme uretmisti ("hepsi kucuk yardimci
+yapi"). Ayakizi buyuklugune gore ayrildiginda iki **farkli mekanizma** cikiyor:
+
+| Alt grup | n | Tanim | Mekanizma |
+|---|---|---|---|
+| **A — kucuk, islevsiz yardimci yapilar** | {n_small_zero} | < 100 m2, `gebruiksdoel` **tamamen bos**, woonfunctie **sifir** | AHN siniflandirmasi bunlari bina saymamis |
+| **B — buyuk yapilar** | {n_big_zero} | >= 100 m2 | tek bir mekanizma DEGIL — asagiya bakiniz |
+
+Alt grup B tek tek incelenmistir:
+`reports/00_stage_0_3_zero_ratio_investigation.md`.
+
+{big_zero_rows}
+
+**Alt grup B'nin onemi:** bunlar yardimci yapi degildir ve enerji analizi icin
+onemlidir. Tek tek incelendiginde **iki ayri mekanizma** cikti:
+
+- **2 yapi (996,5 ve 1.665,0 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
+  (2023-02-08/14) sirasinda **hicbir bina yoktu**. Zemin noktasi orani %98,9
+  ve %62,1; >8 m noktalarin %99,8-100'u cok donuslu (= bitki ortusu, kontrol
+  binasinda %2,4). Ikisi de 3DBAG'de **yok**. Bu bir girdi KALITESI sorunu
+  degil, **zamansal uyusmazliktir**.
+- **1 yapi (109,0 m2, bouwjaar 2002):** 8 m ustu hic noktasi yok, cok donuslu
+  orani %3,0 — orada alcak, kati bir yapi var ve AHN onu **maaiveld/overig**
+  saymis. Bu, alt grup A ile **ayni mekanizmanin** daha buyuk bir ornegidir.
+
+Asama 1'de bu yapilar rekonstruksiyona **girmemelidir**; girerse mutlaka
+basarisiz olur ve nedeni yanlis siniflandirilir. Filtre `bouwjaar` ile
+kurulamaz (kanit: D-018 ve inceleme raporu Bolum 5.1); `ground_class_ratio`
+ve `building_class_ratio` ile kurulur. Esik **P-013**'te acik karardir.
+
+**Alt grup A icin:** AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes
+zonder fundering" gibi nesnelerin **"overig" (=1)** siniflandirilmasini
+emreder. Bu yapilar BAG'de **vardir**, yani kural birebir uymuyor; AHN5'in
+siniflandirici davranisi belgelenmemistir (bkz. `docs/ahn_class_codes.md`).
+Sebep Asama 1'de kapatilacaktir; burada varsayim yazilmaz.
 
 **Asama 1'e etkisi:** bu {n_zero} bina basarisiz olursa sebep **ne girdi
 yogunlugu ne bizim yontemimizdir** — AHN'in siniflandirma politikasidir.

@@ -20,6 +20,7 @@
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
 | P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
 | P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **Asama 1 baslangici** |
+| P-013 | 1 | AHN5'te karsiligi olmayan binalar ne yapilacak (3 yapi) | Asama 1 + Asama 3 enerji | **Asama 1 baslangici** |
 
 ---
 
@@ -478,3 +479,41 @@ Iki secenegi de calistirip iyi gorunen sonucu secmek **yasaktir**.
 **Benim onerim:** (b), ama **her iki grup ayri raporlanarak** — sinif 6'dan
 kurulan binalar ana metrigi olusturur, sinif 1 katkisiyla kurtarilanlar ayri
 satirda verilir. Boylece secim sonuclara gore degil, bastan tanimlanmis olur.
+
+
+---
+
+## [2026-09-21] [1] P-013 — AHN5'te karsiligi olmayan binalar ne yapilacak?
+
+**Durum:** ACIK · **Engelledigi is:** Asama 1 rekonstruksiyon filtresi,
+Asama 3 enerji kapsami
+
+**Baglam:** A'da 3 yapinin ayakizinde AHN5 (Subat 2023) verisinde bina
+**yoktur** — ikisi okul (996 m2 ve 1.665 m2), biri 109 m2'lik alcak yapi.
+Ayrinti: `reports/00_stage_0_3_zero_ratio_investigation.md`, D-018.
+
+**Karar gereken uc nokta:**
+
+**1 — Filtre nasil kurulacak?** `bouwjaar` **kullanilamaz** (kanit: D-018).
+Onerim: `ground_class_ratio` ve `building_class_ratio` uzerinden, esik Asama 1
+basinda hesaptan once muhurlenir. Iki esigi deneyip iyi gorunen sonucu secmek
+**yasaktir** (Bolum 12.2).
+
+**2 — Bu binalar modele girecek mi?** Secenekler:
+- (a) Tamamen disla, sinirlama olarak raporla
+- (b) 3DBAG/BAG yuksekliginden basit bir kutu (LOD1) uret, LOD2 iddia etme
+- (c) Daha yeni bir yukseklik kaynagi ara (yeni bir veri kaynagi = Bolum 12.11
+  geregi ayri kullanici onayi)
+
+**Benim onerim: (a)**, cunku (b) olculmemis bir geometriyi olculmus gibi
+gosterir ve `0503100000041285`'in ayakizi zaten `niet ingemeten`'dir.
+
+**3 — Enerji analizine (Asama 3) etkisi:** ikisi de **okul**, yani konut disi.
+A'nin enerji karsilastirmasi PC6 konut tuketimi uzerinden kuruldugu icin bu
+yapilar muhtemelen zaten kapsam disidir — ama bu **acikca yazilmalidir**,
+sessizce dusurulmemelidir (Bolum 12.8).
+
+**Mutasyon tarihi gerekirse:** PDOK BAG WFS `documentdatum` dondurmuyor,
+3DBAG donduruyor ama bu binalar 3DBAG'de yok. **BAG Individuele Bevragingen
+API** ayri bir veri kaynagi olarak eklenmelidir — Bolum 12.11 geregi
+kullanici karari.

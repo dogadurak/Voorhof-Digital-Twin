@@ -1,6 +1,6 @@
 # Asama 0.3 — AHN girdi kalite kapisi
 
-**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-019`
+**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-021`
 
 Esikler `config/acceptance_criteria.yml` -> `input_gate_ahn` altindan okundu.
 O blok bu olcumden **once** ayri bir commit ile muhurlendi.
@@ -68,18 +68,18 @@ tum noktalar. Ikisi de ayni `within` sorgusundan gelir.
 gore bozulmustur: ayni oranda icinde daha cok nokta bulunan bina Asama 1 icin
 daha buyuk risktir. Tam liste CSV'dedir.
 
-| bag_id | ayakizi m2 | toplam nokta | sinif 6 nokta | oran | p/m2 | konut |
+| bag_id | ayakizi m2 | toplam nokta | sinif 6 nokta | sinif 6 orani | zemin orani | gebruiksdoel |
 |---|---|---|---|---|---|---|
-| `0503100000041285` | 1665.0 | 124,119 | 0 | **0.000** | 74.55 | evet |
-| `0503100000038184` | 996.5 | 81,963 | 0 | **0.000** | 82.25 | evet |
-| `0503100000038212` | 28.5 | 9,324 | 0 | **0.000** | 327.65 | hayir |
-| `0503100000039655` | 109.0 | 3,601 | 0 | **0.000** | 33.03 | hayir |
-| `0503100000038258` | 24.2 | 2,515 | 0 | **0.000** | 103.86 | hayir |
-| `0503100000038676` | 8.8 | 1,336 | 0 | **0.000** | 151.08 | hayir |
-| `0503100000039608` | 13.8 | 1,249 | 0 | **0.000** | 90.69 | hayir |
-| `0503100000039647` | 16.8 | 1,158 | 0 | **0.000** | 68.96 | hayir |
-| `0503100000039640` | 9.7 | 1,100 | 0 | **0.000** | 113.23 | hayir |
-| `0503100000039645` | 17.1 | 969 | 0 | **0.000** | 56.66 | hayir |
+| `0503100000041285` | 1665.0 | 124,119 | 0 | **0.000** | 0.621 | onderwijsfunctie,sportfunctie |
+| `0503100000038184` | 996.5 | 81,963 | 0 | **0.000** | 0.989 | onderwijsfunctie |
+| `0503100000038212` | 28.5 | 9,324 | 0 | **0.000** | 0.261 | (islev yok) |
+| `0503100000039655` | 109.0 | 3,601 | 0 | **0.000** | 0.014 | (islev yok) |
+| `0503100000038258` | 24.2 | 2,515 | 0 | **0.000** | 0.296 | (islev yok) |
+| `0503100000038676` | 8.8 | 1,336 | 0 | **0.000** | 0.072 | (islev yok) |
+| `0503100000039608` | 13.8 | 1,249 | 0 | **0.000** | 0.063 | (islev yok) |
+| `0503100000039647` | 16.8 | 1,158 | 0 | **0.000** | 0.058 | (islev yok) |
+| `0503100000039640` | 9.7 | 1,100 | 0 | **0.000** | 0.031 | (islev yok) |
+| `0503100000039645` | 17.1 | 969 | 0 | **0.000** | 0.107 | (islev yok) |
 
 Dusuk oran = cati muhtemelen **bitki ortusuyle kapali** veya **siniflandirma
 eksik**. Tek basina hata degildir. Asama 1'de `failed_buildings.csv` ile
@@ -106,11 +106,47 @@ sinif 6 orani medyani **0.854**, buyuklerinki
 **0.885** — neredeyse esit. Sorun kucukluk degil, bu belirli
 alt gruptur.
 
-AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes zonder fundering" gibi
-nesnelerin **"overig" (=1)** siniflandirilmasini emreder. Bu yapilar BAG'de
-**vardir**, yani kural birebir uymuyor; AHN5'in siniflandirici davranisi
-belgelenmemistir (bkz. `docs/ahn_class_codes.md`). **Sebep Asama 1'de
-kapatilacaktir**; burada varsayim yazilmaz.
+#### Sifir grubu TEK BIR SEY DEGILDIR — iki alt gruba ayrilir
+
+Yukaridaki medyanlar yaniltici bir genelleme uretmisti ("hepsi kucuk yardimci
+yapi"). Ayakizi buyuklugune gore ayrildiginda iki **farkli mekanizma** cikiyor:
+
+| Alt grup | n | Tanim | Mekanizma |
+|---|---|---|---|
+| **A — kucuk, islevsiz yardimci yapilar** | 64 | < 100 m2, `gebruiksdoel` **tamamen bos**, woonfunctie **sifir** | AHN siniflandirmasi bunlari bina saymamis |
+| **B — buyuk yapilar** | 3 | >= 100 m2 | tek bir mekanizma DEGIL — asagiya bakiniz |
+
+Alt grup B tek tek incelenmistir:
+`reports/00_stage_0_3_zero_ratio_investigation.md`.
+
+| bag_id | ayakizi m2 | bouwjaar | status | gebruiksdoel |
+|---|---|---|---|---|
+| `0503100000041285` | 1665.0 | 2026 | Pand in gebruik (niet ingemeten) | onderwijsfunctie,sportfunctie |
+| `0503100000038184` | 996.5 | 2023 | Pand in gebruik | onderwijsfunctie |
+| `0503100000039655` | 109.0 | 2002 | Pand in gebruik | (islev yok) |
+
+**Alt grup B'nin onemi:** bunlar yardimci yapi degildir ve enerji analizi icin
+onemlidir. Tek tek incelendiginde **iki ayri mekanizma** cikti:
+
+- **2 yapi (996,5 ve 1.665,0 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
+  (2023-02-08/14) sirasinda **hicbir bina yoktu**. Zemin noktasi orani %98,9
+  ve %62,1; >8 m noktalarin %99,8-100'u cok donuslu (= bitki ortusu, kontrol
+  binasinda %2,4). Ikisi de 3DBAG'de **yok**. Bu bir girdi KALITESI sorunu
+  degil, **zamansal uyusmazliktir**.
+- **1 yapi (109,0 m2, bouwjaar 2002):** 8 m ustu hic noktasi yok, cok donuslu
+  orani %3,0 — orada alcak, kati bir yapi var ve AHN onu **maaiveld/overig**
+  saymis. Bu, alt grup A ile **ayni mekanizmanin** daha buyuk bir ornegidir.
+
+Asama 1'de bu yapilar rekonstruksiyona **girmemelidir**; girerse mutlaka
+basarisiz olur ve nedeni yanlis siniflandirilir. Filtre `bouwjaar` ile
+kurulamaz (kanit: D-018 ve inceleme raporu Bolum 5.1); `ground_class_ratio`
+ve `building_class_ratio` ile kurulur. Esik **P-013**'te acik karardir.
+
+**Alt grup A icin:** AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes
+zonder fundering" gibi nesnelerin **"overig" (=1)** siniflandirilmasini
+emreder. Bu yapilar BAG'de **vardir**, yani kural birebir uymuyor; AHN5'in
+siniflandirici davranisi belgelenmemistir (bkz. `docs/ahn_class_codes.md`).
+Sebep Asama 1'de kapatilacaktir; burada varsayim yazilmaz.
 
 **Asama 1'e etkisi:** bu 67 bina basarisiz olursa sebep **ne girdi
 yogunlugu ne bizim yontemimizdir** — AHN'in siniflandirma politikasidir.
