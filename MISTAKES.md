@@ -25,6 +25,8 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | KAPALI | 0 |
 | M-006 | 2026-09-21 | 0.2 | Konsol kodlamasi bir DOGRULAMA log satirini sessizce dusurdu | KAPALI | 0 |
 | M-007 | 2026-09-21 | 0.3 | Mekansal predicate yonu varsayildi, tum binalar 0 nokta saydi | KAPALI | 0 |
+| M-008 | 2026-09-21 | 0.3 | Config'de `decision_ref: D-015` vardi ama o D kaydi hic yazilmamisti | KAPALI | 0 |
+| M-009 | 2026-09-21 | 0.3 | Olcum metrigi, olcmesi gereken seyi olcmuyordu (tum siniflar sayildi) | KAPALI | 0 |
 
 ---
 
@@ -399,3 +401,83 @@ orantili, sayilan bolge alanla orantilidir. Bu yuzden kucuk ayakizlerinde
 yogunluk **sistematik olarak biraz dusuk** cikar. Bu bir veri sorunu DEGILDIR,
 olcum tanimindan gelir ve Asama 1'de dusuk yogunluklu binalar yorumlanirken
 akilda tutulmalidir.
+
+---
+
+## M-008 · [2026-09-21] · Asama 0.3
+
+**Ne oldu:**
+`config/acceptance_criteria.yml` -> `input_gate_ahn` blogu
+`decision_ref: D-015` tasiyordu. `DECISIONS.md` icinde **D-015 diye bir kayit
+yoktu**; dosyanin basligi hala "SONRAKI BOS ID: D-015" diyordu. Yani muhurlu
+config, var olmayan bir karara atif yapiyordu ve eger o config denetlense
+gerekcesi bulunamazdi.
+
+**Kok neden:**
+Muhur commit'i (`77fdfbb`) aceleyle atildi: esik degerleri ve gerekceleri
+config YORUMLARINA yazildi, ama ayri bir D kaydina donusturulmedi. Config
+yorumu ile karar kaydi arasindaki fark gozden kacti — ikisi de "gerekce
+yaziyor" gibi gorundugu icin is bitmis sayildi.
+
+**Neden onemli:**
+Bolum 12.2'nin denetim izi iki parcadan olusur: (a) esigin olcumden ONCE
+muhurlendigi (git sirasi), (b) esigin NEDEN o deger oldugu (D kaydi). (a)
+saglamdi, (b) eksikti. Tek basina (a) "bu sayi nereden geldi" sorusunu
+cevaplamaz.
+
+**Turetilen kural:**
+Bir config blogu `decision_ref: D-xxx` tasiyorsa, o D kaydi **ayni commit'te**
+DECISIONS.md'de var olmalidir. Config yorumu bir karar kaydinin yerini tutmaz.
+
+**Otomatik kontrol:** `src/qa/check_compliance.py` (Asama 0.5) config'deki tum
+`decision_ref` degerlerini toplayip DECISIONS.md'deki `## D-xxx` basliklariyla
+karsilastiracak; eslesmeyen varsa FAIL. Ayni kontrol ters yonde de calisir:
+"SONRAKI BOS ID" satiri, var olan en buyuk D kaydindan buyuk olmalidir.
+
+**Durum:** KAPALI (D-015 geriye donuk yazildi, baslik D-018'e guncellendi)
+
+---
+
+## M-009 · [2026-09-21] · Asama 0.3
+
+**Ne oldu:**
+Bina bazli "cati yogunlugu" metrigi, ayakizi icindeki **tum siniflari**
+sayiyordu. Catiyi orten agac noktalari (sinif 1) da "cati noktasi" olarak
+sayiliyordu. Sonuc: medyan 38,22 p/m2 ile her sey saglikli gorunuyordu.
+
+**Kok neden:**
+Metrik "nokta var mi" sorusunu cevapliyordu, ama cevaplamasi gereken soru
+"**binanin catisindan** nokta var mi" idi. Girdi kalite kapisinin (Bolum
+12.12) amaci "Asama 1'de cikan hatanin girdi mi yontem mi oldugunu ayirt
+etmek"tir; agac noktasiyla sisirilmis bir yogunluk bu ayrimi **yapamaz**.
+
+**Neden bu tehlikeliydi:**
+Yanlilik rastgele degil, **sistematik ve ters yonluydu**. Agac ortusu ne kadar
+yogunsa ayakizi icine o kadar cok nokta duser; yani metrik, rekonstruksiyonun
+**bozulmasi en muhtemel** binalarda **en iyi** degeri veriyordu. Bir esik
+konsaydi bu binalar sessizce gecerdi.
+
+**Nasil yakalandi:** Otomatik kontrolle degil, **kullanici incelemesiyle**.
+Kodda hata yoktu; olcum tanimi yanlisti. Hicbir birim testi bunu yakalayamazdi
+cunku kod tam olarak yazildigi seyi yapiyordu.
+
+**Turetilen kural:**
+Bir kalite metrigi yazilmadan once su iki soru ayri ayri yanitlanir ve
+gerekce olarak kayda gecer:
+1. Bu metrik **hangi soruyu** cevapliyor?
+2. Metrigi **yukselten** her mekanizma, cevaplamak istedigim soru acisindan
+   gercekten **iyi** midir?
+(2) numarali soruya "hayir" diyen bir mekanizma varsa (burada: agac ortusu),
+metrik o mekanizmayi **dislayacak** bicimde tanimlanir veya yaninda onu ifsa
+eden ikinci bir metrik raporlanir.
+
+**Nerede uygulanir:** `src/00_acquisition/verify_ahn_quality.py`
+(`building_class_ratio`), ileride KNMI eksik saat orani, Sentinel bulut orani,
+Stedin PC6 kapsama metrikleri.
+
+**Durum:** KAPALI (sinif 6 orani eklendi, D-016)
+
+**Ikincil bulgu:** Duzeltme, beklenenden farkli bir sey ortaya cikardi —
+67 binada oran **tam 0**, ve bunlar agac altindaki konutlar degil, kucuk
+konut-disi yardimci yapilar. Yani metrik yalnizca ongorulen kor noktayi degil,
+**ongorulmeyen bir baskasini** da acti. Ayrinti: D-016.

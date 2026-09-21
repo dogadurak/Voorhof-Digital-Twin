@@ -1,11 +1,11 @@
 {
-  "run_id": "RUN-2026-09-21-016",
-  "git_commit": "77fdfbb-dirty",
-  "created_utc": "2026-09-21T15:14:03Z",
+  "run_id": "RUN-2026-09-21-019",
+  "git_commit": "0efe40b-dirty",
+  "created_utc": "2026-09-21T18:35:23Z",
   "output": {
     "path": "reports/00_stage_0_3_ahn_gate.md",
-    "sha256": "60229fdeb01f949642b5fc4d979e9c2deff58c1be04630321dd8887f7daf2531",
-    "size_bytes": 2054
+    "sha256": "9a43c1071bad6a24b60ee1dc84d7ed4b96890292ecf0dfb6f2b0b6cbb2fd83b9",
+    "size_bytes": 7146
   },
   "inputs": [],
   "parameters": {
@@ -13,6 +13,9 @@
     "p10": 17.79,
     "zero_cells_pct": 0.08997984451482868,
     "buildings_below_10": 1,
+    "cls6_ratio_median": 0.8743455497382199,
+    "cls6_ratio_p10": 0.48232018717702707,
+    "cls6_ratio_undefined": 0,
     "hard_gate": 10.0,
     "expectation": 20.0,
     "gate_pass": true,

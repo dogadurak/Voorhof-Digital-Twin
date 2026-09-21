@@ -19,6 +19,7 @@
 | P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
 | P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
+| P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **Asama 1 baslangici** |
 
 ---
 
@@ -437,3 +438,43 @@ A'yi temsil etme iddiasi zayiflar ve **sinirlama olarak raporlanir**.
 
 **Bu karar verilmeden ilerlenemeyen isler:** C aday hesabi ve dolayisiyla
 Asama 4 mikroklima modulu. **Asama 0.3 ve Asama 1-3 etkilenmez.**
+
+
+---
+
+## [2026-09-21] [1] P-012 — Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek?
+
+**Durum:** ACIK · **Engelledigi is:** Asama 1 LOD2 rekonstruksiyonu
+
+**Baglam:** Sinif kodlari `docs/ahn_class_codes.md`de belgeden dogrulandi
+(D-017). Artik hangilerinin girdi olacagina karar verilebilir.
+
+**Onerim (onay bekliyor):**
+
+| Kod | Oneri | Gerekce |
+|---|---|---|
+| 6 | **DAHIL** | bina. DIKKAT: cepheler de 6'dir, cati ayrimi dikeylik olcutuyle yapilmali |
+| 2 | **DAHIL**, yalniz zemin kotu referansi icin | bina yuksekligi maaiveld'e gore olculur |
+| 1 | **HARIC**, ama izlenir | bitki ortusu + siniflandirilamayan her sey |
+| 26 | **HARIC** | kunstwerk (kopru/vlonder) — bina degil |
+| 9 | **HARIC** | su |
+| 14 | **HARIC** | tel/bilinmeyen — her halukarda cati degil |
+
+**Karar gerektiren asil nokta — sinif 1:**
+Sinif 1 (64,9 milyon nokta, %38,8) hem bitki ortusunu hem de AHN'in
+siniflandiramadigi **gercek bina parcalarini** icerir. D-016'da bulunan 67
+binada ayakizi icindeki noktalarin **tamami** sinif 1'dir; bu yapilar sinif 1
+dislanirsa **hic nokta gormez ve kesinlikle basarisiz olur**.
+
+Iki secenek:
+- **(a) Kati:** yalniz sinif 6. Temiz ama 67 yapiyi bastan kaybeder.
+- **(b) Genis:** sinif 6 + ayakizi icindeki sinif 1, ek bir geometrik filtreyle
+  (orn. yerel maaiveld'den >1,5 m yukseklik). Daha cok bina kurtarir ama
+  agac noktasi sizma riski tasir.
+
+Secim **Asama 1'in ilk adiminda, hesaptan once** muhurlenmelidir (Bolum 12.2).
+Iki secenegi de calistirip iyi gorunen sonucu secmek **yasaktir**.
+
+**Benim onerim:** (b), ama **her iki grup ayri raporlanarak** — sinif 6'dan
+kurulan binalar ana metrigi olusturur, sinif 1 katkisiyla kurtarilanlar ayri
+satirda verilir. Boylece secim sonuclara gore degil, bastan tanimlanmis olur.

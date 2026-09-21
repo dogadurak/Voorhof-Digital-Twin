@@ -1094,10 +1094,40 @@ input_gate_ahn:
     csv_columns:
       - bag_id                 # identificatie
       - footprint_area_m2
-      - point_count
+      - point_count            # ayakizi icindeki TUM siniflar
       - roof_density_pts_m2
       - below_10               # true/false
       - has_dwellings          # aantal_verblijfsobjecten > 0
+      # --- EK (2026-09-21, kullanici talimati; ESIK DEGIL, raporlanir) ---
+      - building_class_points  # ayakizi icinde YALNIZCA sinif 6 (bina) noktalari
+      - building_class_ratio   # building_class_points / point_count
+
+  # --- SINIF 6 ORANI (2026-09-21 eklendi; ESIK DEGIL, raporlanir) ---
+  # Bu blok, olcum ZATEN yapildiktan SONRA eklenmistir. Eklenmesi Bolum 12.2'yi
+  # ihlal ETMEZ cunku bir ESIK DEGILDIR ve hicbir PASS/FAIL kararina girmez;
+  # var olan bir esigi de gevsetmez. Yeni bir RAPORLAMA sutunudur.
+  per_building_class_ratio:
+    threshold: none
+    added_at: "2026-09-21"
+    added_by: "kullanici talimati"
+    definition: >
+      Bir pandin ayakizi poligonu ICINE DUSEN (within) sinif 6 noktalarinin,
+      ayni poligona dusen TUM sinif noktalarina orani.
+    rationale: >
+      Mevcut roof_density_pts_m2 ayakizi icindeki TUM siniflari sayar. Catiyi
+      orten agac noktalari (sinif 1 / siniflandirilmamis) de "cati noktasi"
+      olarak sayilir. Bu, tam da rekonstruksiyonun bozulmasi beklenen binalarda
+      yogunlugun IYI gorunmesine yol acar - yani metrik en cok ihtiyac duyulan
+      yerde yaniltir. Sinif 6 orani bu kor noktayi kapatir.
+    interpretation: >
+      DUSUK oran = cati muhtemelen bitki ortusuyle kapali VEYA siniflandirma
+      eksik. Tek basina hata DEGILDIR; Asama 1'de failed_buildings.csv ile
+      KARSILASTIRILACAK ucuncu eksendir (yogunluk, sinif orani, basari).
+    undefined_case: >
+      point_count = 0 olan binalarda oran TANIMSIZDIR; CSV'de bos birakilir ve
+      en dusuk 10 listesine ALINMAZ (0/0 yapay olarak 0 gosterilmez).
+    reported:
+      - lowest_10_building_class_ratio   # raporda tablo olarak
     csv_scope_note: >
       CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
       "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1

@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-015**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-018**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -788,3 +788,133 @@ kabul kriterlerine yeni bir sinif ekliyor — "cikti kalitesi" yaninda **"girdi
 kalitesi"**. Bu yuzden karar olarak kaydedildi ve AGENTS.md'ye islendi.
 
 **Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-015 · [2026-09-21] · AHN LAZ girdi kalite kapisi: iki kademeli esik
+
+> **GECIKMIS KAYIT.** Bu karar `config/acceptance_criteria.yml` ->
+> `input_gate_ahn` blogunda `decision_ref: D-015` olarak ANILIYORDU ama
+> DECISIONS.md'ye hic yazilmamisti. 2026-09-21'de sinif kodu dogrulamasi
+> sirasinda fark edildi ve geriye donuk yazildi. Muhurleme commit'i
+> (`77fdfbb`) olcum commit'inden (`0efe40b`) once gelir; Bolum 12.2 denetim
+> izi bozulmamistir. Eksik olan yalnizca gerekce metniydi.
+> Turetilen kural: bir config blogu `decision_ref` tasiyorsa, o D kaydi
+> AYNI commit'te var olmalidir (bkz. MISTAKES.md M-008).
+
+**Karar:** AHN LAZ verisi icin girdi kapisi **iki kademelidir**:
+
+| Kademe | Kriter | Esik | Kaynak | Basarisizlikta |
+|---|---|---|---|---|
+| Sert kapi | 0-E | medyan >= 10 p/m2 | ahn.nl resmi spec (AHN4 tabani) | **FAIL** — Asama 1'e gecilmez |
+| Beklenti | 0-F | medyan >= 20 p/m2 | kendi olcumumuz (37EN1 = 29,3) | **UYARI** — engellemez |
+
+**Gerekce:** AHN5 icin resmi spesifikasyon **yoktur**. Tek belgelenmis sayi
+AHN4'un tabanidir (10) ve gercek veriye gore cok gevsektir; bu yuzden bir kapi
+degil **regresyon alarmi** olarak konmustur. Ikinci kademe bu boslugu doldurur
+ama kaynagi kendi olcumumuz oldugu icin FAIL uretmez. AGENTS.md Bolum 2'deki
+">=20 nokta/m2" ifadesi **kaynaksizdir** ve esik olarak KULLANILMAMISTIR
+(M-005).
+
+**Olculen (2026-09-21):** medyan **35,89 p/m2** -> 0-E PASS, 0-F PASS.
+
+**Onay:** Kullanici, 2026-09-21 ("Iki kademeli onay").
+
+---
+
+## D-016 · [2026-09-21] · Bina sinifi (kod 6) orani ek raporlama sutunu
+
+**Karar:** `reports/ahn_point_density_by_building.csv` dosyasina iki sutun
+eklenir: `building_class_points` (ayakizi icindeki yalnizca sinif 6 noktalari)
+ve `building_class_ratio` (bunlarin tum noktalara orani). **Esik yoktur**;
+Asama 1'de `failed_buildings.csv` ile karsilastirilacaktir.
+
+**Gerekce (kullanici tespiti):** Mevcut `roof_density_pts_m2` ayakizi icindeki
+**tum siniflari** sayiyordu. Catiyi orten agac noktalari (sinif 1) da "cati
+noktasi" olarak sayiliyordu; bu yuzden yogunluk **tam da rekonstruksiyonun
+bozulmasi beklenen binalarda iyi gorunuyordu**. Metrik en cok ihtiyac duyulan
+yerde yaniltiyordu.
+
+**Bolum 12.2 ile iliskisi:** Bu bir **esik degildir** ve hicbir PASS/FAIL
+kararina girmez; var olan bir esigi de gevsetmez. Olcumden sonra eklenmis
+olmasi Bolum 12.2'yi ihlal etmez. Config'e `per_building_class_ratio` olarak
+`threshold: none` ile yazilmistir.
+
+**Olculen sonuc (2026-09-21):** medyan **0,874**, p10 **0,482**.
+**67 bina (%5,3) tam 0,000** — yani ayakizi icinde bol nokta var ama **hicbiri
+sinif 6 degil**.
+
+**Beklenmeyen bulgu — neden "agac ortusu" DEGIL:** Sifir grubunun profili:
+
+| | Sifir grubu (67) | Digerleri (1.192) |
+|---|---|---|
+| Ayakizi medyani | **8,0 m2** | 52,3 m2 |
+| < 50 m2 olan | 64/67 | - |
+| Konut VBO'lu | **%3,0** | %75,2 |
+| Bouwjaar medyani | **2014** | 1966 |
+
+Yani bunlar **kucuk, konut olmayan, sonradan yapilmis yardimci yapilardir**
+(berging, bisiklet deposu, bahce evi) — agac altinda kalmis konutlar degil.
+Kucuk ayakizi tek basina sebep DEGILDIR: A'daki 516 kucuk binanin (<50 m2)
+sinif 6 orani medyani 0,854 ile buyuklerinkine (0,884) neredeyse esittir.
+Sorun kucukluk degil, bu **belirli alt grup**tur.
+
+**Muhtemel mekanizma (kesin degil):** AHN4 sartnamesi Bolum 9.2, BAG
+pandenkaart'inda olmayan "tuinhuisjes zonder fundering" gibi nesnelerin
+**"overig" (=1)** siniflandirilmasini emreder. Bu 67 yapi BAG'de vardir, yani
+kural birebir uymuyor; AHN5'in siniflandirici davranisi belgelenmemistir.
+**Sebep Asama 1'de kapatilacaktir**, simdi varsayim yazilmaz.
+
+**Asama 1'e etkisi:** Bu 67 bina icin rekonstruksiyon basarisiz olursa, sebep
+**ne girdi yogunlugu ne de bizim yontemimizdir** — AHN'in siniflandirma
+politikasidir. Bu ucuncu kategori, Bolum 12.6'nin "nedeni siniflandir" adimina
+eklenmistir.
+
+**Onay:** Kullanici talimati, 2026-09-21.
+
+---
+
+## D-017 · [2026-09-21] · AHN sinif kodlari: 26 belgelendi, 14 cikarimdir
+
+**Karar:** Sinif kodlarinin anlami `docs/ahn_class_codes.md` dosyasinda
+belgeden dogrulanarak kayda gecirilir. Kanit duzeyi **acikca ayrilir**:
+
+| Kod | Anlam | Kanit duzeyi |
+|---|---|---|
+| 0, 1, 2, 6, 9, **26** | nvt, Overig, Maaiveld, Bebouwing, Water, **Kunstwerken** | **BELGELENMIS** — AHN4 Besteksvoorwaarden Bolum 9 tablosu |
+| **14** | hoogspanningsleiding (tel) | **CIKARIM** — AHN belgesinde YOK |
+
+**Normatif kaynak:** *Besteksvoorwaarden inwinning landsdekkende dataset
+AHN2020-2022*, Definitief v1.0, 28-05-2019, Bolum 9. ahn.nl'in **web
+sayfalarinin hicbiri sayisal kod vermez**; yalnizca bu ihale sartnamesi verir.
+
+**14 icin durum:** Sartname "ASPRS LAS 1.4 Standard LIDAR Point Classes"a uyum
+sart kosar (orada 14 = Wire-Conductor) ve ahn.nl Dataroom "Vanaf het AHN4 zijn
+ook hoogspanningsleidingen onderscheiden" der — ama **tabloya eklenmemistir**.
+Veri kaniti cikarimi guclu bicimde destekler: maaiveld ustu medyan 17,31 m,
+5 m hucre basina yalnizca 25,8 nokta, 407 x 1.235 m'lik dar bir koridor.
+Yine de bu **belge degil cikarimdir** ve oyle etiketlenir (M-005).
+
+**AHN5 SINIRLAMASI:** Hicbir kaynak **AHN5**'in siniflandirmasini
+belgelemiyor. Yukaridaki yorumlar AHN4'ten tasinmistir; onlari destekleyen sey
+belge degil, kendi veri olcumumuzdur. `ahn.nl/kwaliteitsbeschrijving` ayrica
+"de definitie van de klasse gebouwen en de klasse kunstwerken in het AHN3 en
+het AHN4 niet identiek is" diye uyarir — tanimlar surumler arasi degisiyor.
+AGENTS.md Bolum 5'e sinirlama olarak islenmistir.
+
+**Asama 1'i dogrudan etkileyen uc tanim** (ayrinti: `docs/ahn_class_codes.md`
+Bolum 5):
+1. **Sinif 6 "cati" degildir** — cepheler, dakkapeller, balkonlar ve gunes
+   panelleri de 6'dir. Cati duzlemi ayrimi Asama 1'de yapilmalidir.
+2. **Sinif 6 noktalari ayakizinin disina dusebilir** — sartname bunu acikca
+   soyler. Kati `within` olcumumuz onlari kaciriyor; M-007'nin kenar etkisine
+   ikinci bir mekanizma ekler.
+3. **Sinif 6 BAG'den turetilmistir** — "ten tijde van de vlucht" BAG
+   pandenkaart'i kullanilir. Dolayisiyla sinif 6, BAG'den **bagimsiz** bir
+   gozlem DEGILDIR ve `building_class_ratio` BAG ayakizinin bagimsiz denetimi
+   olarak kullanilamaz (Bolum 12.10).
+
+**Asama 1 sinif secimi onerisi** P-012 olarak kayda alindi; **onaylanmamistir**.
+
+**Onay:** Kullanici talimati ("Sinif 26 ve 14'u de AHN belgelerinden dogrula,
+Asama 1 oncesi kapansin"), 2026-09-21.
