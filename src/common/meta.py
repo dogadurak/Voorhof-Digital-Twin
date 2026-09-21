@@ -95,15 +95,18 @@ def write_meta(
             notes       — serbest not (ornek: uygulanan CRS donusumu)
     Cikti : Path — yazilan .meta.json dosyasinin yolu
 
-    Rastgelelik iceren bir islemde random_seed None birakilirsa ValueError
-    firlatilir: seedsiz rastgelelik tekrarlanabilirligi bozar.
+    UYARI: Bu fonksiyon islemin rastgelelik icerip icermedigini BILEMEZ, bu yuzden
+    `random_seed=None` birakildiginda hata firlatmaz. Sorumluluk cagirandadir:
+    rastgelelik iceren her islemde seed SABITLENIR ve buraya gecilir (Bolum 8).
+    Seedsiz rastgelelik, "ayni girdiyle iki calistirma ayni sonucu verir" kuralini
+    bozar. Bu kontrol Asama 0.5'te src/qa/check_compliance.py ile otomatiklestirilir.
     """
     output_path = Path(output_path)
 
     input_records: list[dict[str, Any]] = []
     for item in inputs or []:
         item_path = Path(item)
-        record: dict[str, Any] = {"path": str(_relative(item_path))}
+        record: dict[str, Any] = {"path": _relative(item_path)}
         if item_path.is_file():
             record["sha256"] = sha256(item_path)
             record["size_bytes"] = item_path.stat().st_size
@@ -116,7 +119,7 @@ def write_meta(
         "run_id": run_id,
         "git_commit": git_commit(),
         "created_utc": utc_now(),
-        "output": {"path": str(_relative(output_path))},
+        "output": {"path": _relative(output_path)},
         "inputs": input_records,
         "parameters": parameters or {},
         "software": {
@@ -141,13 +144,20 @@ def write_meta(
     return meta_path
 
 
-def _relative(path: Path) -> Path:
-    """Yolu mumkunse depo kokune gore goreli yapar.
+def _relative(path: Path) -> str:
+    """Yolu depo kokune gore goreli, POSIX ayracli dizgiye cevirir.
 
-    Mutlak makine yollari .meta.json'a yazilirsa kayit baska makinede
-    anlamsizlasir; goreli yol tasinabilir kalir.
+    Girdi : path — herhangi bir dosya yolu
+    Cikti : str  — "data/interim/x.tif" bicimli goreli yol
+
+    Iki gerekce:
+    1. Mutlak makine yollari .meta.json'a yazilirsa kayit baska makinede
+       anlamsizlasir; goreli yol tasinabilir kalir.
+    2. Ayrac her zaman "/" yazilir. Windows'ta uretilen bir .meta.json,
+       Linux/Docker'da (Asama 1 roofer, Asama 4 OpenFOAM) okunacaktir;
+       ters boluyle yazilan yol orada eslesmez.
     """
     try:
-        return path.resolve().relative_to(REPO_ROOT)
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
     except ValueError:
-        return path
+        return path.as_posix()
