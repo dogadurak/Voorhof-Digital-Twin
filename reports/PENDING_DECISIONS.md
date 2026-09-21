@@ -8,15 +8,30 @@
 
 | ID | Asama | Konu | Engelledigi is | Aciliyet |
 |---|---|---|---|---|
-| P-001 | 4 | B ve D alan boyutlari | Asama 4 (CFD, mikroklima) | Asama 3 sonunda |
+| P-001 | 4 | B ve D alan boyutlari | Asama 4 (CFD, mikroklima) | Asama 3 sonunda — **erteleme ONAYLANDI** |
 | P-002 | 4 | ENVI-met lisansi | Asama 4 mikroklima | Asama 3 sonunda |
-| P-003 | 0.3 | Disk alani yetersizligi riski | Asama 0.3 indirmeleri | **YUKSEK — hemen** |
+| ~~P-003~~ | 0.3 | ~~Disk alani yetersizligi~~ | — | **KAPANDI 2026-09-21** |
 | P-004 | 1 | AHN z-fark esigi (Kriter 1-C) | Asama 1 baslangici | Asama 0 sonunda |
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
 
 ---
 
-## [2026-09-21] [0.3] P-003 — Disk alani yetersiz olabilir
+## [2026-09-21] [0.3] P-003 — Disk alani  ·  **KAPANDI**
+
+**Cozum (kullanici, 2026-09-21):** Sistem diskinde yer acilacak, hedef **en az 80 GB bos**.
+Harici diske tasima gerekmiyor; `config/paths.yml` degismedi.
+
+**Ek ve daha onemli karar:** Indirmeler disk durumundan **bagimsiz olarak** B alani
+bbox'i ile sinirlanacak — bkz. `DECISIONS.md` → **D-006**. Yer acilmasi ulke geneli
+indirmeyi mesru kilmaz.
+
+**Asama 0.3 on kosulu:** Indirmeye baslamadan once bos alan fiilen olculur ve
+>= 80 GB oldugu dogrulanir. Olculen deger `DATA_LOG.md`'ye yazilir.
+
+<details>
+<summary>Orijinal kayit</summary>
+
+### P-003 (acilis kaydi) — Disk alani yetersiz olabilir
 
 **Soru:** Ham veri nereye indirilecek? Sistem diskinde yalnizca **31,6 GB** bos alan var
 (toplam 452,9 GB, olculdu 2026-09-21).
@@ -44,9 +59,15 @@ dosya olusur; bozuk dosya checksum kontrolunden gecmez ama zaman kaybettirir.
 
 **Not:** Asama 0.1-0.2 bu karardan etkilenmez, devam edilebilir.
 
+</details>
+
 ---
 
-## [2026-09-21] [4] P-001 — B ve D alan boyutlari
+## [2026-09-21] [4] P-001 — B ve D alan boyutlari  ·  **ERTELEME ONAYLANDI**
+
+**Kullanici karari (2026-09-21):** Bu kararin Asama 3 sonuna ertelenmesi onaylandi.
+Gerekce asagida — ozetle: D domeni en yuksek bina H'ye bagli ve H henuz olculmedi.
+Asama 0-3 donanimdan bagimsiz ilerler (AGENTS.md Bolum 3).
 
 **Soru:** B (baglam/tampon) ve D (CFD domeni) alanlari hangi boyutta sabitlenecek?
 

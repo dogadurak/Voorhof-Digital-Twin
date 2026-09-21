@@ -14,6 +14,7 @@
 | D-003 | 2026-09-21 | Sayisi verilmemis esikler | ONAYLANDI |
 | D-004 | 2026-09-21 | Depo adi | ONAYLANDI |
 | D-005 | 2026-09-21 | Asama 0 raporu elle yazilir | ONAYLANDI |
+| D-006 | 2026-09-21 | Indirmeler B alani bbox'i ile sinirlanir | ONAYLANDI |
 
 ---
 
@@ -121,5 +122,63 @@ gecici olarak eldir.
 **Risk ve nasil ele alindi:** Elle yazilan rapor, otomatik raporun yakaladigi eksik
 alanlari kacirabilir. Bu yuzden Bolum 13.1 sablonunun her alani elle raporda da
 eksiksiz doldurulur; bos birakilan alan FAIL sayilir.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-006 · [2026-09-21] · Tum indirmeler B alani bbox'i ile sinirlanir
+
+> **Numaralandirma notu:** Kullanici bu karari "D-004" olarak istemisti. D-004
+> numarasi daha once depo adi karari icin kullanilmis ve AGENTS.md Bolum 11-3 ile
+> commit 61e4677 mesajinda ona atif yapilmisti. Referanslari kirmamak icin bu karar
+> **D-006** olarak kaydedildi. Icerik kullanicinin talimatiyla aynidir.
+
+**Karar:** Hicbir veri kumesi ulke geneli olarak indirilmez. Her indirme, **B alani
+(baglam/tampon) bounding box'i** ile sinirlanir.
+
+| Veri | Sinirlama yontemi |
+|---|---|
+| **BAG** | PDOK **WFS bbox sorgusu**. Ulke geneli ATOM/full download KULLANILMAZ. |
+| **AHN5** | Yalnizca B alanini kesen **alt-fayanslar (subtiles)**. Tam kaartblad gereksizse indirilmez. |
+| **3DBAG** | Yalnizca ilgili **tile'lar** (tile indeksinden secim / `api.3dbag.nl`). |
+| Diger (BGT, NWB) | Ayni ilke: bbox veya tile bazli secim. |
+
+**Gerekce (uc katmanli):**
+
+1. **Disk.** Sistem diskinde olculen bos alan 31,6 GB idi (2026-09-21). Kullanici
+   en az 80 GB'a cikaracak, ancak bbox sinirlamasi **disk durumundan bagimsiz olarak
+   gecerlidir** — yer acilmasi ulke geneli indirmeyi mesru kilmaz.
+2. **Sure ve tekrarlanabilirlik.** Kucuk ve tanimli bir bbox, indirmeyi tekrarlanabilir
+   kilar. Kullanilan bbox `data/DATA_LOG.md`'ye **sorgu parametresi** olarak yazilir
+   (Bolum 12.7) ve boylece ucuncu bir kisi ayni veriyi yeniden cekebilir.
+3. **Ham veri butunlugu.** Yarida kesilen buyuk indirme bozuk dosya uretir; bozuk dosya
+   checksum kontrolunden gecmez ama zaman kaybettirir (Asama 0 kriteri 0-C).
+
+**NEDEN A DEGIL DE B:** AGENTS.md Bolum 3 tampon katmanini zorunlu kiliyor —
+"B katmani atlanamaz. Tamponsuz simulasyonda kenar binalar golgelenmemis gorunur ve
+gunes potansiyeli **sistematik olarak yuksek** cikar." Indirme kapsamini A ile
+sinirlamak bu hatayi veri ediniminde kalici hale getirirdi. Bu nedenle bbox'in
+**alt siniri B'dir**, A degil.
+
+**D domeni icin yeterli mi:** Evet. Bolum 3, D (CFD domeni) icin "Geometri B'den"
+diyor; ayrica geometri indirilmesi gerekmez.
+
+**Uygulama kurallari (Asama 0.3):**
+- bbox degeri `aoi/area_B_context.geojson` dosyasindan **turetilir**, koda gomulmez
+  (Bolum 8: yollar ve parametreler config'ten okunur).
+- bbox CRS'i **EPSG:28992**'dir ve sorguya acikca yazilir (Bolum 1, kural 6).
+- Fayans/tile secimi kacinilmaz olarak bbox'tan biraz genis olur (fayanslar ayriktir).
+  Bu fazlalik atilmaz, ham haliyle saklanir — `data/raw/` degistirilmez (Bolum 12.7).
+  Kirpma yapilacaksa ciktisi `data/interim/` altina yazilir.
+- Secilen her fayans/tile kimligi `DATA_LOG.md`'ye yazilir.
+
+**Dogrulama (Asama 0.4, `verify_data.py`):** Indirilen kapsamin B alanini **tamamen**
+icerdigi kontrol edilir. Icermiyorsa bbox dar demektir ve Bolum 12.6 uygulanir —
+eksik veriyle devam edilmez.
+
+**Risk:** bbox hatali daraltilirsa kenar binalar eksik kalir ve golgeleme yine
+sistematik olarak iyimser cikar. Bu, yonü bilinen bir hatadir; yukaridaki 0.4
+kontrolu bunun icin vardir.
 
 **Onay:** Kullanici, 2026-09-21.

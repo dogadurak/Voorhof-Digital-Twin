@@ -37,6 +37,16 @@ A alanindaki bina sayisi (Asama 0.4'te olculecek) ~400-700 araliginda.
 en yuksek bina yuksekligi H olculdukten sonra hesaplanir — bkz.
 `reports/PENDING_DECISIONS.md` → P-001.
 
+**D-006 nedeniyle ek onem:** B alani artik yalnizca simulasyon tamponu degil,
+**indirme kapsamini da belirliyor** (bkz. `DECISIONS.md` → D-006). Asama 0.3'teki
+BAG WFS sorgusu, AHN alt-fayans secimi ve 3DBAG tile secimi bu dosyanin bbox'indan
+turetilecek. B dar cizilirse kenar binalar hic indirilmez ve golgeleme sistematik
+olarak iyimser cikar — bu hata veri ediniminde kalici hale gelir.
+
+Bu yuzden B cizilirken A'nin her yonunde **en az ~300 m** halka biraktigindan emin ol;
+supheye dusersen genis tarafta kal. Fazla veri atilabilir, eksik veri sonradan fark
+edilmez.
+
 **Kim yapar:** Kullanici (ajan yapmaz).
 **Durum:** BEKLIYOR
 
