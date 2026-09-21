@@ -55,6 +55,8 @@ Cevap hayırsa, o çıktı üretilmez veya açıkça "doğrulanmamış" etiketiy
    olmasa da her aşama sonunda kendini değerlendirir ve PASS/FAIL beyan edersin.
 10. **Aynı hatayı iki kez yapma.** Bölüm 14: her oturuma `MISTAKES.md` okuyarak
     başlarsın, her hatadan kural türetirsin.
+11. **Girdi kalite kapısından geçmeyen veriyle modelleme yapma.** Bölüm 12.12:
+    her girdi, işlenmeden önce ölçülür ve kaydedilir.
 
 ---
 
@@ -149,7 +151,14 @@ güneş potansiyeli **sistematik olarak yüksek** çıkar.
 
 ### AHN doğruluk referansı
 Resmî kwaliteitsbeschrijving: düşey sistematik ≤5 cm, stokastik σ ≤5 cm; yatay ~5 cm
-stokastik / ~8 cm sistematik. AHN5 ihale belgesi düşey σ ≤3 cm veriyor —
+stokastik / ~8 cm sistematik.
+
+> ⚠️ **ÖLÇÜLDÜ 2026-09-21:** Resmî kwaliteitsbeschrijving (ahn.nl) **yalnızca AHN1-AHN4'ü**
+> kapsıyor; **AHN5 için hiçbir spesifikasyon vermiyor.** ≤5 cm değerleri metinde açıkça
+> "AHN2, AHN3 en AHN4" için tanımlı. Nokta yoğunluğu: AHN2/3 ~6-10 p/m² (spesifiye değil),
+> AHN4 ~10-14 p/m² (Schiphol 20-24). **Bölüm 2'deki "AHN5 Randstad ≥20 nokta/m²" ifadesi
+> bu belgeyle desteklenmiyor** — kaynaksız bir iddiadır ve eşik olarak kullanılamaz.
+> Ölçülen gerçek AHN5 yoğunluğu (fayans 37EN1): **29,3 nokta/m²**. AHN5 ihale belgesi düşey σ ≤3 cm veriyor —
 **bu çelişki raporda açıkça not düşülecek**, sessizce tek değer seçilmeyecek.
 
 ---
@@ -165,6 +174,7 @@ Bunlar gizlenmeyecek, raporun "Limitations" bölümünde açıkça yazılacak.
 | **Güneş doğrulaması** | Resmî açık ulusal zonnekaart yok (Zonatlas/MapServices ticari) | PVGIS — ama **aynı fiziksel büyüklük kuralı** geçerli (12.4) |
 | **Rüzgâr doğrulaması** | Bağımsız açık CFD benchmark zayıf | NEN 8100 literatür vakaları; sonuç en fazla "literatürle tutarlı" |
 | **LST çözünürlüğü** | Landsat termal gerçekte 100 m, 30 m'ye resample | Tek mahalle için kaba. ECOSTRESS (~70 m) denenebilir. Sınırlama yazılacak |
+| **3DBAG karışık AHN kaynağı** | B alanındaki 7.376 binanın **%94,9'u AHN5 (2023)**, %3,5'i **AHN3 (2014)**, %1,6'sı AHN4 (2020) tabanlı — `b3_pw_bron` ile ölçüldü 2026-09-21 | Bizim girdimiz tümüyle AHN5 (D-013). **377 bina** için kriter 1-B'deki fark, rekonstrüksiyon kalitemizi değil binanın 2014'ten beri değişmiş olmasını yansıtabilir. Bu binalar 1-B'de **ayrı raporlanır**; toplu RMSE'ye karıştırılmaz |
 | **PDOK BAG WFS kısmi** | Servis BAG'in tam kopyası değil; çoklu adresli nesnelerde yalnızca **hoofdadres** sunuluyor, nevenadressen yok (ölçüldü 2026-09-21, D-008) | Aşama 0.2 için etkisiz. **Aşama 2 EP-Online eşleştirmesinde** (12.3 hiyerarşisi) eksik eşleşme üretebilir. Aşama 2'den önce tam BAG dağıtımı (ATOM/LVBAG) ile fark ölçülüp raporlanacak — bkz. P-007 |
 | **3DBAG bağımsız değil** | 3DBAG de AHN + roofer ile üretiliyor | Karşılaştırma **"tutarlılık kontrolü"** olarak adlandırılır, "bağımsız doğrulama" değil. Bağımsız kontrol: AHN nokta bulutuna doğrudan z-fark analizi |
 | **PC6 bina-level değil** | Stedin verisi en az 10 bağlantı birleştirilmiş anonim agregat | Bina bazında atama YAPILMAZ. Karşılaştırma PC6 kümesi düzeyinde (bkz. 12.3) |
@@ -500,6 +510,48 @@ Aynı ham veriden türetilmiş iki çıktı bağımsız ground truth sayılmaz.
 Uygulama: her aşama sonunda **QA kontrol listesi** (Bölüm 10) ayrı bir adım olarak
 çalıştırılır ve sonucu rapora yazılır. Mümkün olduğunda ikinci bir hesaplama yolu kullanılır
 (örn. geometri için hem 3DBAG karşılaştırması hem AHN nokta bulutuna doğrudan z-fark analizi).
+
+### 12.12 Girdi kalite kapısı
+
+> **Her aşamada, girdi verisi işlenmeden ÖNCE kalitesi ölçülür ve kaydedilir —
+> kapsama, eksik değer, çözünürlük/yoğunluk, tarih. Ölçüm, o veri tipinin resmî
+> spesifikasyonu veya makul bir beklentiyle karşılaştırılır; eşik hesaptan önce
+> config'e yazılır. Girdi kapısını geçmeyen veriyle modelleme yapılmaz.**
+
+**Amaç:** Sonraki aşamada çıkan bir hatanın **girdi mi yöntem mi** kaynaklı
+olduğunu baştan ayırt edebilmek. Girdi kalitesi ölçülmemişse, Aşama 1'de çıkan
+bir yükseklik sapmasının rekonstrüksiyon algoritmasından mı yoksa seyrek nokta
+bulutundan mı geldiği **sonradan ayrıştırılamaz** — ve bu durumda Bölüm 12.6'nın
+"nedeni sınıflandır" adımı uygulanamaz hale gelir.
+
+**Her girdi için ölçülecek dört boyut:**
+
+| Boyut | Ne sorulur |
+|---|---|
+| **Kapsama** | Veri, çalışma alanının tamamını kapsıyor mu? Boşluk nerede? |
+| **Eksik değer** | Eksik/NoData oranı nedir? Mekânsal olarak kümelenmiş mi? |
+| **Çözünürlük / yoğunluk** | Beklenen çözünürlüğü sağlıyor mu? Dağılımı nasıl? |
+| **Tarih** | Edinim tarihi nedir? Diğer katmanlarla zaman farkı ne kadar? |
+
+**Kural:**
+1. Eşik, veriyi görmeden önce `config/acceptance_criteria.yml`'ye yazılır (12.2).
+2. Karşılaştırma referansı **resmî spesifikasyondur**; yoksa gerekçesi yazılmış
+   makul bir beklentidir. Spesifikasyon iddiası kaynağından doğrulanır (M-005).
+3. Kapıyı geçmeyen veriyle sonraki aşamaya **geçilmez** (12.6 uygulanır).
+4. Ölçülen değerler `data/DATA_LOG.md`'ye ve aşama raporuna yazılır — geçse de
+   geçmese de.
+
+**Uygulanacağı yerler (bilinen):**
+
+| Veri | Kapı ölçümü |
+|---|---|
+| **AHN LAZ** | nokta yoğunluğu (nokta/m²), sınıf dağılımı, kapsama boşluğu, uçuş tarihi |
+| **KNMI saatlik** | eksik saat oranı, kesinti kümeleri, zaman referansı |
+| **Sentinel-2 / Landsat** | bulut oranı, sahne kapsaması, geçiş tarihi |
+| **Stedin PC6** | boş/gizlenmiş PC6 oranı, birleştirilmiş PC6 sayısı |
+| **BAG / 3DBAG** | kapsama, sürüm, öznitelik bütünlüğü, anlık görüntü tarihi |
+
+Bu liste kapalı değildir; yeni bir veri tipi eklendiğinde kapı ölçümü de tanımlanır.
 
 ### 12.11 Kullanıcı onayı gereken kararlar
 

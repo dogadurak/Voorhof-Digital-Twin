@@ -39,6 +39,56 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
+## 3DBAG LOD2 (CityJSONFeature)  ·  2026-09-21T14:59:55Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `data/raw/3dbag/3dbag_pand.city.jsonl` |
+| kaynak_url | https://api.3dbag.nl/collections/pand/items |
+| saglayici | TU Delft 3D geoinformation |
+| surum | collection 2.0 |
+| veri_uretim_tarihi | TODO_DOLDURULACAK |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-21T14:59:55Z |
+| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| sorgu_parametreleri | bbox=83323.9,444466.0,85102.5,446843.6 (EPSG:28992) = B + 50 m; sayfalama limit=1000 |
+| crs | EPSG:7415 |
+| zaman_referansi | b3_pw_datum dagilimi: {'2023': 6999, '2020': 116, '2014': 261} |
+| lisans | CC BY 4.0 (AGENTS.md Bolum 7) - attribution ZORUNLU |
+| attribution_sarti | TODO: 3DBAG resmi attribution metni kaynagindan alinacak |
+| sha256 | `48055908c04de127bd49ce88e4a9937a7fef7476b60840e9b369a272a3c61457` |
+| dosya_boyutu_bytes | 43246008 |
+| run_id | RUN-2026-09-21-014 |
+| uygulanan_islemler | yok (ham indirme) |
+
+7376 CityJSONFeature, 7376 benzersiz pand. numberMatched=14754 CityObject sayar (Building + BuildingPart), pand DEGIL. NOKTA BULUTU KAYNAGI (b3_pw_bron): {'ahn5': 6999, 'ahn4': 116, 'ahn3': 261}. Yil (b3_pw_datum): {'2023': 6999, '2020': 116, '2014': 261}. Bizim girdimiz AHN5'tir (D-013); AHN5 payi %94.9. OZNITELIKLER (62): b3_bag_bag_overlap, b3_bouwlagen, b3_dak_type, b3_extrusie, b3_h_dak_50p, b3_h_dak_70p, b3_h_dak_max, b3_h_dak_min, b3_h_maaiveld, b3_h_nok, b3_is_glas_dak, b3_kas_warenhuis, b3_kwaliteitsindicator, b3_mutatie_ahn3_ahn4, b3_mutatie_ahn4_ahn5, b3_n_nok, b3_n_vlakken, b3_nodata_fractie_ahn3, b3_nodata_fractie_ahn4, b3_nodata_fractie_ahn5, b3_nodata_radius_ahn3, b3_nodata_radius_ahn4, b3_nodata_radius_ahn5, b3_opp_buitenmuur, b3_opp_dak_plat, b3_opp_dak_schuin, b3_opp_grond, b3_opp_scheidingsmuur, b3_puntdichtheid_ahn3, b3_puntdichtheid_ahn4, b3_puntdichtheid_ahn5, b3_pw_bron, b3_pw_datum, b3_pw_onvoldoende, b3_pw_selectie_reden, b3_rmse_lod12, b3_rmse_lod13, b3_rmse_lod22, b3_t_run, b3_val3dity_lod12, b3_val3dity_lod13, b3_val3dity_lod22, b3_volume_lod12, b3_volume_lod13, b3_volume_lod22, begingeldigheid, documentdatum, documentnummer, eindgeldigheid, eindregistratie, fid, geconstateerd, identificatie, oorspronkelijkbouwjaar, status, tijdstipeindregistratielv, tijdstipinactief, tijdstipinactieflv, tijdstipnietbaglv, tijdstipregistratie, tijdstipregistratielv, voorkomenidentificatie
+
+---
+## AHN5 LAZ nokta bulutu (GeoTiles alt-fayanslari)  ·  2026-09-21T14:53:49Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `data/raw/ahn/AHN5_T/37EN1_14.LAZ` |
+| kaynak_url | https://geotiles.citg.tudelft.nl/AHN5_T |
+| saglayici | AHN (Rijkswaterstaat/provincies/waterschappen) - fayanslama: TU Delft GeoTiles |
+| surum | AHN5, kampanya etiketi '2023_C' (dosya adindan) |
+| veri_uretim_tarihi | 2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi) |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-21T14:53:49Z |
+| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| sorgu_parametreleri | B bbox + 50 m (D-010); secilen alt-fayanslar: 37EN1_14, 37EN1_19, 37EN1_24, 37EN1_15, 37EN1_20, 37EN1_25, 37EN2_11, 37EN2_16, 37EN2_21 |
+| crs | EPSG:7415 |
+| zaman_referansi | CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi 'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu). |
+| lisans | TODO: AHN lisans kosulu ahn.nl'den dogrulanacak |
+| attribution_sarti | TODO |
+| sha256 | `184a4c766f35642c1561681cac5ae63dc16c21420a1277d5c2047e2f7861594e` |
+| dosya_boyutu_bytes | 307816585 |
+| run_id | RUN-2026-09-21-012 |
+| uygulanan_islemler | yok (ham indirme). Alt-fayanslar 20 m ortusme tasir (GeoTiles tasarimi). |
+
+9 alt-fayans, toplam 420007378 nokta, 3.12 GB. Kapsama B+50 m icin DOGRULANDI. Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. CRS dosya ici WKT'den okundu: EPSG:7415 (RD New + NAP). KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; AHN5 LAZ icin GeoTiles kullanildi.
+
+---
 ## ON KOSUL OLCUMU — disk alani  ·  2026-09-21
 
 Asama 0.3 indirmelerinin on kosulu (P-003). Tahmin degil, `shutil.disk_usage`

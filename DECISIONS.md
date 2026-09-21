@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-013**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-015**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -24,6 +24,8 @@
 | D-010 | 2026-09-21 | AHN/3DBAG indirmelerine +50 m guvenlik payi | ONAYLANDI |
 | D-011 | 2026-09-21 | C alani kural tabanli secilir; hesap 0.3 sonrasina | ONAYLANDI |
 | D-012 | 2026-09-21 | C yukseklik esigi: 25 m birincil, 37,5 m on-kayitli yedek | ONAYLANDI |
+| D-013 | 2026-09-21 | Girdimiz AHN5 (kapsama tamsa), 3DBAG surumunden bagimsiz | ONAYLANDI |
+| D-014 | 2026-09-21 | Girdi kalite kapisi ilkesi (AGENTS.md 12.12) | ONAYLANDI |
 
 ---
 
@@ -692,5 +694,97 @@ Blok, A'nin yukseklik dagilimi **henuz bilinmeden** yazildi; 3DBAG verisi Asama
 0.3'te inecek. Dolayisiyla "baskin sinif" ve "temsil" tanimlari sonuca bakilarak
 ayarlanamamistir. **Git gecmisi bunu kanitlar:** bu commit, 3DBAG indirme
 commit'inden oncedir. Bolum 12.2'nin istedigi sey tam olarak budur.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-013 · [2026-09-21] · Girdimiz AHN5'tir; 3DBAG'in AHN surumunden bagimsiz
+
+**Karar (3DBAG'e BAKILMADAN, on-kayit):** AHN5 B alanini **tam kapsiyorsa**
+rekonstruksiyon girdimiz **AHN5** olur. 3DBAG'in hangi AHN surumunu kullandigi
+bu secimi **degistirmez**.
+
+**Gerekce:**
+
+1. **Zamansal uyum.** AHN5, AHN4'e gore BAG anlik goruntusune (2026-09-21) daha
+   yakindir. Aradaki fark ne kadar kucukse, Asama 1'de "BAG'da var ama nokta
+   bulutunda yok" (veya tersi) turunden basarisiz rekonstruksiyon o kadar az olur.
+2. **Birincil bagimsiz kontrolumuz 3DBAG DEGILDIR.** AGENTS.md Bolum 6, Asama 1
+   icin iki kontrol tanimliyor: 3DBAG karsilastirmasi (**tutarlilik kontrolu**,
+   cunku 3DBAG de AHN + roofer ile uretiliyor — Bolum 5 ve 12.10) ve **AHN nokta
+   bulutuna dogrudan z-fark analizi** (bagimsiz kontrol). Girdi surumunu 3DBAG'e
+   gore secmek, bagimli olani bagimsiz olanin onune koymak olurdu.
+
+**Surum farki cikarsa ne yapilir:**
+- Kriter **1-B** zaten `consistency_check` etiketlidir; bu etiket korunur.
+- Olculen fark (3DBAG'in `b3_puntdichtheid_ahn4` / `b3_puntdichtheid_ahn5`
+  alanlarindan) **AGENTS.md Bolum 5'e sinirlama olarak** ve
+  `reports/01_geometry_validation.md`'ye yazilir.
+- Raporda acikca belirtilir: 1-B'deki sapmanin bir kismi **bizim rekonstruksiyon
+  kalitemizden degil, AHN4 ile AHN5 arasindaki farktan** kaynaklaniyor olabilir.
+  Bu fark ayristirilamaz; ayristirilmis gibi sunulmaz.
+
+**Dikkat — iki yonlu etki, ikisi de yazilacak:** Farkli AHN surumu kullanmak
+karsilastirmayi bir anlamda **daha bagimsiz** yapar (farkli girdi verisi), ama
+**daha az yorumlanabilir** kilar (fark konfaunde olur). Rapor iki yonu de belirtir;
+yalnizca lehte olani yazmak Bolum 1 kural 5'in (belirsizligi gizleme) ihlalidir.
+
+**Kapsama tam degilse:** D-014 oncesi 0.3 planinda kararlastirildigi gibi
+**AHN4'e tamamen dusulur**; AHN4 ve AHN5 fayanslari **karistirilmaz**. Karisik
+kullanim B icinde nokta yogunlugu ve ucus tarihinde mekansal sureksizlik yaratir;
+Asama 1 yukseklik hatasi o sinirda sistematik olur ve sonradan ayristirilamaz.
+
+### OLCULEN SONUC (2026-09-21, 3DBAG indirildikten sonra)
+
+3DBAG collection **v2023.10.08**. B+50 m icindeki 7.376 bina icin `b3_pw_bron`:
+
+| Kaynak | Bina | Pay | `b3_pw_datum` |
+|---|---|---|---|
+| **ahn5** | 6.999 | **%94,9** | 2023 |
+| ahn3 | 261 | %3,5 | **2014** |
+| ahn4 | 116 | %1,6 | 2020 |
+
+`b3_pw_onvoldoende` = False (7.376/7.376) - 3DBAG nokta bulutunu tum binalar
+icin yeterli bulmus.
+
+**Sonuc:** Binalarin %94,9'unda 3DBAG bizimle **ayni kaynagi** (AHN5, 2023)
+kullanmis. Kalan **377 bina** icin surum farki var ve bu, D-013'te ongorulen
+sinirlamanin somut halidir. Kriter 1-B bu binalar icin **ayristirilarak**
+raporlanacaktir (bkz. docs/validation_protocol.md 1.1b ve AGENTS.md Bolum 5).
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-014 · [2026-09-21] · Girdi kalite kapisi — genel ilke
+
+**Karar:** AGENTS.md'ye **Bolum 12.12** olarak eklendi ve Bolum 1'in baglayici
+kurallarina **11. kural** olarak islendi.
+
+> Her asamada, girdi verisi islenmeden ONCE kalitesi olculur ve kaydedilir —
+> kapsama, eksik deger, cozunurluk/yogunluk, tarih. Olcum, o veri tipinin resmi
+> spesifikasyonu veya makul bir beklentiyle karsilastirilir; esik hesaptan once
+> config'e yazilir. Girdi kapisini gecmeyen veriyle modelleme yapilmaz.
+
+**Amac:** Sonraki asamada cikan bir hatanin **girdi mi yontem mi** kaynakli
+oldugunu bastan ayirt edebilmek. Bu, Bolum 12.6'nin "nedeni siniflandir: veri
+kaynakli mi, kod kaynakli mi, parametre mi, yontem mi" adimini **uygulanabilir**
+kilar. Girdi kalitesi olculmemisse o siniflandirma sonradan yapilamaz.
+
+**Ilk uygulama:** Asama 0.3'teki LAZ butunluk kontrolu (nokta yogunlugu, sinif
+dagilimi, kapsama bosluklari, ucus tarihi).
+
+**Planlanan sonraki uygulamalar** (kullanici tarafindan belirtildi):
+
+| Veri | Kapi olcumu |
+|---|---|
+| KNMI saatlik | eksik saat orani, kesinti kumeleri |
+| Sentinel-2 / Landsat | bulut orani, sahne kapsamasi, gecis tarihi |
+| Stedin PC6 | bos/gizlenmis PC6 orani, birlestirilmis PC6 sayisi |
+
+**Neden bu bir metodoloji degisikligi sayilir (Bolum 12.11):** Ilke, her asamanin
+kabul kriterlerine yeni bir sinif ekliyor — "cikti kalitesi" yaninda **"girdi
+kalitesi"**. Bu yuzden karar olarak kaydedildi ve AGENTS.md'ye islendi.
 
 **Onay:** Kullanici, 2026-09-21.

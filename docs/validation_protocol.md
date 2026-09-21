@@ -47,6 +47,30 @@ uretir ve bu kayma toplu RMSE tarafindan maskelenir. Bu nedenle
 `config/acceptance_criteria.yml` → `global_rules.bias_with_rmse` geregi
 **bias her zaman RMSE ile birlikte** raporlanir.
 
+### 1.1b 3DBAG'in AHN kaynagina gore AYRISTIRMA (olculdu 2026-09-21)
+
+Kriter 1-B'de karsilastirilan 3DBAG modelleri **tek bir nokta bulutundan
+uretilmemistir**. B alanindaki 7.376 bina icin `b3_pw_bron`:
+
+| Kaynak | Bina | Yil | Bizim girdimizle (AHN5 2023) ayni mi |
+|---|---|---|---|
+| `ahn5` | 6.999 (%94,9) | 2023 | **EVET** |
+| `ahn3` | 261 (%3,5) | **2014** | hayir - 9 yil fark |
+| `ahn4` | 116 (%1,6) | 2020 | hayir - 3 yil fark |
+
+**Baglayici kural:** Kriter 1-B'nin RMSE ve bias degerleri **kaynaga gore
+ayristirilarak** raporlanir. `ahn5` tabanli 6.999 bina ana metrigi olusturur;
+`ahn3`/`ahn4` tabanli 377 bina **ayri satirda** verilir.
+
+**Gerekce:** Bu 377 bina icin olculen fark, bizim rekonstruksiyon kalitemizi
+degil **binanin 2014 veya 2020'den beri gecirdigi fiziksel degisimi** yansitiyor
+olabilir. Ikisini tek bir RMSE'de toplamak, yontem hatasi ile gercek degisimi
+ayirt edilemez hale getirir — Bolum 12.6'nin "nedeni siniflandir" adimini
+uygulanamaz kilar.
+
+`b3_mutatie_ahn3_ahn4` ve `b3_mutatie_ahn4_ahn5` oznitelikleri 3DBAG'in kendi
+degisim tespitini tasir; ayristirmada yardimci kanit olarak kullanilir.
+
 ### 1.2 AHN nokta bulutuna dogrudan z-fark → `validated` (bagimsiz)
 
 Bu, projedeki **tek gercekten bagimsiz** geometri kontrolu. Esik henuz onaylanmadi
