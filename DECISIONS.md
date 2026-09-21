@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-010**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-011**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -21,6 +21,7 @@
 | D-007 | 2026-09-21 | AOI merkezi kural tabanli secilir + kor karsilastirma | ONAYLANDI |
 | D-008 | 2026-09-21 | 0.2a metrik paydalari ve status filtresi | ONAYLANDI |
 | D-009 | 2026-09-21 | AOI = 7 resmi konut buurt'u; aday izgarasi iptal | ONAYLANDI |
+| D-010 | 2026-09-21 | AHN/3DBAG indirmelerine +50 m guvenlik payi | ONAYLANDI |
 
 ---
 
@@ -439,6 +440,14 @@ konut orani olculebilir bicimde iyilesiyor, PC6 homojenligi guclenir), ama
 "sanayi alanlarini cikardik" ifadesi bu veriyle **tam dogru degildir**.
 Raporda bu nitelendirme yer alacaktir.
 
+**Dislamanin dogru cercevesi: KARMA KULLANIM (kullanici notu, 2026-09-21).**
+Gerekce "sanayi" degil, **karma kullanim**dir. Bu, AGENTS.md Bolum 2'nin
+Binnenstad'i eleme gerekcesiyle **birebir ayni ilkedir**: "Karma kullanim
+(dukkan+ofis+konut) -> PC6 agregati konut modeliyle kiyaslanamaz hale gelir."
+Ayni ilke Voorhof'un ici icin de tutarli bicimde uygulanmis olur. Bu cerceve
+hem olculen veriye uyar (dislanan buurt'lar %84,4 konut, yani saf sanayi degil
+karma) hem de projenin kendi elemek olcutuyle celismez.
+
 ### SANAYI BUURT'LARI MODELDEN CIKARILMIYOR
 
 Dislama **yalnizca A'nin raporlama ve dogrulama kapsami** icindir.
@@ -467,5 +476,47 @@ bu yuzden context binalari icin de uretilir. Bos birakilan bir enerji alani
 Sanayi buurt'lariyla kesisen PC6 kumeleri Asama 3 karsilastirmasindan
 **dislanacak ve sayilari raporlanacaktir**. `docs/validation_protocol.md`'ye
 islendi; acik kalem P-009.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-010 · [2026-09-21] · AHN ve 3DBAG indirmelerine +50 m guvenlik payi
+
+**Karar:** Asama 0.3'te **AHN ve 3DBAG** indirilirken sorgu kapsami
+**B bbox + 50 m** olur. BAG icin ek pay gerekmez (gerekce asagida).
+
+```
+AHN / 3DBAG sorgu kapsami = bbox(B) genisletilmis 50 m
+```
+
+**Gerekce — olculen sorun:** Asama 0.2'de B'nin guney kenarinda indirme
+kapsamiyla arasindaki pay **0,0 m** olctuldu (B tam tegetti). Vektor BAG icin bu
+sorun degildi: WFS bbox'a **degen** ozellikleri butun halinde doner, bina
+geometrisi kesilmez.
+
+**AHN ve 3DBAG icin ayni sey gecerli DEGILDIR:**
+- **AHN** bir nokta bulutu/raster'dir. Sinirda kirpilirsa B'nin kenarindaki
+  binalarin **catisi eksik nokta ile** rekonstruksiyona girer. Sonuc sessizdir:
+  bina uretilir ama cati yuzeyi eksik nokta uzerinden uydurulur; `b3_nodata_fractie`
+  yukselir ve yukseklik hatasi **kenarda sistematik** olur.
+- **3DBAG** fayans (tile) tabanlidir. Sinira tegen bir bbox, kenardaki bir binanin
+  ait oldugu fayansi **secim disi birakabilir**.
+
+**Neden 50 m:** Bir binanin plan boyutu ve cati sacagi icin yeterli; indirme
+hacmini anlamli olcude buyutmez. Sayi olculmus bir esik degil, muhendislik
+paydir ve boyle kaydedilir.
+
+**D-006 ile iliski — CELISMEZ:** D-006 "hicbir veri kumesi ulke geneli indirilmez,
+kapsam B bbox'i ile sinirlanir" diyor. D-010 bu ilkeyi degistirmez; ayni sinirin
+uzerine dar bir guvenlik payi ekler. Kapsam hala B merkezlidir.
+
+**Raporlanan alan degismez:** Pay yalnizca **indirme** kapsamini etkiler.
+Analiz B'de, **raporlama A'da** kalir (Bolum 3). Fazladan inen veri atilmaz,
+`data/raw/` icinde ham haliyle durur (Bolum 12.7).
+
+**Dogrulama (Asama 0.4, `verify_data.py`):** indirilen AHN/3DBAG kapsaminin
+B'yi **en az 50 m payla** icerdigi kontrol edilir. Pay saglanmiyorsa Bolum 12.6
+uygulanir; eksik kapsamla devam edilmez.
 
 **Onay:** Kullanici, 2026-09-21.

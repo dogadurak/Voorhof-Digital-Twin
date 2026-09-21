@@ -15,7 +15,7 @@
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
 | ~~P-006~~ | 0.2a | ~~woonfunctie ve bina sayimi paydalari~~ | — | **KAPANDI 2026-09-21 (D-008)** |
 | P-007 | 2 | PDOK BAG WFS kismi — nevenadres yok | Asama 2 EP-Online eslestirmesi | Asama 1 sonunda |
-| P-008 | 0.2 | "Verbouwing pand" sayima girsin mi? | Teyit (etkisi dusuk) | Asama 0 sonunda |
+| ~~P-008~~ | 0.2 | ~~"Verbouwing pand" sayima girsin mi?~~ | — | **KAPANDI 2026-09-21** |
 | P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
 
@@ -280,9 +280,15 @@ Asama 0.2 ve 0.3 etkilenmez.
 
 ---
 
-## [2026-09-21] [0.2a] P-008 — "Verbouwing pand" sayima girsin mi?
+## [2026-09-21] [0.2] P-008 — "Verbouwing pand"  ·  **KAPANDI**
 
-**Durum: TEYIT BEKLIYOR.** Ajan bir okuma secti ve uyguladi; adim 4'ten once
+**Karar (kullanici, 2026-09-21):** `Verbouwing pand` (77) ve `Verbouwing
+verblijfsobject` (34) sayima **DAHIL**. Ajanin uyguladigi okuma onaylandi.
+Config `stage_0_2.status_filter` aynen kaliyor; degisiklik gerekmedi.
+
+<details><summary>Acilis kaydi</summary>
+
+**Durum: TEYIT BEKLIYORDU.** Ajan bir okuma secti ve uyguladi; adim 4'ten once
 teyit edilmeli. Yanlissa config duzeltilir (hesap henuz yapilmadi).
 
 **Ayrisma:** Talimatin **lafzi** sayima yalnizca "Pand in gebruik" ve
@@ -304,8 +310,10 @@ de dahil edildi.
 PDOK bu WFS'te onlari sunmuyor. Filtrenin fiili islevi yikilmislari elemek degil,
 **henuz yapilmamislari** elemektir.
 
-**Eger DISLANSIN dersen:** config'te `pand_include` ve `vbo_include` listelerinden
-iki satir cikarilir; hesap henuz yapilmadigi icin Bolum 12.2 ihlali olusmaz.
+**Eger DISLANSIN denseydi:** config'te iki satir cikarilacakti; hesap yapilmamisti,
+Bolum 12.2 ihlali olusmayacakti.
+
+</details>
 
 ---
 

@@ -407,7 +407,7 @@ stage_0_2:
       literal listesi bunlari saymiyordu, ancak belirtilen amac fiilen var olmayan
       yapilari dislamakti; tadilattaki bir bina fiziksel olarak MEVCUTTUR ve catisi
       gunes/golge analizine girer. Dislansaydi 77 gercek bina (%1,0) sayim disi
-      kalirdi. Bu okuma kullanici onayina sunulmustur — P-008.
+      kalirdi. Bu okuma kullanici tarafindan ONAYLANDI (2026-09-21, P-008 kapandi).
     gesloopt_note: >
       Kullanici "BAG WFS yikilmis binalari da iceriyor" demisti. OLCUM: indirilen
       7704 pand icinde "Pand gesloopt" veya benzeri yikilmis durum kaydi YOKTUR.
