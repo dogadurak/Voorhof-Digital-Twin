@@ -24,6 +24,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
 | M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | KAPALI | 0 |
 | M-006 | 2026-09-21 | 0.2 | Konsol kodlamasi bir DOGRULAMA log satirini sessizce dusurdu | KAPALI | 0 |
+| M-007 | 2026-09-21 | 0.3 | Mekansal predicate yonu varsayildi, tum binalar 0 nokta saydi | KAPALI | 0 |
 
 ---
 
@@ -338,3 +339,63 @@ terminalde hem disk logunda gorundu, `Logging error` izi kalmadi.
 
 **Durum:** KAPALI (iki katmanli duzeltme yazildi ve fiilen dogrulandi;
 kalici otomatik kontrol Asama 0.5'e planlandi)
+
+---
+
+## M-007 · [2026-09-21] · Asama 0.3
+
+**Ne oldu:**
+Bina bazli cati yogunlugu hesabinda `STRtree.query(pts, predicate="contains")`
+kullanildi. Sonuc: **A'daki 1.259 binanin TAMAMI 0 nokta saydi** ve rapor
+"1259 bina 10 p/m2 altinda (%100)" dedi.
+
+**Kok neden:**
+Shapely 2.x'te `STRtree.query` predicate'i **GIRDI geometrisine** uygular:
+`input.predicate(tree)`. Nokta-poligon iliskisinde bu `nokta.contains(poligon)`
+demektir ve **her zaman False**'tur. Dogru yon `within`
+(`nokta.within(poligon)`).
+
+Yon varsayildi; API belgesinden veya bir testten dogrulanmadi.
+
+**Neden fark edildi — ve neden bu SANSTI:**
+Sonuc bariz sacmaydi (%100 bina esik altinda), o yuzden goze carpti.
+**Daha ince bir sapma olsaydi yakalanmayabilirdi.** Ornegin yon dogru ama
+predicate `intersects` olsaydi, sinirdaki noktalar da sayilir ve yogunluk
+kucuk binalarda sistematik olarak YUKSEK cikardi — bu, bariz olmayan ve
+sessizce raporlanan bir hata olurdu.
+
+Onceki kontrollerin hicbiri bunu yakalayamazdi: CRS dogruydu, nokta sayisi
+dogruydu, dosyalar saglamdi. Hata tamamen **geometrik yuklem semantigindeydi**.
+
+**Turetilen kural:**
+Bir mekansal yuklem (predicate) kullanilmadan once yonu **iki noktali bir
+birim testle** dogrulanir: biri geometrinin icinde, biri disinda; test tam
+olarak 1 eslesme vermelidir. Test kod icinde kalir ve **her calistirmada**
+kosar — kutuphane surumu degisip semantik kayarsa sessiz sifir sayim yerine
+gurultulu hata alinir.
+
+**Nerede uygulanir:** `src/00_acquisition/verify_ahn_quality.py`
+(`_assert_predicate_direction()`), mekansal yuklem kullanan her script
+
+**Otomatik kontrol:** Fonksiyonun kendisi otomatik kontroldur; `main()`
+basinda kosar. `src/qa/check_compliance.py` (Asama 0.5) ayrica projedeki tum
+`predicate=` kullanimlarini tarayip yanlarinda yon testi olup olmadigini
+kontrol edecek.
+
+**Duzeltme sonrasi olculen (2026-09-21):**
+
+| | Hatali (`contains`) | Duzeltilmis (`within`) |
+|---|---|---|
+| Bina bazli medyan | 0,00 p/m2 | **38,22 p/m2** |
+| p10 | 0,00 | 28,27 |
+| 10 p/m2 altinda | 1.259 (%100) | **1 (%0,1)** |
+
+**Durum:** KAPALI (yon duzeltildi, kalici oz-test eklendi, olcum tekrarlandi)
+
+**Ikincil bulgu — kucuk ayakizlerinde kenar etkisi:**
+Tek dusuk bina (`0503100000011569`, 18,03 m2, 9,65 p/m2) kucuk bir yapidir.
+Kati `within` kurali poligon sinirindaki noktalari eler; elenen bolge cevreyle
+orantili, sayilan bolge alanla orantilidir. Bu yuzden kucuk ayakizlerinde
+yogunluk **sistematik olarak biraz dusuk** cikar. Bu bir veri sorunu DEGILDIR,
+olcum tanimindan gelir ve Asama 1'de dusuk yogunluklu binalar yorumlanirken
+akilda tutulmalidir.

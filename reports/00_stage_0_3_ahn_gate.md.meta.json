@@ -1,0 +1,27 @@
+{
+  "run_id": "RUN-2026-09-21-016",
+  "git_commit": "77fdfbb-dirty",
+  "created_utc": "2026-09-21T15:14:03Z",
+  "output": {
+    "path": "reports/00_stage_0_3_ahn_gate.md",
+    "sha256": "60229fdeb01f949642b5fc4d979e9c2deff58c1be04630321dd8887f7daf2531",
+    "size_bytes": 2054
+  },
+  "inputs": [],
+  "parameters": {
+    "median_density": 35.89,
+    "p10": 17.79,
+    "zero_cells_pct": 0.08997984451482868,
+    "buildings_below_10": 1,
+    "hard_gate": 10.0,
+    "expectation": 20.0,
+    "gate_pass": true,
+    "expectation_pass": true
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Esikler config'ten okundu; olcumden once muhurlendi (D-015)."
+}
