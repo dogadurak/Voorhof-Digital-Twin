@@ -39,6 +39,29 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
+## ON KOSUL OLCUMU — disk alani  ·  2026-09-21
+
+Asama 0.3 indirmelerinin on kosulu (P-003). Tahmin degil, `shutil.disk_usage`
+ile **olculmustur**.
+
+| Alan | Deger |
+|---|---|
+| surucu | `C:` |
+| toplam | 452,9 GB |
+| kullanilan | 325,4 GB |
+| **bos** | **127,5 GB** |
+| hedef | >= 80 GB |
+| sonuc | **SAGLANDI** |
+| onceki olcum | 31,6 GB (P-003 acilisinda) |
+| kazanilan | 95,9 GB |
+
+Not: Asama 0.3'te her indirme oncesi beklenen boyut `Content-Length` veya
+`resultType=hits` ile olculecek ve bos alanla karsilastirilacaktir (M-004
+kural 3). Disk doluysa indirme yarida kesilir ve bozuk dosya olusur.
+
+---
+
+
 ## AOI — B — baglam/tampon  ·  2026-09-21T12:08:36Z
 
 | Alan | Deger |

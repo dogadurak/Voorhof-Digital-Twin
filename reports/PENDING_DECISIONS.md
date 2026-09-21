@@ -18,7 +18,7 @@
 | ~~P-008~~ | 0.2 | ~~"Verbouwing pand" sayima girsin mi?~~ | — | **KAPANDI 2026-09-21** |
 | P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
-| P-011 | 0.3 | C alani secimi + ENVI-met yukseklik esigi | C alani (Asama 4) | **0.3 sonrasi, hemen** |
+| P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
 
 ---
 
@@ -391,7 +391,18 @@ yuksek binasina ust sinir koyuyor. Yukseklik verisi (3DBAG `b3_h_dak_max`) Asama
 0.3'te gelecek. Once secip sonra yukseklik kontrolu yapmak ikinci bir secim turu
 gerektirebilirdi.
 
-### Onay bekleyen: yukseklik esigi (kriter C-6)
+### ~~Onay bekleyen: yukseklik esigi~~ -> **KAPANDI 2026-09-21 (D-012)**
+
+**Karar:** birincil **25 m** (dz <= 2 m), on-kayitli yedek **37,5 m** (dz <= 3 m).
+Yedek tetikleyicileri T-A (sifir aday) ve T-B (baskin yukseklik sinifi hicbir
+adayda temsil edilmiyor). "Temsil" kriteri hesaptan once tanimlandi ve
+muhurlendi — bkz. `config/acceptance_criteria.yml` -> `stage_0_2_c_height`.
+
+**Acik kalan tek sey: C aday hesabinin 0.3 sonrasi calistirilmasi.**
+
+<details><summary>Acilis kaydi</summary>
+
+#### Onay bekleyen: yukseklik esigi (kriter C-6)
 
 ENVI-met belgelerinden **dogrulandi** (2026-09-21):
 
@@ -422,5 +433,7 @@ bloklar iceriyor. Dar bir esik A'nin bu bolumunu C adayi olmaktan cikarir. Bu
 kabul edilebilir (C bir alt-alandir) ama yuksek bloklar tamamen dislanirsa C'nin
 A'yi temsil etme iddiasi zayiflar ve **sinirlama olarak raporlanir**.
 
-**Bu karar verilmeden ilerlenemeyen isler:** C aday hesabi ve dolayisiyla Asama 4
-mikroklima modulu. **Asama 0.3 ve Asama 1-3 etkilenmez.**
+</details>
+
+**Bu karar verilmeden ilerlenemeyen isler:** C aday hesabi ve dolayisiyla
+Asama 4 mikroklima modulu. **Asama 0.3 ve Asama 1-3 etkilenmez.**

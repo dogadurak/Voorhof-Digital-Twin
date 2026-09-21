@@ -850,3 +850,132 @@ stage_0_2_c:
         Bu KABUL EDILEBILIR bir sonuctur - C, A'yi temsil eden bir ALT-ALANDIR,
         A'nin tamami degildir. Ancak yuksek bloklar tamamen dislanirsa C'nin
         A'yi temsil etme iddiasi zayiflar ve bu SINIRLAMA olarak raporlanir.
+
+# ============================================================================
+#  C ALANI YUKSEKLIK KURALI (Karar D-012) — MUHURLENDI 2026-09-21
+#  Kullanici onayi: birincil 25 m, yedek 37,5 m.
+#  HESAP CALISTIRILMADI. Yukseklik verisi (3DBAG) henuz indirilmedi; bu blok
+#  A'nin yukseklik dagilimi GORULMEDEN yazilmistir — gercek bir on-kayittir.
+# ============================================================================
+stage_0_2_c_height:
+  decision_ref: D-012
+  status: SEALED_NOT_EXECUTED
+  sealed_at: "2026-09-21"
+  execute_at: "Asama 0.3 sonrasi"
+  data_needed:
+    - "3DBAG b3_h_dak_max  (cati maks yukseklik, NAP)"
+    - "3DBAG b3_h_maaiveld (zemin kotu, NAP)"
+    - "3DBAG b3_bouwlagen  (kat sayisi — capraz kontrol)"
+  height_definition: "bina_yuksekligi_m = b3_h_dak_max - b3_h_maaiveld"
+  height_definition_note: >
+    Mutlak z DEGIL, zemin kotuna gore yukseklik. NAP sifirinin atlanmasi
+    sistematik ~1 m kayma uretir (AGENTS.md Bolum 14.6, M-007 ornegi).
+
+  # --- Birincil kural (ONAYLANDI) ---
+  primary:
+    max_building_height_m: 25.0
+    target_dz_m: 2.0
+    model_height_m: 50.0
+    basis: "ENVI-met: 25 dikey hucre x 2 m = 50 m; model tepesi H_max'in >=2 kati"
+
+  # --- ON-KAYITLI YEDEK (ONAYLANDI) ---
+  fallback:
+    max_building_height_m: 37.5
+    target_dz_m: 3.0
+    model_height_m: 75.0
+    triggers:
+      - id: "T-A"
+        rule: "Birincil kuralla gecerli aday sayisi == 0"
+      - id: "T-B"
+        rule: >
+          Birincil kuralla gecen adaylarin HICBIRINDE A'nin baskin yukseklik
+          sinifi TEMSIL EDILMIYOR (bkz. representation_criterion).
+    logic: "T-A VEYA T-B saglanirsa yedek uygulanir"
+    reporting: >
+      Hangi kural setinin uygulandigi ve hangi tetikleyicinin calistigi
+      raporda ACIKCA belirtilir. Rapor "birincil" veya "yedek (T-A / T-B)"
+      ifadesini tasimadan kapatilamaz.
+    if_fallback_also_fails: >
+      Bolum 12.6 failure raporu yazilir ve DURULUR. Esik kendiliginden daha
+      fazla gevsetilmez. Bu durumda secenekler kullaniciya sunulur:
+      (a) ENVI-met tam lisans (25 hucre siniri kalkar, bkz. P-002),
+      (b) C'nin A'yi temsil etme iddiasindan vazgecilip "A'nin dusuk katli
+          bolumunu temsil eden alt-alan" olarak yeniden tanimlanmasi,
+      (c) dz > 3 m kabul edilmesi (yaya seviyesi cozunurlugu duser).
+
+  # --- "TEMSIL" KRITERI — hesaptan ONCE tanimlandi ---
+  representation_criterion:
+    purpose: >
+      C, A'yi temsil eden bir alt-alandir. Eger A'da baskin olan yapi tipi
+      hicbir adayda bulunmuyorsa, secilen C alani A'nin mikroklimasi hakkinda
+      yaniltici sonuc uretir — bu yuzden yedek kurala gecilir.
+
+    height_classes:
+      - name: laagbouw
+        range_m: "<= 10"
+        note: "yaklasik 1-3 kat"
+      - name: middelhoogbouw
+        range_m: "> 10 ve <= 25"
+        note: "yaklasik 4-8 kat"
+      - name: hoogbouw
+        range_m: "> 25"
+        note: "9 kat ve uzeri"
+    height_classes_rationale: >
+      Sinirlar Hollanda yapi pratigindeki laagbouw / middelhoogbouw / hoogbouw
+      ayrimina dayanir. 25 m siniri ayrica BIRINCIL KURALIN esigiyle ayni
+      secilmistir: boylece "hoogbouw baskinsa birincil kural onu asla temsil
+      edemez" iliskisi tanim geregi gorunur olur.
+      Capraz kontrol: siniflar b3_bouwlagen ile de raporlanir; yukseklik ve
+      kat sayisi birbirini tutmuyorsa fark raporlanir (Bolum 12.10 ikinci yol).
+
+    dominant_class:
+      measure: verblijfsobject_share
+      definition: >
+        A icindeki her yukseklik sinifinin, A'daki toplam VBO icindeki payi.
+        Baskin sinif = payi en yuksek olan sinif.
+      why_not_building_count: >
+        Bina sayisi kucuk sira evler ve yardimci yapilar tarafindan domine edilir;
+        200 daireli bir kule tek bir pand olarak sayilir. VBO payi, mahallenin
+        fiilen nerede yasadigini yansitir ve D-008'in VBO paydasiyla tutarlidir.
+      also_reported: >
+        Seffaflik icin ucu de raporlanir: bina sayisi payi, VBO payi ve taban
+        alani payi. Karar VBO payina gore verilir; digerleri farkli sonuc
+        veriyorsa bu rapora yazilir.
+
+    represented_in_candidate:
+      rule: >
+        Bir aday, baskin sinifi TEMSIL EDIYOR sayilir ancak ve ancak:
+        (1) adayin icinde baskin siniftan en az 1 pand varsa, VE
+        (2) baskin sinifin adaydaki VBO payi, ayni sinifin A'daki VBO payinin
+            EN AZ YARISI ise.
+      threshold_ratio: 0.50
+      formula: "share_in_candidate / share_in_A >= 0.50"
+      rationale: >
+        Tek kosul (1) yetersizdir: tek bir sinir binasi "temsil" sayilmamalidir.
+        Tek kosul (2) de yetersizdir: A'daki pay cok kucukse oran kolayca
+        saglanir. Ikisi birlikte "sembolik varlik" ile "gercek temsil" ayrimini
+        yapar. 0,50 orani bir muhendislik secimidir, olculmus bir esik degildir
+        ve boyle kaydedilmistir.
+
+    special_case_hoogbouw:
+      note: >
+        Baskin sinif hoogbouw (> 25 m) ise, birincil kural (H_max <= 25 m) o
+        sinifi TANIM GEREGI iceremez; T-B otomatik olarak tetiklenir ve yedek
+        uygulanir. Yedek de (H_max <= 37,5 m) yalnizca 25-37,5 m araligini
+        kapsar; A'nin hoogbouw'u 37,5 m'yi asiyorsa yedek de temsil saglayamaz
+        ve if_fallback_also_fails yolu isler.
+
+    evaluation_order:
+      - "1. A'nin yukseklik dagilimi hesaplanir, siniflar ve baskin sinif belirlenir"
+      - "2. Birincil kuralla adaylar taranir"
+      - "3. T-A kontrolu: aday sayisi 0 mi?"
+      - "4. T-B kontrolu: gecen adaylarin hicbiri baskin sinifi temsil etmiyor mu?"
+      - "5. T-A veya T-B ise yedek kuralla tarama TEKRARLANIR"
+      - "6. Uygulanan set ve tetikleyici rapora yazilir"
+
+  pre_registration_note: >
+    Bu blok, A'nin yukseklik dagilimi HENUZ BILINMEDEN yazilmistir; 3DBAG verisi
+    Asama 0.3'te inecektir. Dolayisiyla "baskin sinif" ve "temsil" tanimlari
+    sonuca bakilarak ayarlanamamistir. Bu, Bolum 12.2'nin istedigi anlamda
+    gercek bir on-kayittir ve git gecmisi bunu kanitlar: bu commit, 3DBAG
+    indirme commit'inden ONCEDIR.

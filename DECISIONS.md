@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-012**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-013**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -23,6 +23,7 @@
 | D-009 | 2026-09-21 | AOI = 7 resmi konut buurt'u; aday izgarasi iptal | ONAYLANDI |
 | D-010 | 2026-09-21 | AHN/3DBAG indirmelerine +50 m guvenlik payi | ONAYLANDI |
 | D-011 | 2026-09-21 | C alani kural tabanli secilir; hesap 0.3 sonrasina | ONAYLANDI |
+| D-012 | 2026-09-21 | C yukseklik esigi: 25 m birincil, 37,5 m on-kayitli yedek | ONAYLANDI |
 
 ---
 
@@ -615,3 +616,81 @@ C'nin A'yi temsil etme iddiasi zayiflar ve bu **sinirlama olarak raporlanir**.
 
 **Onay:** Kullanici, 2026-09-21 (kurallar ve erteleme). Yukseklik esigi
 **onay bekliyor** — bkz. PENDING_DECISIONS P-011.
+
+---
+
+## D-012 · [2026-09-21] · C yukseklik esigi: 25 m birincil, 37,5 m on-kayitli yedek
+
+**Karar:**
+
+| Set | H_max | Hedef dz | Model yuksekligi (25 hucre) |
+|---|---|---|---|
+| **Birincil** | **25,0 m** | <= 2 m | 50 m |
+| **Yedek (on-kayitli)** | **37,5 m** | <= 3 m | 75 m |
+
+Dayanak: ENVI-met'in belgelenmis kurallari — LITE grid siniri 50 x 50 x 25;
+model tepesi en yuksek binanin **en az 2 kati**; telescoping ancak en yuksek
+bina yuksekliginden itibaren baslayabilir. (envi-met.info bilgi bankasi,
+dogrulama 2026-09-21.)
+
+### Yedek ne zaman uygulanir
+
+| Tetikleyici | Kosul |
+|---|---|
+| **T-A** | Birincil kuralla gecerli aday sayisi **== 0** |
+| **T-B** | Gecen adaylarin **hicbirinde** A'nin baskin yukseklik sinifi temsil edilmiyor |
+
+`T-A VEYA T-B` -> yedek uygulanir. **Hangi setin ve hangi tetikleyicinin
+calistigi raporda acikca belirtilir**; rapor bu ifadeyi tasimadan kapatilamaz.
+
+### "Temsil" kriteri — hesaptan ONCE tanimlandi
+
+**Yukseklik siniflari** (Hollanda yapi pratigi):
+
+| Sinif | Aralik | Yaklasik kat |
+|---|---|---|
+| laagbouw | <= 10 m | 1-3 |
+| middelhoogbouw | 10-25 m | 4-8 |
+| hoogbouw | > 25 m | 9+ |
+
+25 m siniri **bilerek** birincil esikle ayni secildi: boylece "hoogbouw baskinsa
+birincil kural onu tanim geregi temsil edemez" iliskisi gorunur olur.
+
+**Baskin sinif** = A'daki toplam **VBO** icinde payi en yuksek olan sinif.
+Bina sayisi kullanilmadi: bina sayisi kucuk sira evler ve yardimci yapilar
+tarafindan domine edilir; 200 daireli bir kule tek pand olarak sayilir. VBO payi
+mahallenin fiilen nerede yasadigini yansitir ve D-008'in paydasiyla tutarlidir.
+Seffaflik icin bina sayisi ve taban alani paylari da raporlanir; farkli sonuc
+veriyorlarsa bu rapora yazilir.
+
+**Bir aday baskin sinifi temsil ediyor sayilir ancak ve ancak:**
+
+1. Adayin icinde o siniftan **en az 1 pand** varsa, **VE**
+2. O sinifin adaydaki VBO payi, ayni sinifin A'daki VBO payinin **en az yarisi**
+   ise (`share_in_candidate / share_in_A >= 0,50`).
+
+Tek basina (1) yetersizdir — tek bir sinir binasi "temsil" sayilmamalidir.
+Tek basina (2) de yetersizdir — A'daki pay cok kucukse oran kolayca saglanir.
+**0,50 orani bir muhendislik secimidir, olculmus bir esik degildir** ve boyle
+kaydedilmistir.
+
+### Ozel durum: baskin sinif hoogbouw ise
+
+Birincil kural (25 m) hoogbouw'u **tanim geregi** iceremez; T-B otomatik
+tetiklenir. Yedek (37,5 m) yalnizca 25-37,5 m araligini kapsar. A'nin hoogbouw'u
+37,5 m'yi asiyorsa **yedek de temsil saglayamaz** ve Bolum 12.6 isler.
+
+O durumda kullaniciya sunulacak secenekler (simdiden kayitli):
+(a) ENVI-met tam lisans — 25 hucre siniri kalkar (P-002 ile baglantili);
+(b) C'nin iddiasini daraltmak — "A'nin dusuk katli bolumunu temsil eden
+alt-alan" olarak yeniden tanimlamak;
+(c) dz > 3 m kabul etmek — yaya seviyesi cozunurlugu duser.
+
+### Bu gercek bir on-kayittir
+
+Blok, A'nin yukseklik dagilimi **henuz bilinmeden** yazildi; 3DBAG verisi Asama
+0.3'te inecek. Dolayisiyla "baskin sinif" ve "temsil" tanimlari sonuca bakilarak
+ayarlanamamistir. **Git gecmisi bunu kanitlar:** bu commit, 3DBAG indirme
+commit'inden oncedir. Bolum 12.2'nin istedigi sey tam olarak budur.
+
+**Onay:** Kullanici, 2026-09-21.

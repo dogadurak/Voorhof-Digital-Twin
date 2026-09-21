@@ -20,7 +20,7 @@
 | RAM | 15,7 GB |
 | GPU 1 | NVIDIA GeForce RTX 3050 Laptop — 4 GB VRAM (sürücü 32.0.16.1078) |
 | GPU 2 | Intel UHD Graphics — tumlesik (sürücü 31.0.101.5592) |
-| Disk (C:) | 452,9 GB toplam / **31,6 GB bos** |
+| Disk (C:) | 452,9 GB toplam / **127,5 GB bos** (olcum 2026-09-21; onceki 31,6 GB) |
 | OS | Windows 11 Home Single Language 10.0.26200 |
 
 ### Donanim kisitlarinin projeye etkisi
