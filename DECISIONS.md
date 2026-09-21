@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-022**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-023**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1140,3 +1140,88 @@ kalitemizin degil, referansin eskiliginin** olcusudur. Ayristirma bu yuzden
 
 **Onay:** Kullanici talimati ("0.3 planinin 3. maddesi ... yapilmadiysa
 simdi yap"), 2026-09-21.
+
+---
+
+## D-022 · [2026-09-21] · Ucus sonrasi bina tespiti + yeniden yapim suphesi + koken (lineage)
+
+**Karar:** Uc kural birden `config/acceptance_criteria.yml` ->
+`post_flight_detection` ve `building_lineage` altinda **hesaptan ONCE**
+muhurlendi. Bu commit hicbir hesap icermez; `status: SEALED_NOT_EXECUTED`.
+
+### 1. Ucus sonrasi aday — UC kosul birden
+
+| Kriter | Metrik | Esik |
+|---|---|---|
+| K1 | `building_class_ratio` | **<= 0,02** |
+| K2 | `ground_class_ratio` | **>= 0,70** |
+| K3 | 2 m ustu **tek donuslu** nokta yogunlugu | **< 1,0 p/m2** |
+
+**Tam ikisi saglaniyorsa:** `suspect_partial` listesine girer, **karar
+verilmez**.
+
+**K3 neden "tek donuslu":** olculdu (2026-09-21) — okul `...041285`'in >8 m
+noktalarinin **%99,8'i cok donusluydu** (bitki ortusu), kontrol binasi
+`...001494`'unkilerin yalnizca **%2,4'u**. Kati cati tek donus verir. Bu,
+"cati platosu var mi" sorusunu agaca karsi bagisik sorar.
+
+**DURUSTLUK NOTU (Bolum 12.2):** K2'nin 0,70 degeri A alaninda **zaten
+gorulmus** bir dagilimdan beslenmistir (63 yapi < 0,30, 1 yapi > 0,70, arada
+sifir). Esik o dogal bosluga konmustur ve bu **gizlenmiyor**. K1 ve K3 icin
+on bilgi yoktur; B alani hicbir kriter icin olculmemistir.
+
+### 2. YIKILIP YENIDEN YAPILMA (sloop-nieuwbouw) — kullanici tespiti
+
+**Ana kuralin yakalayamadigi senaryo:** ucusta ESKI bina vardi, yikildi,
+yerine yenisi yapildi. LiDAR eski catiyi gorur; **K1 tutmaz** (sinif 6
+noktasi var), **K3 tutmaz** (cati platosu var). Kural "normal bina" der ve
+Asama 1'de **eski geometri yeni binaya giydirilir**. Ne kapi ne kriter
+yakalar — **sessiz hatadir**.
+
+**Tanim:** `bouwjaar >= 2023` **VE** ucus sonrasi aday **degil**
+-> **"olasi yeniden yapim"** listesi. **KARAR VERILMEZ** (`decision: NONE`),
+yalnizca listelenir.
+
+**Belirsizlik acikca yazilir:** BAG yalnizca **yil** verir, ucus **Subat
+2023**'tedir. `bouwjaar == 2023` olan bina ucustan once de sonra da yapilmis
+olabilir. `bouwjaar >= 2024` icin belirsizlik yoktur.
+
+**Ek sinyal (esik YOK):** `class6_footprint_coverage` — ayakizi icindeki
+2x2 m hucrelerden icinde en az bir sinif 6 noktasi bulunanlarin orani.
+Alansal ortusme olcusudur, nokta yogunlugundan bagimsizdir. Eski ayakizi
+yeni BAG ayakizinden farkliysa oran **duser**.
+**Sinirlama kayda gecti:** bitisik nizamda komsu binanin cati noktalari
+ayakizina tasip orani **yukseltebilir**; Voorhof'ta bitisik nizam yaygindir.
+Bu metrik tek basina karar vermez.
+
+### 3. Koken (lineage)
+
+| Deger | Anlam | Dogrulama istatistiklerine girer mi |
+|---|---|---|
+| `measured_lod2` | AHN5'ten rekonstrukte edildi | **EVET** |
+| `estimated_lod1` | Ucus sonrasi; ayakizi BAG'den, yukseklik TAHMIN | **HAYIR** |
+| `footprint_only` | Yukseklik bilinmiyor | **HAYIR** |
+
+`estimated_lod1` icin `height_source`, `height_method` ve
+`height_uncertainty_m` alanlari **zorunludur**; biri bile bos ise bina
+`footprint_only`'ye **duser**. "Tahmini yukseklik" kaynaksiz yazilamaz.
+
+**Baglayici kural:** kriter 1-A/1-B/1-C/1-D istatistiklerine **yalnizca**
+`measured_lod2` girer. Digerleri **ayri sayilir ve ayri listelenir** —
+toplam metrige karistirilmaz, ama sessizce de dusurulmez (Bolum 12.8).
+
+### 4. Gorsel orneklem: AMACLI ornek eklendi
+
+`0503100000038177` (bouwjaar **2025**, sinif 6 orani **0,785**) orneklem
+listesine **AMACLI** ornek olarak eklendi. Rastgele orneklemden **ayri
+etiketlidir** ve **seed'i bozmaz** — rastgele havuz yalnizca sifir
+grubundaki kucuk yapilardir, bu bina o havuzda degildir.
+
+**Gerekce:** Bu binadan "bouwjaar guvenilmez" sonucunu cikarmistim. Bu bir
+**CIKARIMDI** (Bolum 12.13). Alternatif aciklama **yeniden yapimdir**. Ikisi
+cok farkli sonuclar dogurur, bu yuzden gorsel olarak ayrilmalidir:
+**2023 hava fotografi ile guncel fotografta ayni bina mi?**
+
+**Onay:** Kullanici, 2026-09-21 ("K1 <= 0,02, K2 >= 0,70 (durustluk
+notuyla), K3 tek donuslu < 1,0 p/m2 onayli, muhurle" + yeniden yapim
+senaryosu).

@@ -1146,11 +1146,182 @@ input_gate_ahn:
       yarar: guncel Luchtfoto'da (2025/2026) okul binasi GORUNUYORSA,
       "ucustan sonra yapildi" aciklamasi bagimsiz olarak dogrulanmis olur.
       Yani ayni orneklem hem A hem B alt grubunu sinar.
+    # AMACLI (purposive) ornek — rastgele orneklemden AYRIDIR ve seed'i
+    # BOZMAZ. Rastgele havuz yalnizca sifir grubundaki kucuk yapilardan
+    # olusur; asagidaki bina o havuzda DEGILDIR (sinif 6 orani 0,785),
+    # bu yuzden eklenmesi rastgele cekilisi degistirmez.
+    purposive_include:
+      - bag_id: "0503100000038177"
+        reason: >
+          bouwjaar 2025 ama sinif 6 orani 0,785 — yani Subat 2023'te o
+          ayakizinde bir bina VARDI. Bundan "bouwjaar guvenilmez" sonucunu
+          cikarmistim; bu bir CIKARIMDI (Bolum 12.13). ALTERNATIF ACIKLAMA:
+          yikilip yeniden yapilma (sloop-nieuwbouw) — eski bina goruldu,
+          sonra yikilip yenisi yapildi. Ikisi cok farkli sonuclar dogurur.
+        question: >
+          2023 hava fotografi ile guncel (2025/2026) hava fotografinda
+          AYNI BINA MI? Ayni ise bouwjaar kayit pratigi meselesidir;
+          farkli ise yeniden yapimdir ve rebuild_suspect kurali dogrulanmis
+          olur.
+        label: "AMACLI - yeniden yapim sinamasi"
     labels: ["depo/kulube", "ev", "baska", "goruntude yok"]
     output_geojson: aoi/qa/zero_class6_buildings.geojson
     output_csv: reports/visual_check_sample.csv
     result_doc: docs/visual_check_zero_class6.md
     blocks: "P-012 (P-013 BEKLEMEZ - dogrudan olcume dayanir, D-019)"
+
+# ============================================================================
+#  UCUS SONRASI BINA TESPITI — Karar D-022
+#  MUHURLENDI 2026-09-21, HESAPTAN ONCE.
+#  A ve B alanlarinin TAMAMI icin henuz CALISTIRILMAMISTIR.
+# ============================================================================
+post_flight_detection:
+  decision_ref: D-022
+  status: SEALED_NOT_EXECUTED
+  sealed_at: "2026-09-21"
+  scope: "A ve B alanlarindaki TUM panden (status filtreli, centroid kurali)"
+  reference_date: "AHN5 ucusu 2023-02-08 / 2023-02-14 (D-020)"
+
+  # --- DURUSTLUK NOTU (Bolum 12.2) ---
+  threshold_provenance: >
+    K2'nin 0,70 degeri, A alaninda ZATEN GORULMUS bir dagilimdan beslenmistir:
+    sinif 6 orani sifir cikan 64 kucuk yapinin 63'unun zemin orani < 0,30,
+    1'inin > 0,70 idi; 0,30-0,70 araliginda HICBIR yapi yoktu. Esik bu dogal
+    bosluga konmustur. Bu gizlenmiyor: eger ileride bu esik "sonuca bakip
+    secildi" diye elestirilirse, cevap "evet, A'nin dagilimina bakarak
+    secildi" olacaktir. K1 ve K3 icin boyle bir on bilgi YOKTUR. B alani
+    hicbir kriter icin olculmemistir.
+  user_approval: "Kullanici, 2026-09-21: K1/K2/K3 onaylandi (durustluk notuyla)"
+
+  # --- ANA KURAL: ucus sonrasi aday (UC KOSUL BIRDEN) ---
+  post_flight_candidate:
+    requires: ALL
+    criteria:
+      K1:
+        metric: building_class_ratio
+        comparator: "<="
+        threshold: 0.02
+        rationale: "Ayakizi icinde bina sinifi noktasi yok denecek kadar az."
+      K2:
+        metric: ground_class_ratio
+        comparator: ">="
+        threshold: 0.70
+        rationale: >
+          Lazer ayakizinin buyuk kismindan YERE ulasmis. Bir cati bunu
+          engellerdi. Esigin kaynagi icin bkz. threshold_provenance.
+      K3:
+        metric: single_return_density_above_2m_pts_m2
+        comparator: "<"
+        threshold: 1.0
+        definition: >
+          Yerel maaiveld'den (ayakizi icindeki sinif 2 noktalarinin medyani)
+          2 m yukaridaki TEK DONUSLU (number_of_returns == 1) noktalarin
+          ayakizi alanina bolumu.
+        rationale: >
+          "Cati platosu var mi" sorusunu bitki ortusune karsi bagisik sorar.
+          Olculdu (2026-09-21): okul 0503100000041285'in >8 m noktalarinin
+          %99,8'i COK donusluydu; kontrol binasi 0503100000001494'unkilerin
+          yalnizca %2,4'u. Kati cati tek donus verir, bitki ortusu vermez.
+          AHN5 ~36 p/m2 verirken gercek bir cati onlarca p/m2 TEK donus
+          uretir; 1,0 esigi cok guvenli taraftadir.
+    on_match: "Bina 'geometrisi yok (ucus sonrasi)' etiketi alir (D-020)"
+
+  suspect_partial:
+    definition: "UC kosuldan TAM IKISI saglaniyor"
+    on_match: "AYRI listelenir, KARAR VERILMEZ"
+    rationale: >
+      Iki kosul saglayip ucuncusunu saglamayan bina, ya kuralin kenarindadir
+      ya da kuralin ongormedigi bir durumdur. Otomatik karar verilirse hangisi
+      oldugu bir daha sorulmaz.
+
+  # --- IKINCI SENARYO: YIKILIP YENIDEN YAPILMA (sloop-nieuwbouw) ---
+  # Kullanici tespiti 2026-09-21. Ana kuralin YAKALAYAMADIGI durum.
+  rebuild_suspect:
+    problem_statement: >
+      Ucusta ESKI bina vardi, yikildi, yerine yenisi yapildi. LiDAR eski
+      catiyi gorur: K1 tutmaz (sinif 6 noktasi VAR), K3 tutmaz (cati platosu
+      VAR). Ana kural bu binaya "normal" der ve Asama 1'de ESKI GEOMETRI
+      YENI BINAYA GIYDIRILIR. Sessiz hatadir — ne kapi ne kriter yakalar.
+    definition:
+      requires: ALL
+      criteria:
+        R1:
+          metric: bouwjaar
+          comparator: ">="
+          threshold: 2023            # AHN5 ucus yili
+          note: >
+            BAG yalnizca YIL verir, ucus ise SUBAT 2023'tedir. Bu yuzden
+            bouwjaar == 2023 olan bina ucustan ONCE de SONRA da yapilmis
+            olabilir; BELIRSIZDIR ve oyle raporlanir. bouwjaar >= 2024 icin
+            belirsizlik yoktur.
+        R2:
+          metric: post_flight_candidate
+          comparator: "=="
+          value: false
+          note: "Ucus sonrasi aday olanlar zaten D-020 kapsamindadir."
+    on_match: "'olasi yeniden yapim' listesine girer — KARAR VERILMEZ"
+    decision: NONE
+    rationale: >
+      Bu bir tespit degil, bir SUPHEDIR. bouwjaar tek basina guvenilir
+      degildir (olculdu: 0503100000038177 bouwjaar 2025 ama sinif 6 orani
+      0,785). Liste, gorsel kontrol ve Asama 1 icin bir UYARI kaydidir.
+
+    # Ek sinyal (esik YOK, raporlanir)
+    extra_signal:
+      metric: class6_footprint_coverage
+      definition: >
+        Ayakizi icindeki 2x2 m hucrelerden, icinde EN AZ BIR sinif 6 noktasi
+        bulunanlarin orani. Alansal ortusme olcusudur, nokta yogunlugundan
+        bagimsizdir.
+      interpretation: >
+        Eski binanin ayakizi yeni BAG ayakizinden FARKLIYSA, yeni ayakizinin
+        bir kismi eski catiyla ortusmez ve oran DUSER. Yuksek oran, eski ve
+        yeni ayakizinin buyuk olcude ayni oldugunu soyler (tadilat, yikim
+        degil).
+      threshold: none
+      limitation: >
+        Bitisik nizam (rijtjeshuis) dokusunda komsu binanin cati noktalari da
+        ayakizina tasabilir ve orani YUKSELTEBILIR. Bu metrik tek basina
+        karar vermez; Voorhof'ta bitisik nizam yaygindir.
+
+  # --- Ciktilar ---
+  outputs:
+    report: reports/00_stage_0_3_post_flight_detection.md
+    csv_candidates: reports/post_flight_buildings.csv
+    csv_suspects: reports/post_flight_suspects.csv
+    csv_rebuild: reports/rebuild_suspects.csv
+  reporting_rule: >
+    Sonuc HEM SAYI HEM ALAN olarak, gebruiksdoel kirilimiyla raporlanir ve
+    etkiye gore en buyuk 5 uye tek tek yazilir (Bolum 14.6, M-010).
+
+# ============================================================================
+#  KOKEN (LINEAGE) — Karar D-022
+# ============================================================================
+building_lineage:
+  decision_ref: D-022
+  status: SEALED
+  field_name: lineage
+  values:
+    measured_lod2:
+      meaning: "AHN5 nokta bulutundan rekonstrukte edildi"
+      enters_validation_statistics: true
+    estimated_lod1:
+      meaning: "Ucus sonrasi; ayakizi BAG'den, yukseklik TAHMIN"
+      enters_validation_statistics: false
+      required_fields: [height_source, height_method, height_uncertainty_m]
+      fallback: >
+        required_fields'dan biri bile bos ise bina footprint_only'ye DUSER.
+        "Tahmini yukseklik" kaynaksiz yazilamaz.
+    footprint_only:
+      meaning: "Yukseklik bilinmiyor; yalnizca 2B ayakizi"
+      enters_validation_statistics: false
+  binding_rule: >
+    Kriter 1-A, 1-B, 1-C ve 1-D'nin dogrulama istatistiklerine YALNIZCA
+    lineage == "measured_lod2" olan binalar girer. Digerleri raporda AYRI
+    sayilir ve AYRI listelenir; toplam metrige karistirilmaz (Bolum 12.8:
+    sessizce dusurulmez de).
+  web_requirement: >
+    Arayuzde lineage'a gore ayri gosterim zorunludur (D-020, Asama 5).
     csv_scope_note: >
       CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
       "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
