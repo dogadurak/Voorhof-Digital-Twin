@@ -46,7 +46,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | dosya | `data/raw/3dbag/3dbag_pand.city.jsonl` |
 | kaynak_url | https://api.3dbag.nl/collections/pand/items |
 | saglayici | TU Delft 3D geoinformation |
-| surum | collection 2.0 |
+| surum | v2023.10.08 (dataset surumu; onceki kayit 'collection 2.0' idi - o CityJSON SEMA surumu, duzeltildi 2026-09-21) |
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T14:59:55Z |

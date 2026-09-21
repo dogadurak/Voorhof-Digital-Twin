@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-021**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-022**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1042,9 +1042,101 @@ icin bilinen AHN5 kampanyasiyla tutarlidir.
 - `AGENTS.md` Bolum 10 — kontrol listesi maddesi
 - Her raporun basina "VERI DONEMI" notu
 
+### OLCULEN: tarih fayans basina DEGIL, UCUS SERIDI basina degisir (2026-09-21)
+
+Kullanici, 9 alt-fayansin her biri icin tarihin ayri olculmesini ve farkliysa
+"veri donemi"nin fayans basina yazilmasini istedi. Olculdu — sonuc beklenenden
+farkli cikti: **fayans bazli ayrim dogru granulerlik degildir.**
+
+Her alt-fayansin `gps_time` araligi **ayni**: 2023-02-08 – 2023-02-14. Sebep,
+her fayansin **birden cok ucus seridi** (`point_source_id`) icermesidir.
+Seritlerin kendi tarihleri kesin:
+
+| Serit | Tarih ve saat (UTC) | | Serit | Tarih ve saat (UTC) |
+|---|---|---|---|---|
+| 1059 | 2023-02-08 02:51 | | 1127 | 2023-02-14 16:01 |
+| 1060 | 2023-02-08 03:34 | | 1128 | 2023-02-14 15:45 |
+| 1061 | 2023-02-08 03:37 | | 1129 | 2023-02-14 15:16 |
+| 1062 | 2023-02-08 22:42 | | 1130 | 2023-02-14 14:57 |
+| 1063 | 2023-02-08 23:29 | | 1131 | 2023-02-14 14:29 |
+
+**Yalnizca IKI ucus gunu vardir:** 2023-02-08 (gece ucuslari) ve 2023-02-14
+(ogleden sonra). Fayanslar bu iki gunu **farkli oranlarda** karistirir:
+
+| Alt-fayans | 2023-02-08 | 2023-02-14 |
+|---|---|---|
+| 37EN1_14 | **%100,0** | %0,0 |
+| 37EN1_15 | %99,9 | %0,1 |
+| 37EN2_11 | %99,7 | %0,3 |
+| 37EN1_19 | %44,4 | %55,6 |
+| 37EN1_20 | %43,0 | %57,0 |
+| 37EN2_16 | %47,3 | %52,7 |
+| 37EN1_24 | %9,8 | **%90,2** |
+| 37EN1_25 | %10,9 | %89,1 |
+| 37EN2_21 | %6,8 | **%93,2** |
+
+**Karar — veri donemi TEK ARALIK olarak kalir:** `2023-02-08 / 2023-02-14`.
+
+**Gerekce:** Fayans basina yazmak **daha az dogru** olurdu; her fayans zaten
+iki gunu birden icerir, bu yuzden fayansa tek tarih atamak yanlis olur. Dogru
+granulerlik **nokta duzeyindedir** (`point_source_id`). Kampanyanin tamami
+**6 gun** surduğu icin bina bazli tarih atamasi pratikte **hicbir sonucu
+degistirmez**: "ucus sonrasi" tespitinde 6 gunluk belirsizlik, BAG ile
+arasindaki 3,5 yillik farkin yaninda ihmal edilebilir.
+
+**Ancak yontem simdi tanimlidir:** bir binanin ucus tarihi gerekirse,
+ayakizi icindeki noktalarin `point_source_id` degerleri yukaridaki serit
+tablosuyla eslestirilerek **kesin olarak** bulunur. Gelecekte daha genis
+tarih araligina yayilan bir veri seti gelirse (orn. AHN6 asamali ucus) bu
+yontem dogrudan uygulanir.
+
 **Kapsam notu:** Bu karar AHN5'e ozgu degildir. KNMI, Sentinel/Landsat ve
 Stedin verileri eklendiginde her birinin **kendi donemi** ayni bicimde
 yazilacaktir; "veri donemi" notu tek bir tarih degil, **kaynak basina
 donem listesi** haline gelir.
 
 **Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-021 · [2026-09-21] · 3DBAG'in eski AHN kullanimi: KARSILASTIRMA sinirlamasi, girdi sinirlamasi DEGIL
+
+**Karar:** D-013'un kriter 1-B ayristirma kurali **korunur**, ancak
+**gerekcesi duzeltilir**. Ayristirma, bizim girdimizdeki bir eksiklik yuzunden
+degil, **3DBAG'in referans olarak eski veri kullanmasi** yuzunden yapilir.
+
+**Olculen (2026-09-21):** 3DBAG, 377 bina icin AHN5 yerine AHN3/AHN4 kullanmis
+ve gerekce olarak AHN5 kapsama eksikligini gostermis
+(`b3_nodata_fractie_ahn5` medyani **0,696**, ahn3 grubu).
+
+Bu iddia **bizim verimizde sinandi** — varsayimla kapatilmadi:
+
+| 3DBAG kaynagi | n | Bizim AHN5 yogunlugumuz (medyan) | Hic noktasi olmayan |
+|---|---|---|---|
+| ahn3 | 240 | **29,93 p/m2** | **0** |
+| ahn4 | 109 | **25,11 p/m2** | **0** |
+
+**Bizim AHN5 verimiz bu binalarin tamamini iyi kapsiyor.** 3DBAG'in
+`_HIGHEST_YET_INSUFFICIENT_COVERAGE` gerekcesi **kendi AHN5 anlik
+goruntusune** aittir; v2023.10.08 Ekim 2023'te yayinlandi ve AHN5 o tarihte
+ulke genelinde hala uculuyordu.
+
+**Sonuc:** Kriter 1-B'de bu 377 binada cikacak fark, **bizim rekonstruksiyon
+kalitemizin degil, referansin eskiliginin** olcusudur. Ayristirma bu yuzden
+*daha da* gereklidir ve raporda bu cerceveyle sunulur.
+
+**Ek kayitlar:**
+- `b3_kwaliteitsindicator = False` olan **98** bina ayri isaretlenir.
+- 3DBAG'de olan ama guncel BAG'de olmayan **28** bina (muhtemelen yikilmis)
+  eslesme disidir, **kayip sayilmaz**. Bu, D-020'nin **ters yonudur**:
+  ucus sonrasi yapilanlar kadar, sonradan **yikilanlar** da vardir.
+- **3DBAG API'sinde daha yeni surum yok** (2026-09-21 itibariyla hala
+  `v2023.10.08`). P-014 icin bir secenek daha kapandi.
+- 3DBAG'in kendi olcumunde **AHN4 yogunlugu (33,02) AHN5'ten (22,42)
+  yuksektir**. Bu, "yeni surum daha yogundur" ortuk varsayimini desteklemez.
+  Eslik ettigi esikler (0-E, 0-F) degismez; yalnizca gerekce duzeltildi.
+
+**Ayrinti:** `reports/00_stage_0_3_3dbag_source.md`
+
+**Onay:** Kullanici talimati ("0.3 planinin 3. maddesi ... yapilmadiysa
+simdi yap"), 2026-09-21.
