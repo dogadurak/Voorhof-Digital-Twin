@@ -260,3 +260,45 @@ def bounds_of(features: Iterable[dict[str, Any]]) -> tuple[float, float, float, 
     if not xs:
         raise WfsError("Ozelliklerde geometri bulunamadi; bbox hesaplanamadi.")
     return min(xs), min(ys), max(xs), max(ys)
+
+
+def describe_attributes(
+    features: list[dict[str, Any]],
+    layer: str,
+    logger: logging.Logger | None = None,
+    value_counts_for: Iterable[str] = (),
+) -> dict[str, Any]:
+    """Indirilen bir katmanin oznitelik listesini ve secili alan dagilimlarini cikarir.
+
+    Girdi : features        — indirilen ozellikler
+            layer           — katman adi (log icin)
+            value_counts_for— dagilimi sayilacak alan adlari (ornek ("status",))
+    Cikti : dict — {"attributes": [...], "value_counts": {alan: {deger: adet}}}
+    Birim : adet
+
+    NEDEN VAR (MISTAKES.md M-005, Bolum 14.5 otomatiklestirmesi):
+    Bir veri kaynaginin semasi hakkindaki iddia, kavramsal veri modelinden DEGIL,
+    kaynagin kendi ciktisindan dogrulanir. M-001/M-002/M-005 ayni kok nedenin uc
+    tekrariydi (dogrulanmadan yazmak); ucuncu tekrarda Bolum 14.5 geregi kontrol
+    insan disiplininden alinip koda tasindi.
+
+    Cikti `DATA_LOG.md`'ye yazilir; boylece bir sema iddiasi, o katmanin gercek
+    oznitelik listesi kayda gecmeden config'e giremez.
+    """
+    log = logger or logging.getLogger(__name__)
+    if not features:
+        raise WfsError(f"{layer}: oznitelik cikarilacak ozellik yok.")
+
+    attributes = sorted(features[0].get("properties", {}).keys())
+    log.info("Oznitelikler | %s | %d alan: %s", layer, len(attributes), ", ".join(attributes))
+
+    value_counts: dict[str, dict[str, int]] = {}
+    for field in value_counts_for:
+        counts: dict[str, int] = {}
+        for feature in features:
+            key = str(feature.get("properties", {}).get(field))
+            counts[key] = counts.get(key, 0) + 1
+        value_counts[field] = dict(sorted(counts.items(), key=lambda kv: -kv[1]))
+        log.info("Deger dagilimi | %s.%s | %s", layer, field, value_counts[field])
+
+    return {"attributes": attributes, "value_counts": value_counts}

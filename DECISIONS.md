@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-008**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-009**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -19,6 +19,7 @@
 | D-005 | 2026-09-21 | Asama 0 raporu elle yazilir | ONAYLANDI |
 | D-006 | 2026-09-21 | Indirmeler B alani bbox'i ile sinirlanir | ONAYLANDI |
 | D-007 | 2026-09-21 | AOI merkezi kural tabanli secilir + kor karsilastirma | ONAYLANDI |
+| D-008 | 2026-09-21 | 0.2a metrik paydalari ve status filtresi | ONAYLANDI |
 
 ---
 
@@ -291,5 +292,72 @@ Sonuc: **Asama 0 raporunda "bina sayisi beklenen aralikta, demek ki AOI dogru"
 denemez.** Bu dongusel olur. Kriter 0-B bundan sonra bir tutarlilik kaydidir,
 bagimsiz dogrulama degildir. Not `acceptance_criteria.yml` ve
 `docs/validation_protocol.md` icine islenmistir.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-008 · [2026-09-21] · Asama 0.2a metrik paydalari ve status filtresi
+
+**Karar:** 0.2a'nin metrikleri asagidaki gibi tanimlanir. **Esikler degismemistir**
+(400-700 ve >=%90 aynen durur); tanimlanan sey **hangi buyuklugun olculdugudur.**
+
+| Metrik | Payda / kural | Kullanici secimi |
+|---|---|---|
+| Bina sayisi (0.2-A) | **TUM panden** (yardimci yapilar dahil) | evet |
+| woonfunctie orani (0.2-B) | **VBO duzeyi** — karedeki panden'a bagli verblijfsobject'ler | evet |
+| Coklu islevli VBO | **TAM ESLESME** — "woonfunctie,winkelfunctie" konut SAYILMAZ | evet (ajan onerisinden farkli) |
+| bouwjaar 1960-1975 | VBO duzeyi (0.2-B ile ayni payda) | ajan, tutarlilik gerekcesiyle |
+| panden_with_dwellings | aantal_verblijfsobjecten > 0 — **raporlanir, esik degil** | evet |
+
+**Coklu islevli VBO notu:** Ajan "woonfunctie iceriyorsa say" (%93,3) onermisti;
+kullanici daha kati olan tam eslesmeyi (%93,2) secti. Fark 0,09 puan.
+
+**bouwjaar paydasi neden VBO:** Bilesik skorda toplanan iki oran farkli paydalara
+sahip olursa skor yorumlanamaz. Olculen fark buyuktur: pand duzeyi %22,2,
+VBO duzeyi %48,5.
+
+### woonfunctie icin neden VBO duzeyi
+
+Pand duzeyi **yanlis oldugu icin degil, KULLANILAMAZ oldugu icin** elendi:
+indirilen panden'in **%40,6'si (3.124 adet)** `aantal_verblijfsobjecten = 0` olan
+yardimci yapilardir (garaj, trafo, depo, otopark) ve gebruiksdoel'leri bostur.
+Pand duzeyinde oran %50,5'te kalir; **>=%90 esigi hicbir karede saglanamaz** ve
+secim sifir aday uretirdi.
+
+### Bina sayisi icin neden TUM panden
+
+Indirilen alanda yogunluk 1.852 pand/km2. 600x600 m = 0,36 km2 -> kare basina
+**~667 pand**, yani AGENTS.md Bolum 3'un verdigi **400-700 araligina dogal olarak
+oturuyor**. Yalnizca konutlu panden sayilsaydi kare basina ~337 duser ve alt sinirin
+altinda kalirdi. Bu, Bolum 3'teki sayinin tum panden'i kastettigine dair gucli isaret.
+
+### Status filtresi (kullanici talimati)
+
+Degerler **indirilen veriden dogrulanmistir**, tahmin edilmemistir (M-005 kurali).
+
+| Katman | Dahil | Haric |
+|---|---|---|
+| pand | Pand in gebruik (7576), Pand in gebruik (niet ingemeten) (4), **Verbouwing pand (77)** | Bouwvergunning verleend (31), Bouw gestart (15), Sloopvergunning verleend (1) |
+| verblijfsobject | Verblijfsobject in gebruik (18644), **Verbouwing verblijfsobject (34)** | Verblijfsobject gevormd (668) |
+
+**Kullanicinin varsayiminin duzeltilmesi:** "BAG WFS yikilmis binalari da iceriyor"
+denilmisti. **OLCUM: indirilen 7.704 pand icinde yikilmis durum kaydi YOKTUR.**
+PDOK bu WFS'te onlari sunmuyor. Dislanan durumlar aslinda **henuz insa edilmemis**
+yapilardir. Filtre yine de yazildi: hem bu yapilari disliyor hem de veri surumu
+degisirse savunma sagliyor.
+
+**ACIK NOKTA — "Verbouwing pand" (P-008):** Kullanicinin literal listesi bunu
+dislardi; belirtilen amac ise fiilen var olmayan yapilari dislamakti. Tadilattaki
+bina **fiziksel olarak mevcuttur** ve catisi gunes/golge analizine girer. Ajan
+amaca gore DAHIL etti ve karari onaya sundu. Dislansaydi 77 gercek bina (%1,0)
+sayim disi kalirdi.
+
+### Bilinen kaynak sinirlamasi
+
+PDOK BAG WFS, BAG'in **kismi secimidir**; coklu adresli nesnelerde yalnizca
+**hoofdadres** sunulur. 0.2 icin etkisi yok; **Asama 2 EP-Online eslestirmesinde
+ciddi olabilir** (Bolum 12.3 hiyerarsisi nevenadres gerektirebilir).
+AGENTS.md Bolum 5'e islendi; azaltim plani PENDING_DECISIONS -> P-007.
 
 **Onay:** Kullanici, 2026-09-21.

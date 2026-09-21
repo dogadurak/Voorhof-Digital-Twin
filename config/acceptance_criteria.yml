@@ -363,6 +363,40 @@ stage_0_2:
     candidate_origin: "Izgara noktalari Voorhof poligonu ICINDE olmak zorunda"
     crs: "EPSG:28992"
 
+  # --- STATUS FILTRESI (Karar D-008, kullanici talimati 2026-09-21) ---
+  # Deger listeleri INDIRILEN VERIDEN dogrulanmistir, tahmin edilmemistir (M-005 kurali).
+  status_filter:
+    enabled: true
+    pand_field: status
+    vbo_field: status
+    pand_include:
+      - "Pand in gebruik"                   # 7576 (%98.34)
+      - "Pand in gebruik (niet ingemeten)"  #    4 (%0.05)
+      - "Verbouwing pand"                   #   77 (%1.00) — bkz. renovation_note
+    pand_exclude:
+      - "Bouwvergunning verleend"           #   31 (%0.40) — henuz insa edilmemis
+      - "Bouw gestart"                      #   15 (%0.19) — insaat devam ediyor
+      - "Sloopvergunning verleend"          #    1 (%0.01) — yikim izni verilmis
+    vbo_include:
+      - "Verblijfsobject in gebruik"        # 18644 (%96.37)
+      - "Verbouwing verblijfsobject"        #    34 (%0.18) — bkz. renovation_note
+    vbo_exclude:
+      - "Verblijfsobject gevormd"           #   668 (%3.45) — kayden olusmus, henuz kullanimda degil
+    renovation_note: >
+      "Verbouwing pand" ve "Verbouwing verblijfsobject" DAHIL EDILDI. Kullanicinin
+      literal listesi bunlari saymiyordu, ancak belirtilen amac fiilen var olmayan
+      yapilari dislamakti; tadilattaki bir bina fiziksel olarak MEVCUTTUR ve catisi
+      gunes/golge analizine girer. Dislansaydi 77 gercek bina (%1,0) sayim disi
+      kalirdi. Bu okuma kullanici onayina sunulmustur — P-008.
+    gesloopt_note: >
+      Kullanici "BAG WFS yikilmis binalari da iceriyor" demisti. OLCUM: indirilen
+      7704 pand icinde "Pand gesloopt" veya benzeri yikilmis durum kaydi YOKTUR.
+      PDOK bu WFS'te yikilmis nesneleri sunmuyor (veya bu bbox'ta yok). Filtre yine de
+      yazildi — hem henuz insa edilmemis yapilari disliyor hem de veri surumu
+      degisirse savunma saglıyor.
+    measured_at: "2026-09-21, indirilen bbox geneli"
+    applies_to: [0.2-A, 0.2-B, bouwjaar_1960_1975_ratio_pct, panden_with_dwellings]
+
   # --- SAYIM KURALI (kullanicinin acik talimati) ---
   counting_rule:
     method: pand_centroid_in_square
@@ -381,6 +415,13 @@ stage_0_2:
       threshold: [400, 700]
       status: LOCKED
       source: "AGENTS.md Bolum 3"
+      denominator: all_panden          # Karar D-008
+      denominator_note: >
+        TUM panden sayilir; konut birimi icermeyen yardimci yapilar (garaj, trafo,
+        depo, otopark) DAHILDIR. Gerekce: indirilen alanda yogunluk 1852 pand/km2
+        oldugundan 600x600 m kare basina ~667 pand duser ve Bolum 3'un verdigi
+        400-700 araligina dogal olarak oturur. Yalnizca konutlu panden sayilsaydi
+        kare basina ~337 dusecek ve alt sinirin altinda kalacakti.
     - id: "0.2-B"
       description: "woonfunctie orani"
       metric: woonfunctie_ratio_pct
@@ -389,10 +430,25 @@ stage_0_2:
       unit: pct
       status: LOCKED
       source: "AGENTS.md Bolum 2 (%90+ konut)"
+      denominator: verblijfsobjecten_of_panden_in_square   # Karar D-008
+      woonfunctie_rule: exact_match                        # Karar D-008
       computation: >
-        gebruiksdoel BAG PAND uzerinde DEGIL, VERBLIJFSOBJECT uzerindedir.
-        Oran, pand -> verblijfsobject join'i ile hesaplanir (Bolum 12.3 hiyerarsisi).
+        Karedeki panden'a (centroid kurali) pandidentificatie ile baglanan
+        VERBLIJFSOBJECT'ler toplanir; bunlardan gebruiksdoel'u TAM OLARAK
+        "woonfunctie" olanlarin orani hesaplanir. Coklu islevli kayitlar
+        ("woonfunctie,winkelfunctie" gibi) konut SAYILMAZ.
         Join oncesi ve sonrasi satir sayisi loglanir (Bolum 14.6 sessiz veri kaybi).
+      computation_correction: >
+        DUZELTME (MISTAKES.md M-005): Bu alan daha once "gebruiksdoel BAG pand
+        uzerinde DEGIL" diyordu. Bu YANLISTIR — PDOK'un bag:pand katmani gebruiksdoel,
+        bouwjaar ve aantal_verblijfsobjecten alanlarini tasir. Iddia, BAG'in kavramsal
+        veri modelinden turetilmis ama servisin semasindan dogrulanmamisti.
+      why_not_pand_level: >
+        VBO duzeyi, pand duzeyi dogru olmadigi icin degil, pand duzeyi KULLANILAMAZ
+        oldugu icin secildi: indirilen panden'in %40,6'si (3124 adet)
+        aantal_verblijfsobjecten = 0 olan yardimci yapilardir ve gebruiksdoel'leri
+        bostur. Pand duzeyinde oran %50,5'te kalir; >=%90 esigi hicbir karede
+        saglanamaz ve secim sifir aday uretirdi.
     - id: "0.2-C"
       description: "Karenin Voorhof siniri icinde kalan alan orani"
       metric: inside_wijk_area_pct
@@ -401,13 +457,43 @@ stage_0_2:
       unit: pct
       status: LOCKED
 
+  # --- Olculen referans dagilimlar (indirilen bbox geneli, 2026-09-21) ---
+  # Kare bazinda DEGIL; metrik tanimini netlestirmek icin olculdu (Karar D-008).
+  # Aday skoru uretilmeden once olculmustur — Bolum 12.2 ihlali yoktur.
+  measured_context:
+    download_bbox: "Voorhof + 300 m tampon, 1713 x 2428 m"
+    total_panden: 7704
+    total_verblijfsobjecten: 19346
+    panden_without_dwelling: 3124        # %40.6 — garaj, trafo, depo, otopark
+    woonfunctie_pct_pand_level: 50.5
+    woonfunctie_pct_vbo_level: 93.2
+    bouwjaar_1960_1975_pct_pand_level: 22.2
+    bouwjaar_1960_1975_pct_vbo_level: 48.5
+    multifunction_vbo_count: 61          # %0.32
+    vbo_to_pand_join_match_pct: 100.0
+
   # --- Raporlanan ama filtrelemeyen metrikler ---
   reported_metrics:
     - metric: bouwjaar_1960_1975_ratio_pct
       unit: pct
-      note: "Filtre DEGIL, ama bilesik skora girer (asagi). AGENTS.md Bolum 2 arsetip kohortu."
+      denominator: verblijfsobjecten_of_panden_in_square   # Karar D-008, 0.2-B ile ayni birim
+      note: >
+        Filtre DEGIL, ama bilesik skora girer. AGENTS.md Bolum 2 arsetip kohortu.
+        Payda kriter 0.2-B ile AYNI birimdedir (VBO). Gerekce: bilesik skorda
+        toplanan iki oran farkli paydalara sahip olursa skor yorumlanamaz hale gelir.
+        Olculen fark buyuktur: bbox genelinde pand duzeyi %22,2, VBO duzeyi %48,5."
     - metric: total_verblijfsobjecten
     - metric: mean_bouwjaar
+    - metric: panden_with_dwellings
+      definition: "aantal_verblijfsobjecten > 0 olan pand sayisi (status filtresi uygulanmis)"
+      note: >
+        ESIK DEGIL, raporlanir (Karar D-008, kullanici talimati). Gerekce: Asama 3
+        enerji dogrulamasinin ORNEKLEMI bu kumedir — yardimci yapilarin (garaj, trafo,
+        depo) enerji modeli yoktur. Toplam pand sayisi (kriter 0.2-A) ile birlikte
+        raporlanir; ikisi arasindaki fark alanin yardimci yapi yogunlugunu gosterir.
+    - metric: excluded_by_status_count
+      definition: "Status filtresiyle dislanan pand ve VBO sayisi"
+      note: "Sessiz atlama yasagi (Bolum 12.8) — her dislanan kayit sayilir ve raporlanir."
 
   # --- SIRALAMA (hesaptan once kilitli) ---
   ranking:
@@ -440,6 +526,25 @@ stage_0_2:
     blind_protocol: >
       Aday ciktilari, kullanicinin QGIS'te bagimsiz sectigi merkez commit'lenene kadar
       repoya YAZILMAZ ve kullaniciya GOSTERILMEZ (Karar D-007).
+
+  # --- Bilinen veri kaynagi sinirlamasi (Karar D-008) ---
+  known_source_limitation:
+    source: "PDOK BAG WFS v2_0"
+    issue: >
+      Bu WFS, BAG'in KISMI bir secimidir; coklu adresli nesnelerde yalnizca HOOFDADRES
+      sunulur (nevenadressen yok).
+    impact_stage_0_2: >
+      YOK/ihmal edilebilir. 0.2a bina sayimi ve woonfunctie orani icin hoofdadres
+      yeterlidir; bir VBO'nun kac adresi oldugu bu metrikleri degistirmez.
+    impact_stage_2: >
+      CIDDI OLABILIR. Bolum 12.3'un EP-Online eslestirmesi
+      "BAG pand -> verblijfsobject -> adresseerbaar object -> EP-Online label"
+      hiyerarsisini gerektirir. Nevenadres eksikligi, coklu adresli nesnelerde
+      eslesmeyi eksik birakabilir. Bolum 12.3 bu vakalarin "ayri raporlanmasini"
+      zorunlu kiliyor; sessizce bir secenek secilemez.
+    mitigation: >
+      Asama 2'ye gecmeden once tam BAG dagitimi (ATOM/LVBAG extract) ile bu WFS
+      karsilastirilir; fark olculur ve raporlanir. Bkz. PENDING_DECISIONS -> P-007.
 
   # --- Indirme kapsami ---
   download_extent:

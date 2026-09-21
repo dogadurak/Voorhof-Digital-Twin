@@ -22,7 +22,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-002 | 2026-09-21 | 0.1 | conda-forge'da olmayan paket adi varsayildi | KAPALI | 0 |
 | M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | KAPALI | 0 |
 | M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
-| M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | ACIK | 0 |
+| M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | KAPALI | 0 |
 
 ---
 
@@ -264,6 +264,13 @@ config/acceptance_criteria.yml icindeki her computation notu
 src/qa/check_compliance.py (Asama 0.5) — config'te bir oznitelik adi geciyorsa,
 o oznitelik ilgili ham dosyada gercekten var mi?
 
-**Durum:** ACIK — config'teki yanlis gerekce duzeltilmeyi bekliyor. Duzeltme metrik
-tanimini da etkiledigi icin kullanici onayina baglidir (Bolum 12.11); bkz.
-reports/PENDING_DECISIONS.md -> P-006.
+**Durum:** KAPALI (2026-09-21).
+- Config'teki yanlis gerekce duzeltildi: `computation_correction` alani eklendi,
+  dogru gerekce (`why_not_pand_level`) yazildi. Karar D-008.
+- **Bolum 14.5 uygulandi** (ucuncu tekrar -> otomatiklestirme, kullanici onayi
+  2026-09-21): indirme scriptleri bundan sonra her katmanin **oznitelik listesini**
+  loglar ve `DATA_LOG.md`'ye yazar. Artik bir sema iddiasi, o katmanin gercek
+  oznitelik listesi kayda gecmeden config'e giremez.
+- Ayni oturumda kural fiilen ise yaradi: status alan adi ve degerleri indirilen
+  veriden dogrulandi ve kullanicinin "yikilmis binalar var" varsayiminin bu veri
+  icin gecersiz oldugu olculdu (D-008).

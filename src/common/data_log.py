@@ -15,6 +15,7 @@ yazilan kayitlarda alan atlamak sessizce mumkundur; burada degildir.
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -98,6 +99,21 @@ def append_entry(
 """
 
     text = log_path.read_text(encoding="utf-8")
+
+    # Ayni veri seti icin onceki kayit varsa DEGISTIRILIR, eklenmez.
+    # Gerekce: bir indirme tekrarlandiginda data/raw'daki dosya uzerine yazilir.
+    # Eski kayit birakilirsa DATA_LOG artik diskteki dosyayi tanimlamaz; checksum
+    # ve boyut bayatlar. Asama 0 kriteri 0-D ("her indirmenin checksum'i kayitli")
+    # bu durumda bayat bir kayitla eslesip YANLIS PASS uretebilirdi.
+    existing = re.search(
+        rf"^## {re.escape(dataset)}  ·  .*?(?=^## |\Z)",
+        text,
+        flags=re.M | re.S,
+    )
+    if existing:
+        text = text[: existing.start()] + entry.lstrip("\n") + text[existing.end():]
+        log_path.write_text(text, encoding="utf-8")
+        return
 
     if _PLACEHOLDER in text:
         text = text.replace(_PLACEHOLDER, entry.strip(), 1)

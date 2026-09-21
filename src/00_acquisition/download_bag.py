@@ -6,9 +6,14 @@ Cikti : data/raw/bag/bag_pand.geojson
         + .meta.json + data/DATA_LOG.md kayitlari
 
 NEDEN IKI KATMAN:
-`gebruiksdoel` BAG **pand** uzerinde DEGIL, **verblijfsobject** uzerindedir.
-woonfunctie orani ancak `pand -> verblijfsobject` join'i ile hesaplanabilir
-(AGENTS.md Bolum 12.3 hiyerarsisi). Tek katmanla hesaplanamaz.
+woonfunctie orani VBO duzeyinde hesaplanir (Karar D-008), bu yuzden her iki katman
+da gerekir. `bag:pand` da bir `gebruiksdoel` alani TASIR, ama kullanilamaz:
+panden'in %40,6'si konut birimi icermeyen yardimci yapilardir (garaj, trafo, depo)
+ve gebruiksdoel'leri bostur; pand duzeyinde oran %50,5'te kalir ve >=%90 esigi
+hicbir karede saglanamaz.
+
+(Bu dosyanin onceki surumu "gebruiksdoel pand uzerinde DEGIL" diyordu — bu YANLISTI,
+bkz. MISTAKES.md M-005.)
 
 NEDEN TAMPON:
 Merkezi Voorhof icinde olan bir 600 m kare, sinirdan 300 m disari tasabilir
@@ -108,6 +113,11 @@ def main() -> int:
             return 1
         logger.info("bbox ciktidan dogrulandi | %s", layer)
 
+        # M-005 / Bolum 14.5: sema iddiasi degil, gercek oznitelik listesi kayda gecer
+        schema = wfs.describe_attributes(
+            collection["features"], layer, logger=logger, value_counts_for=("status",)
+        )
+
         out_path = out_dir / filename
         out_path.write_text(json.dumps(collection, ensure_ascii=False), encoding="utf-8")
         results.append((out_path, layer, len(collection["features"])))
@@ -124,6 +134,9 @@ def main() -> int:
             },
             software={"service": sources["wfs"], "wfs_version": sources["version"]},
             notes="bbox Voorhof sinirindan turetildi; CRS okundu ve dogrulandi.",
+        )
+        status_lines = " · ".join(
+            f"{k}: {v}" for k, v in schema["value_counts"]["status"].items()
         )
         append_entry(
             dataset=f"BAG — {layer}",
@@ -145,8 +158,12 @@ def main() -> int:
                 f"Ozellik sayisi: {len(collection['features'])}. "
                 f"bbox ciktidan dogrulandi (M-004 kural 2). "
                 f"Ham dosya degistirilmedi. "
-                f"NOT: gebruiksdoel yalnizca verblijfsobject katmanindadir; "
-                f"woonfunctie orani pand->verblijfsobject join'i ile hesaplanir."
+                f"OZNITELIKLER ({len(schema['attributes'])}): "
+                f"{', '.join(schema['attributes'])}. "
+                f"STATUS DAGILIMI: {status_lines}. "
+                f"Status filtresi config/acceptance_criteria.yml -> "
+                f"stage_0_2.status_filter altinda tanimlidir (Karar D-008); "
+                f"degerler bu dagilimdan dogrulanmistir (M-005)."
             ),
         )
 

@@ -13,7 +13,9 @@
 | ~~P-003~~ | 0.3 | ~~Disk alani yetersizligi~~ | — | **KAPANDI 2026-09-21** |
 | P-004 | 1 | AHN z-fark esigi (Kriter 1-C) | Asama 1 baslangici | Asama 0 sonunda |
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
-| P-006 | 0.2a | woonfunctie ve bina sayimi paydalari | **Aday hesabi (0.2a adim 4-5)** | **YUKSEK** |
+| ~~P-006~~ | 0.2a | ~~woonfunctie ve bina sayimi paydalari~~ | — | **KAPANDI 2026-09-21 (D-008)** |
+| P-007 | 2 | PDOK BAG WFS kismi — nevenadres yok | Asama 2 EP-Online eslestirmesi | Asama 1 sonunda |
+| P-008 | 0.2a | "Verbouwing pand" sayima girsin mi? | Aday hesabi (teyit) | **Adim 4'ten once** |
 
 ---
 
@@ -172,7 +174,12 @@ sayisal esik vermiyor. Ajan bu sayilari kendi basina yazamaz (Bolum 12.11).
 
 ---
 
-## [2026-09-21] [0.2a] P-006 — woonfunctie orani ve bina sayimi hangi payda uzerinden?
+## [2026-09-21] [0.2a] P-006 — woonfunctie ve bina sayimi paydalari  ·  **KAPANDI**
+
+**Karar (kullanici, 2026-09-21):** VBO duzeyi + tum panden + tam eslesme.
+Ayrintilar `DECISIONS.md` -> **D-008**. Asagisi acilis kaydidir.
+
+### P-006 (acilis kaydi)
 
 **Durum: ADAY HESABINI BLOKLUYOR.** Karar verilmeden hesaplanamaz (Bolum 12.11:
 metrik tanimi kullanici onayina baglidir). Bkz. MISTAKES.md M-005.
@@ -237,3 +244,63 @@ netlestirildi; aday skoru uretilmemistir.
 
 Asama 0.2a adim 4-5 (aday uretimi ve siralama). **Kullanicinin QGIS secimi bu karardan
 bagimsizdir ve beklemez.**
+
+---
+
+## [2026-09-21] [2] P-007 — PDOK BAG WFS kismi: nevenadres yok
+
+**Sorun (kullanici tespiti, 2026-09-21):** PDOK BAG WFS, BAG'in **kismi secimidir**.
+Coklu adresli nesnelerde yalnizca **hoofdadres** sunulur; nevenadressen yoktur.
+
+**Asama 0.2 etkisi:** Yok. Bina sayimi ve woonfunctie orani icin hoofdadres yeterli;
+bir VBO'nun kac adresi oldugu bu metrikleri degistirmez.
+
+**Asama 2 etkisi — ciddi olabilir.** Bolum 12.3 EP-Online eslestirmesini
+`BAG pand -> verblijfsobject -> adresseerbaar object -> EP-Online label`
+hiyerarsisine bagliyor ve "belirsiz veya coklu adresli vakalar AYRI RAPORLANIR,
+sessizce bir secenek secilmez" diyor. Nevenadres eksikligi tam da bu vakalari
+gorunmez kilabilir — yani kural ihlal edilmeden de eksik eslesme uretilebilir.
+
+**Secenekler:**
+- **A — Asama 2'den once tam BAG dagitimi ile karsilastir** *(ajanin onerisi)*:
+  LVBAG extract / ATOM indirilir, WFS ile fark olculur ve raporlanir. Fark ihmal
+  edilebilirse WFS ile devam edilir; degilse tam dagitima gecilir.
+- **B — Bastan tam BAG dagitimina gec**: daha guvenli ama cok daha buyuk indirme
+  (disk kisiti, D-006) ve 0.2a'da gereksiz.
+- **C — WFS ile devam, sinirlamayi rapora yaz**: en hizli, ama Asama 2'nin kabul
+  kriteri 2-C'yi ("coklu adresli vakalar ayri raporlandi") zayiflatir.
+
+**Ajanin onerisi:** A. Sinirlama zaten AGENTS.md Bolum 5'e islendi; karar Asama 1
+sonunda, Asama 2 baslamadan verilir.
+
+**Bu karar verilmeden ilerlenemeyen isler:** Asama 2 EP-Online eslestirmesi.
+Asama 0.2 ve 0.3 etkilenmez.
+
+---
+
+## [2026-09-21] [0.2a] P-008 — "Verbouwing pand" sayima girsin mi?
+
+**Durum: TEYIT BEKLIYOR.** Ajan bir okuma secti ve uyguladi; adim 4'ten once
+teyit edilmeli. Yanlissa config duzeltilir (hesap henuz yapilmadi).
+
+**Ayrisma:** Talimatin **lafzi** sayima yalnizca "Pand in gebruik" ve
+"Pand in gebruik (niet ingemeten)" girsin diyordu. Talimatin **amaci** ise fiilen
+var olmayan yapilari dislamakti.
+
+**Olculen:** `Verbouwing pand` = **77 kayit (%1,0)**. Bu binalar **fiziksel olarak
+mevcuttur**, yalnizca tadilattadir.
+
+**Ajanin uyguladigi okuma:** DAHIL. Gerekce: tadilattaki binanin catisi gunes ve
+golge analizine girer; dislansaydi 77 gercek bina sayim disi kalirdi ve kare basina
+~6-7 bina eksik sayilirdi. Ayni mantikla `Verbouwing verblijfsobject` (34 kayit)
+de dahil edildi.
+
+**Kesin olarak dislananlar** (henuz insa edilmemis): `Bouwvergunning verleend` (31),
+`Bouw gestart` (15), `Sloopvergunning verleend` (1), `Verblijfsobject gevormd` (668).
+
+**Ek bulgu:** Indirilen 7.704 pand icinde **yikilmis (gesloopt) durum kaydi YOKTUR** —
+PDOK bu WFS'te onlari sunmuyor. Filtrenin fiili islevi yikilmislari elemek degil,
+**henuz yapilmamislari** elemektir.
+
+**Eger DISLANSIN dersen:** config'te `pand_include` ve `vbo_include` listelerinden
+iki satir cikarilir; hesap henuz yapilmadigi icin Bolum 12.2 ihlali olusmaz.

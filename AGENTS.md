@@ -155,6 +155,7 @@ Bunlar gizlenmeyecek, raporun "Limitations" bölümünde açıkça yazılacak.
 | **Güneş doğrulaması** | Resmî açık ulusal zonnekaart yok (Zonatlas/MapServices ticari) | PVGIS — ama **aynı fiziksel büyüklük kuralı** geçerli (12.4) |
 | **Rüzgâr doğrulaması** | Bağımsız açık CFD benchmark zayıf | NEN 8100 literatür vakaları; sonuç en fazla "literatürle tutarlı" |
 | **LST çözünürlüğü** | Landsat termal gerçekte 100 m, 30 m'ye resample | Tek mahalle için kaba. ECOSTRESS (~70 m) denenebilir. Sınırlama yazılacak |
+| **PDOK BAG WFS kısmi** | Servis BAG'in tam kopyası değil; çoklu adresli nesnelerde yalnızca **hoofdadres** sunuluyor, nevenadressen yok (ölçüldü 2026-09-21, D-008) | Aşama 0.2 için etkisiz. **Aşama 2 EP-Online eşleştirmesinde** (12.3 hiyerarşisi) eksik eşleşme üretebilir. Aşama 2'den önce tam BAG dağıtımı (ATOM/LVBAG) ile fark ölçülüp raporlanacak — bkz. P-007 |
 | **3DBAG bağımsız değil** | 3DBAG de AHN + roofer ile üretiliyor | Karşılaştırma **"tutarlılık kontrolü"** olarak adlandırılır, "bağımsız doğrulama" değil. Bağımsız kontrol: AHN nokta bulutuna doğrudan z-fark analizi |
 | **PC6 bina-level değil** | Stedin verisi en az 10 bağlantı birleştirilmiş anonim agregat | Bina bazında atama YAPILMAZ. Karşılaştırma PC6 kümesi düzeyinde (bkz. 12.3) |
 

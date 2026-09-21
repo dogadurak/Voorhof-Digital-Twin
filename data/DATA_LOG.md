@@ -39,7 +39,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
-## BAG — bag:verblijfsobject  ·  2026-09-21T08:59:05Z
+## BAG — bag:verblijfsobject  ·  2026-09-21T10:08:17Z
 
 | Alan | Deger |
 |---|---|
@@ -49,7 +49,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | surum | WFS v2_0 (surum etiketi servis tarafinda yok) |
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
-| indirme_tarihi_utc | 2026-09-21T08:59:05Z |
+| indirme_tarihi_utc | 2026-09-21T10:08:17Z |
 | indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
 | sorgu_parametreleri | bbox=83373.7,444516.0,85086.3,446943.9 (EPSG:28992) = Voorhof bbox + 300 m tampon; sayfalama count=1000 |
 | crs | EPSG:28992 |
@@ -58,13 +58,13 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | attribution_sarti | TODO_0.3 |
 | sha256 | `a9987407b49d74d027a4aaa84ada52d507928cef58802c9e485d13ceb19a4182` |
 | dosya_boyutu_bytes | 13185218 |
-| run_id | RUN-2026-09-21-003 |
+| run_id | RUN-2026-09-21-004 |
 | uygulanan_islemler | yok (ham indirme, degistirilmedi) |
 
-Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi. NOT: gebruiksdoel yalnizca verblijfsobject katmanindadir; woonfunctie orani pand->verblijfsobject join'i ile hesaplanir.
+Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi. OZNITELIKLER (14): bouwjaar, gebruiksdoel, huisletter, huisnummer, identificatie, openbare_ruimte, oppervlakte, pandidentificatie, pandstatus, postcode, rdf_seealso, status, toevoeging, woonplaats. STATUS DAGILIMI: Verblijfsobject in gebruik: 18644 · Verblijfsobject gevormd: 668 · Verbouwing verblijfsobject: 34. Status filtresi config/acceptance_criteria.yml -> stage_0_2.status_filter altinda tanimlidir (Karar D-008); degerler bu dagilimdan dogrulanmistir (M-005).
 
 ---
-## BAG — bag:pand  ·  2026-09-21T08:58:42Z
+## BAG — bag:pand  ·  2026-09-21T10:07:46Z
 
 | Alan | Deger |
 |---|---|
@@ -74,7 +74,7 @@ Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degis
 | surum | WFS v2_0 (surum etiketi servis tarafinda yok) |
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
-| indirme_tarihi_utc | 2026-09-21T08:58:42Z |
+| indirme_tarihi_utc | 2026-09-21T10:07:46Z |
 | indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
 | sorgu_parametreleri | bbox=83373.7,444516.0,85086.3,446943.9 (EPSG:28992) = Voorhof bbox + 300 m tampon; sayfalama count=1000 |
 | crs | EPSG:28992 |
@@ -83,10 +83,10 @@ Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degis
 | attribution_sarti | TODO_0.3 |
 | sha256 | `c934461cd06459d3a6b9a34359cf9445fbcc413d323a6332c364b3252ef079c1` |
 | dosya_boyutu_bytes | 5151041 |
-| run_id | RUN-2026-09-21-003 |
+| run_id | RUN-2026-09-21-004 |
 | uygulanan_islemler | yok (ham indirme, degistirilmedi) |
 
-Ozellik sayisi: 7704. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi. NOT: gebruiksdoel yalnizca verblijfsobject katmanindadir; woonfunctie orani pand->verblijfsobject join'i ile hesaplanir.
+Ozellik sayisi: 7704. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi. OZNITELIKLER (8): aantal_verblijfsobjecten, bouwjaar, gebruiksdoel, identificatie, oppervlakte_max, oppervlakte_min, rdf_seealso, status. STATUS DAGILIMI: Pand in gebruik: 7576 · Verbouwing pand: 77 · Bouwvergunning verleend: 31 · Bouw gestart: 15 · Pand in gebruik (niet ingemeten): 4 · Sloopvergunning verleend: 1. Status filtresi config/acceptance_criteria.yml -> stage_0_2.status_filter altinda tanimlidir (Karar D-008); degerler bu dagilimdan dogrulanmistir (M-005).
 
 ---
 ## CBS Wijken en Buurten 2025 — wijkenbuurten:buurten  ·  2026-09-21T08:58:27Z
