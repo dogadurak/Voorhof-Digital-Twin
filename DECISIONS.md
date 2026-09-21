@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-011**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-012**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -22,6 +22,7 @@
 | D-008 | 2026-09-21 | 0.2a metrik paydalari ve status filtresi | ONAYLANDI |
 | D-009 | 2026-09-21 | AOI = 7 resmi konut buurt'u; aday izgarasi iptal | ONAYLANDI |
 | D-010 | 2026-09-21 | AHN/3DBAG indirmelerine +50 m guvenlik payi | ONAYLANDI |
+| D-011 | 2026-09-21 | C alani kural tabanli secilir; hesap 0.3 sonrasina | ONAYLANDI |
 
 ---
 
@@ -520,3 +521,97 @@ B'yi **en az 50 m payla** icerdigi kontrol edilir. Pay saglanmiyorsa Bolum 12.6
 uygulanir; eksik kapsamla devam edilmez.
 
 **Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-011 · [2026-09-21] · C alani kural tabanli secilir; hesap 0.3 sonrasina birakildi
+
+**Karar:** C alani (mikroklima, 150 x 150 m) QGIS'te gozle secilmez; config'te
+kilitli kurallarla hesaplanir. **Kurallar simdi muhurlendi, aday hesabi
+CALISTIRILMADI.** Hesap Asama 0.3'te 3DBAG yukseklik verisi geldikten sonra,
+yukseklik kurali da eklenerek **tek seferde** yapilacaktir.
+
+**Neden ertelendi:** ENVI-met LITE'in 25 dikey hucre siniri, secilebilecek
+karenin en yuksek binasina bir ust sinir koyuyor. Yukseklik verisi (3DBAG
+`b3_h_dak_max`) Asama 0.3'te gelecek. Once secip sonra yukseklik kontrolu yapmak,
+kuralin ihlal edildigi durumda **ikinci bir secim turu** gerektirirdi; kullanici
+bunu istemedi. Tek seferde dogru secim yapilacak.
+
+**Kullanicinin gozlemleri (yontem degisikliginin tetikleyicisi):**
+- Uzun bloklar eksenlere hizali oldugu icin kare kenarinin bina kesmesi
+  kacinilmaz gorunuyor.
+- Denenen konumda **De Eglantier okulu** (`onderwijsfunctie`) kareye giriyordu.
+
+### Muhurlenen kurallar
+
+`config/acceptance_criteria.yml` -> `stage_0_2_c`, `status: SEALED_NOT_EXECUTED`.
+Kare 150 m, eksenlere hizali, 10 m izgara adimi, A sinirina >= 50 m, sinirdan
+gecen pand yok, konut disi VBO yok, en az 2 konutlu pand, adaylar arasi
+>= 150 m (hic ortusmeme).
+
+### Yardimci yapi esigi — kullanicinin onerisi OLCUMLE CURUTULDU
+
+Kullanici "taban alani < 30 m2" onermisti. A'daki pand taban alani dagilimi
+olculdu:
+
+| | |
+|---|---|
+| Konutsuz pand (n=361) | p50 = 9,2 m2 · p95 = 16,5 m2 · p99 = 85,3 m2 · maks 266,6 m2 |
+| **30 m2 esiginin bedeli** | **KONUTLU panden'in %16,9'u (152 gercek ev) "yardimci yapi" sayilirdi** |
+
+Taban alani tek basina ayirmiyor: A'daki konutlarin %10'u 16,8 m2'nin altinda.
+
+**Kabul edilen tanim:** `aantal_verblijfsobjecten == 0 AND taban_alani < 50 m2`.
+Birinci kosul semantik olarak dogru ayiricidir ("icinde konut birimi yok");
+ikincisi yalnizca guvenlik kapagidir — konutsuz panden'in en buyugu 266,6 m2'dir
+(otopark/trafo olabilir) ve boyle bir yapi mikroklimayi etkiler.
+
+### Temsil edicilik referansi
+
+Referans **A geneli degerdir** (kullanici onayi): bina yogunlugu **0,1755**
+(taban alani/alan) ve bouwjaar 1960-1975 orani **%75,1**. Aday kumesinin medyani
+DEGIL — medyan referansi aday kumesine baglar, kural degisirse referans da kayar.
+
+### On-kayitli yedek set (post-hoc ayar DEGIL)
+
+Birincil set sifir aday verirse **onceden yazilmis** yedek uygulanir:
+C-3 kurali "kare sinirini kesen pand yok" -> **"ic 120 x 120 m cekirdegi kesen
+pand yok"**.
+
+Gerekce hesaptan once kayda gecirilmistir: dis 15 m serit ENVI-met sonuclarinda
+zaten yorumlanmayacaktir, dolayisiyla o seridi kesen bir bina yorumlanan
+cekirdegi etkilemez. Hangi setin uygulandigi raporda acikca belirtilir.
+**Ikisi de basarisiz olursa Bolum 12.6 failure raporu yazilir ve durulur;
+kural kendiliginden daha fazla gevsetilmez.**
+
+### Yukseklik kurali — ONAY BEKLIYOR
+
+ENVI-met belgelerinden **dogrulanan** (tahmin edilmeyen) kurallar:
+
+| Kural | Deger |
+|---|---|
+| LITE grid siniri | **50 x 50 x 25 hucre** |
+| Model tepesi | **en yuksek binanin EN AZ 2 KATI**, en az 30 m |
+| Telescoping | ancak **en yuksek bina yuksekliginden itibaren** baslayabilir |
+
+Kaynak: envi-met.info bilgi bankasi (Total Model Height, Vertical Grid Layout)
+ve envi-met.com LITE surum tanimi. Dogrulama tarihi 2026-09-21.
+
+**Ajanin turettigi oneri** (aritmetik ajana ait, sayi belgede YOK):
+
+| Hedef dz | Model yuksekligi (25 hucre) | Izin verilen H_max |
+|---|---|---|
+| <= 2 m | 50 m | **25 m** |
+| <= 3 m | 75 m | 37,5 m |
+
+**Onerilen: H_max <= 25 m.** Telescoping bu siniri yukari cekebilir ama
+telescoping buyume katsayisi belgeden dogrulanamadi; dogrulanmamis katsayiya
+dayali esik onerilmez (M-005 kurali).
+
+**Bilinen risk:** Voorhof-Hoogbouw (`BU05032406`) yuksek bloklar iceriyor.
+25 m kurali A'nin bu bolumunu C adayi olmaktan cikarabilir. Bu kabul edilebilir
+— C, A'yi temsil eden bir ALT-ALANDIR — ancak yuksek bloklar tamamen dislanirsa
+C'nin A'yi temsil etme iddiasi zayiflar ve bu **sinirlama olarak raporlanir**.
+
+**Onay:** Kullanici, 2026-09-21 (kurallar ve erteleme). Yukseklik esigi
+**onay bekliyor** — bkz. PENDING_DECISIONS P-011.

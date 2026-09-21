@@ -173,6 +173,30 @@ Ek sinirlama (Bolum 5): Landsat termal bandi **gercekte 100 m** cozunurluktedir,
 30 m'ye resample edilmistir. Tek bir mahalle icin kabadir. ECOSTRESS (~70 m)
 denenebilir. Bu sinirlama rapordan **cikarilmaz**.
 
+### 4.1b ENVI-met analiz serit kurali (Karar D-011)
+
+**Baglayici kural:** ENVI-met sonuclarinda C alaninin **dis 10-15 m serisi
+YORUMLANMAZ**. Yalnizca ic cekirdek (150 m kare icin ~120 x 120 m) analiz edilir.
+
+**Gerekce:** Domen kenarinda sinir kosullari henuz gelismemistir; giris akimi
+kentsel dokuya uyum saglamamistir ve kenar hucrelerinde yapay gradyanlar olusur.
+Kenar degerleri yorumlamak, modelin kendi sinir kosulunu fiziksel bir sonuc gibi
+raporlamak olurdu.
+
+**Sonuclari:**
+- Raporlanan tum ENVI-met istatistikleri (ortalama, maks, PET/UTCI dagilimlari)
+  yalnizca cekirdek uzerinden hesaplanir.
+- Serit genisligi rapora **sayiyla** yazilir; "kenarlar atildi" gibi belirsiz bir
+  ifade yeterli degildir.
+- Bu kural, C secimindeki yedek kural setinin de gerekcesidir
+  (`stage_0_2_c.fallback`): dis serit nasilsa yorumlanmadigi icin, o seridi kesen
+  bir bina yorumlanan cekirdegi etkilemez.
+
+**Etkilesim uyarisi:** Bu kural C'nin etkin analiz alanini 150 x 150 m'den
+~120 x 120 m'ye dusurur. C'nin "A'yi temsil eden alt-alan" iddiasi, temsil
+edicilik skoru 150 m kare uzerinden hesaplandigi icin, cekirdek ile tam ortusmez.
+Fark kucuktur ama raporda belirtilir.
+
 ### 4.2 Ruzgar → `literature_consistent`
 
 Bagimsiz acik CFD benchmark zayif (Bolum 5). Sonuc en fazla "NEN 8100 literatur

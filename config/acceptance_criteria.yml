@@ -705,3 +705,148 @@ building_roles:
       binalarinda alan BOS BIRAKILMAZ — acik gerekceyle isaretlenir. Bos alan
       "hesaplanmadi" ile "sifir" arasindaki farki gizler; Bolum 1 kural 5
       (belirsizligi gizleme) bunu yasaklar.
+
+# ============================================================================
+#  C ALANI SECIM KURALLARI (Karar D-011)
+#  MUHURLENDI 2026-09-21 - aday hesabi CALISTIRILMADI.
+#  Hesap Asama 0.3'te, 3DBAG yukseklik verisi geldikten sonra TEK SEFERDE
+#  yapilacak (kullanici talimati: iki kez secim yapmamak icin).
+# ============================================================================
+stage_0_2_c:
+  name: "C alani (mikroklima) kural tabanli secim"
+  decision_ref: D-011
+  status: SEALED_NOT_EXECUTED
+  sealed_at: "2026-09-21"
+  execute_at: "Asama 0.3 sonrasi (3DBAG b3_h_dak_max gerekiyor)"
+  crs: "EPSG:28992"
+
+  geometry:
+    side_m: 150
+    axis_aligned: true
+    rotation: "Asama 4'te degerlendirilecek; 0.2'de dondurme YOK"
+    grid_step_m: 10
+
+  # --- Birincil kural seti ---
+  rules_primary:
+    - id: "C-1"
+      rule: "Kare tamamen A icinde"
+    - id: "C-2"
+      rule: "Kare sinirindan A sinirina en az 50 m"
+    - id: "C-3"
+      rule: "Kare SINIRINI kesen pand yok (kucuk yardimci yapilar haric - bkz. auxiliary_building)"
+    - id: "C-4"
+      rule: "Kare icinde konut disi gebruiksdoel tasiyan VBO yok"
+      excluded_gebruiksdoel: >
+        woonfunctie DISINDAKI her deger: onderwijsfunctie, gezondheidszorgfunctie,
+        bijeenkomstfunctie, winkelfunctie, kantoorfunctie, industriefunctie,
+        sportfunctie, logiesfunctie, celfunctie, overige gebruiksfunctie.
+        Coklu islevli (virgullu) kayitlar da konut disi sayilir - D-008'in
+        exact_match kuralinin C icin karsiligi.
+      user_note: "Kullanici QGIS denemesinde De Eglantier okulunun (onderwijsfunctie) kareye girdigini gozlemledi."
+    - id: "C-5"
+      rule: "Kare icinde en az 2 konutlu pand (aantal_verblijfsobjecten > 0)"
+    - id: "C-6"
+      rule: "TODO_ONAY_BEKLIYOR - yukseklik kurali, bkz. height_rule"
+      status: TODO_ONAY_BEKLIYOR
+
+  # --- Yardimci yapi tanimi (OLCULDU, tahmin edilmedi) ---
+  auxiliary_building:
+    definition: "aantal_verblijfsobjecten == 0  AND  taban_alani_m2 < 50"
+    measured_evidence:
+      a_panden_total: 1259
+      without_dwellings: 361
+      without_dwellings_p50_m2: 9.2
+      without_dwellings_p95_m2: 16.5
+      without_dwellings_p99_m2: 85.3
+      without_dwellings_max_m2: 266.6
+      coverage_at_50m2_pct: 98
+    rationale: >
+      Kullanici "taban alani < 30 m2" onermisti. OLCUM BUNU CURUTTU: A'daki
+      KONUTLU panden'in %16,9'u (152 adet) 30 m2'nin altindadir - saf alan esigi
+      152 gercek evi "yok sayilabilir yardimci yapi" ilan ederdi.
+      Dogru ayirici zaten elimizdedir: aantal_verblijfsobjecten == 0, yani
+      "icinde konut birimi yok". Alan siniri yalnizca GUVENLIK KAPAGIDIR:
+      konutsuz panden'in en buyugu 266,6 m2'dir (otopark/trafo yapisi olabilir)
+      ve boyle bir yapi mikroklimayi etkiler, sinirdan gecirilmemelidir.
+      50 m2 siniri konutsuzlarin %98'ini kapsar.
+
+  # --- Temsil edicilik skoru (referans: A GENELI, kullanici onayi) ---
+  representativeness:
+    reference: a_wide_values
+    metrics:
+      - name: building_density
+        definition: "kare icindeki pand taban alani toplami / kare alani"
+        a_reference_value: 0.1755
+        measured_at: "2026-09-21"
+      - name: bouwjaar_1960_1975_ratio_pct
+        definition: "kare icindeki panden'a bagli VBO'lardan 1960-1975 olanlarin orani"
+        a_reference_value: 75.1
+        measured_at: "2026-09-21"
+    score: "iki metrigin A referansindan MUTLAK SAPMASININ normalize toplami; KUCUK olan daha iyi"
+    normalisation: "her metrik kendi gecerli-aday dagiliminin std'sine bolunur"
+    rationale: >
+      Referans A geneli degerdir, aday kumesinin medyani DEGIL (kullanici onayi
+      2026-09-21). Gerekce: medyan referansi aday kumesine baglar; kural degisirse
+      referans da kayar ve sonuclar karsilastirilamaz hale gelir.
+
+  candidate_separation:
+    min_center_distance_m: 150
+    n_candidates: 3
+    note: "150 m ayriklik, 150 m kenarli karelerin HIC ortusmemesi demektir."
+
+  # --- ON-KAYITLI YEDEK SET (sonuc gorulmeden yazildi) ---
+  # Bolum 12.2: esik sonuctan sonra gevsetilemez. Bu yedek, birincil set sifir
+  # aday verirse uygulanmak uzere HESAPTAN ONCE kayda gecirilmistir.
+  fallback:
+    trigger: "rules_primary ile gecerli aday sayisi == 0"
+    change: "C-3 degisir: 'kare sinirini kesen pand yok' -> 'ic 120x120 m cekirdegi kesen pand yok'"
+    core_side_m: 120
+    rationale: >
+      Dis 15 m serit ENVI-met sonuclarinda zaten YORUMLANMAYACAKTIR
+      (bkz. docs/validation_protocol.md, analysis_margin). O seridi kesen bir bina,
+      yorumlanan cekirdegi etkilemez. Gevsetme bu nedenle fiziksel olarak
+      savunulabilir ve post-hoc DEGILDIR - sonuc gorulmeden yazilmistir.
+    reporting: "Hangi setin uygulandigi raporda ACIKCA belirtilir."
+    if_both_fail: "Bolum 12.6 failure raporu yazilir, durulur. Kural KENDILIGINDEN daha fazla gevsetilmez."
+
+  # --- YUKSEKLIK KURALI - 0.3'te eklenecek, ONAY BEKLIYOR ---
+  height_rule:
+    status: TODO_ONAY_BEKLIYOR
+    decision_ref: D-011
+    data_needed: "3DBAG b3_h_dak_max (Asama 0.3'te inecek)"
+    blocking_for: "C aday hesabi"
+
+    envimet_documented_facts:
+      lite_grid_limit: "50 x 50 x 25 hucre"
+      model_top_rule: "Model yuksekligi, en yuksek binanin EN AZ 2 KATI ve en az 30 m olmali"
+      telescoping_rule: >
+        Telescoping ancak en yuksek bina yuksekliginden ITIBAREN baslayabilir;
+        aksi halde binalar dogru gridlenmez.
+      splitting_note: "Yaya seviyesi cozunurlugu icin en alt hucre bolunebilir; bu dikey hucre butcesini etkiler."
+      source: "envi-met.info bilgi bankasi (Total Model Height, Vertical Grid Layout) + envi-met.com LITE surum tanimi"
+      verified_at: "2026-09-21"
+
+    derived_proposal:
+      note: >
+        Asagidaki aritmetik AJAN TARAFINDAN TURETILMISTIR; belgelenmis bir sayi
+        DEGILDIR. Turetme yalnizca yukaridaki belgelenmis kurallara dayanir ve
+        DUZGUN (uniform) dikey grid varsayar.
+      uniform_grid_bound:
+        - target_dz_m: 2.0
+          model_height_m: 50.0
+          max_building_height_m: 25.0
+        - target_dz_m: 3.0
+          model_height_m: 75.0
+          max_building_height_m: 37.5
+      recommended_max_building_height_m: 25.0
+      recommended_rationale: >
+        dz <= 2 m hedefi, duzgun grid ve belgelenmis "2 kat" kurali birlikte
+        H_max <= 25 m verir. Telescoping bu siniri yukari cekebilir, ANCAK
+        telescoping buyume katsayisi belgeden dogrulanamadi; dogrulanmamis bir
+        katsayiya dayali esik onerilmez (M-005 kurali).
+      known_risk: >
+        Voorhof-Hoogbouw buurt'unda (BU05032406) yuksek bloklar bulunuyor.
+        H_max <= 25 m kurali A'nin bu bolumunu C adayi olmaktan cikarabilir.
+        Bu KABUL EDILEBILIR bir sonuctur - C, A'yi temsil eden bir ALT-ALANDIR,
+        A'nin tamami degildir. Ancak yuksek bloklar tamamen dislanirsa C'nin
+        A'yi temsil etme iddiasi zayiflar ve bu SINIRLAMA olarak raporlanir.

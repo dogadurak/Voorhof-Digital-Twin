@@ -18,6 +18,7 @@
 | ~~P-008~~ | 0.2 | ~~"Verbouwing pand" sayima girsin mi?~~ | — | **KAPANDI 2026-09-21** |
 | P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
+| P-011 | 0.3 | C alani secimi + ENVI-met yukseklik esigi | C alani (Asama 4) | **0.3 sonrasi, hemen** |
 
 ---
 
@@ -376,3 +377,50 @@ sunulur. Olumsuzsa ikincil tutarlilik kontrolu olarak kullanilabilir ama
 
 **Bu karar verilmeden ilerlenemeyen isler:** Yok. Mevcut plan (Stedin PC6)
 degismeden ilerler; bu yalnizca bir guclendirme firsatidir.
+
+---
+
+## [2026-09-21] [0.3] P-011 — C alani secimi ve ENVI-met yukseklik esigi
+
+**Durum: 0.3 SONRASI CALISTIRILACAK.** Kurallar muhurlendi
+(`config/acceptance_criteria.yml` -> `stage_0_2_c`, `SEALED_NOT_EXECUTED`),
+**aday hesabi calistirilmadi**. Karar D-011.
+
+**Neden bekliyor:** ENVI-met LITE'in 25 dikey hucre siniri, secilecek karenin en
+yuksek binasina ust sinir koyuyor. Yukseklik verisi (3DBAG `b3_h_dak_max`) Asama
+0.3'te gelecek. Once secip sonra yukseklik kontrolu yapmak ikinci bir secim turu
+gerektirebilirdi.
+
+### Onay bekleyen: yukseklik esigi (kriter C-6)
+
+ENVI-met belgelerinden **dogrulandi** (2026-09-21):
+
+| Belgelenmis kural | Deger |
+|---|---|
+| LITE grid siniri | 50 x 50 x 25 hucre |
+| Model tepesi | en yuksek binanin **en az 2 kati**, en az 30 m |
+| Telescoping | ancak en yuksek bina yuksekliginden itibaren baslayabilir |
+
+**Ajanin turettigi oneri** (sayi belgede yok, aritmetik ajana ait):
+
+| Hedef dz | Model yuksekligi | Izin verilen H_max |
+|---|---|---|
+| <= 2 m | 50 m | **25 m (onerilen)** |
+| <= 3 m | 75 m | 37,5 m |
+
+**Secenekler:**
+- **A — H_max <= 25 m** *(ajanin onerisi)*: dz <= 2 m, duzgun grid. En saglam;
+  hicbir dogrulanmamis varsayim icermiyor.
+- **B — H_max <= 37,5 m**: dz <= 3 m kabul edilir. Daha fazla aday, daha kaba
+  dikey cozunurluk. ENVI-met'in yaya seviyesi analizinde 3 m kaba sayilabilir.
+- **C — Telescoping ile daha yuksek sinir**: belgede telescoping'in izin verildigi
+  yaziyor ama **buyume katsayisi dogrulanamadi**. Katsayi ENVI-met surumunden
+  teyit edilmeden esik olarak onerilmez (M-005 kurali).
+
+**Bilinen risk (her secenek icin):** Voorhof-Hoogbouw (`BU05032406`) yuksek
+bloklar iceriyor. Dar bir esik A'nin bu bolumunu C adayi olmaktan cikarir. Bu
+kabul edilebilir (C bir alt-alandir) ama yuksek bloklar tamamen dislanirsa C'nin
+A'yi temsil etme iddiasi zayiflar ve **sinirlama olarak raporlanir**.
+
+**Bu karar verilmeden ilerlenemeyen isler:** C aday hesabi ve dolayisiyla Asama 4
+mikroklima modulu. **Asama 0.3 ve Asama 1-3 etkilenmez.**
