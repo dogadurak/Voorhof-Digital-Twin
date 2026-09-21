@@ -1,0 +1,2988 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "urn:ogc:def:crs:EPSG::28992"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84019.22,
+       445083.598
+      ],
+      [
+       84007.82,
+       445079.397
+      ],
+      [
+       84008.863,
+       445076.591
+      ],
+      [
+       83994.861,
+       445071.437
+      ],
+      [
+       83993.826,
+       445074.253
+      ],
+      [
+       83982.411,
+       445070.071
+      ],
+      [
+       83990.7,
+       445047.474
+      ],
+      [
+       83982.23,
+       445044.349
+      ],
+      [
+       83984.348,
+       445038.598
+      ],
+      [
+       83998.577,
+       445043.805
+      ],
+      [
+       83996.516,
+       445049.463
+      ],
+      [
+       84027.565,
+       445060.896
+      ],
+      [
+       84019.22,
+       445083.598
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038184",
+    "footprint_area_m2": 996.55,
+    "has_verblijfsobject": true,
+    "aantal_verblijfsobjecten": 1,
+    "gebruiksdoel": "onderwijsfunctie",
+    "bouwjaar": 2023,
+    "status": "Pand in gebruik",
+    "point_count": 81963,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.9891,
+    "alt_grup": "B_buyuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84003.34,
+       445042.98
+      ],
+      [
+       84004.425,
+       445040.066
+      ],
+      [
+       84012.997,
+       445043.236
+      ],
+      [
+       84011.91,
+       445046.158
+      ],
+      [
+       84003.34,
+       445042.98
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038212",
+    "footprint_area_m2": 28.46,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2023,
+    "status": "Pand in gebruik",
+    "point_count": 9324,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.2615,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84026.229,
+       445788.384
+      ],
+      [
+       84016.702,
+       445785.78
+      ],
+      [
+       84017.323,
+       445783.408
+      ],
+      [
+       84026.85,
+       445786.012
+      ],
+      [
+       84026.229,
+       445788.384
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038258",
+    "footprint_area_m2": 24.22,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2023,
+    "status": "Pand in gebruik",
+    "point_count": 2515,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.2962,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83883.273,
+       446220.684
+      ],
+      [
+       83882.883,
+       446222.943
+      ],
+      [
+       83881.086,
+       446222.661
+      ],
+      [
+       83881.468,
+       446220.386
+      ],
+      [
+       83883.273,
+       446220.684
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038260",
+    "footprint_area_m2": 4.19,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2023,
+    "status": "Pand in gebruik",
+    "point_count": 221,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.9955,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84251.988,
+       446027.771
+      ],
+      [
+       84252.407,
+       446025.131
+      ],
+      [
+       84255.145,
+       446025.548
+      ],
+      [
+       84254.742,
+       446028.191
+      ],
+      [
+       84251.988,
+       446027.771
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038556",
+    "footprint_area_m2": 7.43,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 489,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.002,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83854.229,
+       445613.895
+      ],
+      [
+       83854.812,
+       445611.958
+      ],
+      [
+       83857.56,
+       445612.782
+      ],
+      [
+       83856.977,
+       445614.719
+      ],
+      [
+       83854.229,
+       445613.895
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038675",
+    "footprint_area_m2": 5.8,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2022,
+    "status": "Pand in gebruik",
+    "point_count": 334,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0868,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83992.084,
+       444992.771
+      ],
+      [
+       83993.23,
+       444989.705
+      ],
+      [
+       83995.761,
+       444990.65
+      ],
+      [
+       83994.615,
+       444993.716
+      ],
+      [
+       83992.084,
+       444992.771
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038676",
+    "footprint_area_m2": 8.84,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2014,
+    "status": "Pand in gebruik",
+    "point_count": 1336,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0719,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84508.902,
+       445194.31
+      ],
+      [
+       84509.888,
+       445192.006
+      ],
+      [
+       84512.941,
+       445193.313
+      ],
+      [
+       84511.963,
+       445195.621
+      ],
+      [
+       84508.902,
+       445194.31
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038677",
+    "footprint_area_m2": 8.33,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1985,
+    "status": "Pand in gebruik",
+    "point_count": 291,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1168,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84549.648,
+       445181.64
+      ],
+      [
+       84550.843,
+       445178.756
+      ],
+      [
+       84553.088,
+       445179.686
+      ],
+      [
+       84551.893,
+       445182.57
+      ],
+      [
+       84549.648,
+       445181.64
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038678",
+    "footprint_area_m2": 7.59,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1985,
+    "status": "Pand in gebruik",
+    "point_count": 302,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0728,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84568.192,
+       445465.312
+      ],
+      [
+       84568.882,
+       445463.468
+      ],
+      [
+       84571.017,
+       445464.277
+      ],
+      [
+       84570.32,
+       445466.118
+      ],
+      [
+       84568.192,
+       445465.312
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000038679",
+    "footprint_area_m2": 4.49,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2007,
+    "status": "Pand in gebruik",
+    "point_count": 172,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0407,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84653.116,
+       445218.418
+      ],
+      [
+       84654.898,
+       445214.229
+      ],
+      [
+       84657.416,
+       445215.3
+      ],
+      [
+       84655.634,
+       445219.489
+      ],
+      [
+       84653.116,
+       445218.418
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039600",
+    "footprint_area_m2": 12.46,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1992,
+    "status": "Pand in gebruik",
+    "point_count": 395,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.043,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84648.943,
+       445216.745
+      ],
+      [
+       84650.467,
+       445213.046
+      ],
+      [
+       84652.823,
+       445214.016
+      ],
+      [
+       84651.3,
+       445217.716
+      ],
+      [
+       84648.943,
+       445216.745
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039601",
+    "footprint_area_m2": 10.2,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2011,
+    "status": "Pand in gebruik",
+    "point_count": 375,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.048,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84641.592,
+       445215.274
+      ],
+      [
+       84642.786,
+       445212.612
+      ],
+      [
+       84644.808,
+       445213.519
+      ],
+      [
+       84643.614,
+       445216.181
+      ],
+      [
+       84641.592,
+       445215.274
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039602",
+    "footprint_area_m2": 6.47,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 193,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0518,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84639.903,
+       445208.48
+      ],
+      [
+       84639.192,
+       445206.764
+      ],
+      [
+       84639.758,
+       445205.31
+      ],
+      [
+       84642.533,
+       445206.39
+      ],
+      [
+       84641.481,
+       445209.094
+      ],
+      [
+       84639.903,
+       445208.48
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039603",
+    "footprint_area_m2": 7.78,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1988,
+    "status": "Pand in gebruik",
+    "point_count": 259,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0347,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84630.391,
+       445209.12
+      ],
+      [
+       84632.431,
+       445203.877
+      ],
+      [
+       84634.718,
+       445204.767
+      ],
+      [
+       84632.678,
+       445210.01
+      ],
+      [
+       84630.391,
+       445209.12
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039604",
+    "footprint_area_m2": 13.81,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 668,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1138,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84576.055,
+       445225.471
+      ],
+      [
+       84577.954,
+       445220.996
+      ],
+      [
+       84580.49,
+       445222.072
+      ],
+      [
+       84578.589,
+       445226.553
+      ],
+      [
+       84576.055,
+       445225.471
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039605",
+    "footprint_area_m2": 13.4,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2021,
+    "status": "Pand in gebruik",
+    "point_count": 421,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1354,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84570.625,
+       445238.267
+      ],
+      [
+       84572.011,
+       445234.999
+      ],
+      [
+       84576.009,
+       445236.654
+      ],
+      [
+       84574.651,
+       445239.933
+      ],
+      [
+       84570.625,
+       445238.267
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039606",
+    "footprint_area_m2": 15.41,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2002,
+    "status": "Pand in gebruik",
+    "point_count": 484,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1591,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84567.635,
+       445245.312
+      ],
+      [
+       84570.11,
+       445239.479
+      ],
+      [
+       84573.212,
+       445240.808
+      ],
+      [
+       84570.741,
+       445246.63
+      ],
+      [
+       84567.635,
+       445245.312
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039607",
+    "footprint_area_m2": 21.36,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1991,
+    "status": "Pand in gebruik",
+    "point_count": 646,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0511,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84570.87,
+       445184.717
+      ],
+      [
+       84572.051,
+       445181.946
+      ],
+      [
+       84572.392,
+       445181.146
+      ],
+      [
+       84574.917,
+       445182.222
+      ],
+      [
+       84572.95,
+       445186.838
+      ],
+      [
+       84570.425,
+       445185.762
+      ],
+      [
+       84570.87,
+       445184.717
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039608",
+    "footprint_area_m2": 13.77,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2001,
+    "status": "Pand in gebruik",
+    "point_count": 1249,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0633,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84566.233,
+       445182.742
+      ],
+      [
+       84567.414,
+       445179.97
+      ],
+      [
+       84572.051,
+       445181.946
+      ],
+      [
+       84570.87,
+       445184.717
+      ],
+      [
+       84566.233,
+       445182.742
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039609",
+    "footprint_area_m2": 15.18,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2001,
+    "status": "Pand in gebruik",
+    "point_count": 758,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0409,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84504.471,
+       445200.74
+      ],
+      [
+       84506.491,
+       445196.012
+      ],
+      [
+       84509.432,
+       445197.271
+      ],
+      [
+       84507.409,
+       445201.998
+      ],
+      [
+       84507.027,
+       445201.834
+      ],
+      [
+       84504.471,
+       445200.74
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039610",
+    "footprint_area_m2": 16.44,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2014,
+    "status": "Pand in gebruik",
+    "point_count": 505,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1109,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84502.452,
+       445205.466
+      ],
+      [
+       84504.471,
+       445200.74
+      ],
+      [
+       84507.027,
+       445201.834
+      ],
+      [
+       84505.004,
+       445206.559
+      ],
+      [
+       84502.452,
+       445205.466
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039611",
+    "footprint_area_m2": 14.28,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2018,
+    "status": "Pand in gebruik",
+    "point_count": 437,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0503,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84500.415,
+       445210.21
+      ],
+      [
+       84500.739,
+       445209.475
+      ],
+      [
+       84502.452,
+       445205.466
+      ],
+      [
+       84505.004,
+       445206.559
+      ],
+      [
+       84505.595,
+       445206.811
+      ],
+      [
+       84503.549,
+       445211.591
+      ],
+      [
+       84500.415,
+       445210.21
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039612",
+    "footprint_area_m2": 17.71,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2017,
+    "status": "Pand in gebruik",
+    "point_count": 510,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0235,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84493.872,
+       445212.584
+      ],
+      [
+       84495.75,
+       445208.153
+      ],
+      [
+       84499.524,
+       445209.753
+      ],
+      [
+       84497.646,
+       445214.183
+      ],
+      [
+       84493.872,
+       445212.584
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039613",
+    "footprint_area_m2": 19.72,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2004,
+    "status": "Pand in gebruik",
+    "point_count": 541,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0388,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84484.595,
+       445320.775
+      ],
+      [
+       84485.676,
+       445318.219
+      ],
+      [
+       84487.655,
+       445319.056
+      ],
+      [
+       84486.573,
+       445321.613
+      ],
+      [
+       84484.595,
+       445320.775
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039614",
+    "footprint_area_m2": 5.96,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2000,
+    "status": "Pand in gebruik",
+    "point_count": 172,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0349,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84413.449,
+       445279.645
+      ],
+      [
+       84415.116,
+       445275.723
+      ],
+      [
+       84417.742,
+       445276.839
+      ],
+      [
+       84416.075,
+       445280.761
+      ],
+      [
+       84413.449,
+       445279.645
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039615",
+    "footprint_area_m2": 12.16,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2015,
+    "status": "Pand in gebruik",
+    "point_count": 540,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0222,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84573.066,
+       445412.558
+      ],
+      [
+       84573.748,
+       445410.939
+      ],
+      [
+       84575.615,
+       445411.725
+      ],
+      [
+       84574.933,
+       445413.345
+      ],
+      [
+       84573.066,
+       445412.558
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039616",
+    "footprint_area_m2": 3.56,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1998,
+    "status": "Pand in gebruik",
+    "point_count": 107,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0841,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84568.246,
+       445410.388
+      ],
+      [
+       84568.97,
+       445408.67
+      ],
+      [
+       84571.102,
+       445409.567
+      ],
+      [
+       84570.378,
+       445411.286
+      ],
+      [
+       84568.246,
+       445410.388
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039617",
+    "footprint_area_m2": 4.31,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 131,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0305,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84556.931,
+       445406.771
+      ],
+      [
+       84557.607,
+       445405.098
+      ],
+      [
+       84560.02,
+       445406.073
+      ],
+      [
+       84559.344,
+       445407.746
+      ],
+      [
+       84556.931,
+       445406.771
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039618",
+    "footprint_area_m2": 4.7,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1997,
+    "status": "Pand in gebruik",
+    "point_count": 140,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1143,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84547.563,
+       445407.804
+      ],
+      [
+       84548.418,
+       445405.042
+      ],
+      [
+       84550.389,
+       445405.651
+      ],
+      [
+       84549.534,
+       445408.414
+      ],
+      [
+       84547.563,
+       445407.804
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039619",
+    "footprint_area_m2": 5.97,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1997,
+    "status": "Pand in gebruik",
+    "point_count": 173,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0173,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84548.602,
+       445404.074
+      ],
+      [
+       84549.658,
+       445400.9
+      ],
+      [
+       84551.809,
+       445401.616
+      ],
+      [
+       84550.753,
+       445404.79
+      ],
+      [
+       84548.602,
+       445404.074
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039620",
+    "footprint_area_m2": 7.58,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1997,
+    "status": "Pand in gebruik",
+    "point_count": 249,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0723,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84534.664,
+       445405.727
+      ],
+      [
+       84535.3,
+       445403.974
+      ],
+      [
+       84537.833,
+       445404.892
+      ],
+      [
+       84537.198,
+       445406.645
+      ],
+      [
+       84534.664,
+       445405.727
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039621",
+    "footprint_area_m2": 5.02,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1998,
+    "status": "Pand in gebruik",
+    "point_count": 146,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0616,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84514.085,
+       445406.837
+      ],
+      [
+       84514.928,
+       445404.472
+      ],
+      [
+       84517.378,
+       445405.346
+      ],
+      [
+       84516.535,
+       445407.71
+      ],
+      [
+       84514.085,
+       445406.837
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039622",
+    "footprint_area_m2": 6.53,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 179,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0782,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84562.462,
+       445479.869
+      ],
+      [
+       84563.283,
+       445477.7
+      ],
+      [
+       84565.406,
+       445478.504
+      ],
+      [
+       84564.585,
+       445480.673
+      ],
+      [
+       84562.462,
+       445479.869
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039623",
+    "footprint_area_m2": 5.26,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1992,
+    "status": "Pand in gebruik",
+    "point_count": 179,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1564,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84558.262,
+       445486.595
+      ],
+      [
+       84560.033,
+       445481.92
+      ],
+      [
+       84563.336,
+       445483.171
+      ],
+      [
+       84561.565,
+       445487.846
+      ],
+      [
+       84558.262,
+       445486.595
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039624",
+    "footprint_area_m2": 17.66,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2017,
+    "status": "Pand in gebruik",
+    "point_count": 492,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0102,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84491.825,
+       445617.897
+      ],
+      [
+       84493.367,
+       445613.227
+      ],
+      [
+       84495.253,
+       445613.85
+      ],
+      [
+       84493.71,
+       445618.52
+      ],
+      [
+       84491.825,
+       445617.897
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039625",
+    "footprint_area_m2": 9.77,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 823,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0644,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84490.4,
+       445616.266
+      ],
+      [
+       84491.053,
+       445614.288
+      ],
+      [
+       84492.489,
+       445614.762
+      ],
+      [
+       84491.836,
+       445616.74
+      ],
+      [
+       84490.4,
+       445616.266
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039626",
+    "footprint_area_m2": 3.15,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 262,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1679,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84489.244,
+       445619.263
+      ],
+      [
+       84489.816,
+       445617.532
+      ],
+      [
+       84491.402,
+       445618.055
+      ],
+      [
+       84490.83,
+       445619.787
+      ],
+      [
+       84489.244,
+       445619.263
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039627",
+    "footprint_area_m2": 3.05,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2015,
+    "status": "Pand in gebruik",
+    "point_count": 303,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0594,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84473.052,
+       445618.156
+      ],
+      [
+       84473.88,
+       445615.661
+      ],
+      [
+       84476.045,
+       445616.379
+      ],
+      [
+       84475.217,
+       445618.874
+      ],
+      [
+       84473.052,
+       445618.156
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039628",
+    "footprint_area_m2": 6.0,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2011,
+    "status": "Pand in gebruik",
+    "point_count": 466,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0494,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84469.102,
+       445613.851
+      ],
+      [
+       84469.58,
+       445612.408
+      ],
+      [
+       84471.334,
+       445612.99
+      ],
+      [
+       84470.856,
+       445614.433
+      ],
+      [
+       84469.102,
+       445613.851
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039629",
+    "footprint_area_m2": 2.81,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2022,
+    "status": "Pand in gebruik",
+    "point_count": 224,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1562,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84457.297,
+       445617.009
+      ],
+      [
+       84457.799,
+       445615.496
+      ],
+      [
+       84459.027,
+       445615.904
+      ],
+      [
+       84458.525,
+       445617.416
+      ],
+      [
+       84457.297,
+       445617.009
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039630",
+    "footprint_area_m2": 2.06,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2016,
+    "status": "Pand in gebruik",
+    "point_count": 197,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1574,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84452.295,
+       445615.877
+      ],
+      [
+       84453.241,
+       445613.026
+      ],
+      [
+       84455.116,
+       445613.648
+      ],
+      [
+       84454.17,
+       445616.499
+      ],
+      [
+       84452.295,
+       445615.877
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039631",
+    "footprint_area_m2": 5.93,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2015,
+    "status": "Pand in gebruik",
+    "point_count": 524,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0229,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84435.427,
+       445617.889
+      ],
+      [
+       84436.398,
+       445614.954
+      ],
+      [
+       84439.319,
+       445615.921
+      ],
+      [
+       84438.348,
+       445618.856
+      ],
+      [
+       84435.427,
+       445617.889
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039632",
+    "footprint_area_m2": 9.51,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2007,
+    "status": "Pand in gebruik",
+    "point_count": 811,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0506,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84397.11,
+       445633.376
+      ],
+      [
+       84397.737,
+       445631.727
+      ],
+      [
+       84399.125,
+       445632.255
+      ],
+      [
+       84398.497,
+       445633.904
+      ],
+      [
+       84397.11,
+       445633.376
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039633",
+    "footprint_area_m2": 2.62,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2016,
+    "status": "Pand in gebruik",
+    "point_count": 178,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1461,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84395.432,
+       445620.673
+      ],
+      [
+       84396.187,
+       445618.391
+      ],
+      [
+       84398.341,
+       445619.104
+      ],
+      [
+       84397.586,
+       445621.386
+      ],
+      [
+       84395.432,
+       445620.673
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039634",
+    "footprint_area_m2": 5.45,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1988,
+    "status": "Pand in gebruik",
+    "point_count": 377,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1724,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84383.274,
+       445621.889
+      ],
+      [
+       84384.03,
+       445619.607
+      ],
+      [
+       84387.077,
+       445620.616
+      ],
+      [
+       84386.321,
+       445622.898
+      ],
+      [
+       84383.274,
+       445621.889
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039635",
+    "footprint_area_m2": 7.72,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1988,
+    "status": "Pand in gebruik",
+    "point_count": 474,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1245,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84372.239,
+       445624.513
+      ],
+      [
+       84373.208,
+       445621.967
+      ],
+      [
+       84375.951,
+       445623.01
+      ],
+      [
+       84374.981,
+       445625.557
+      ],
+      [
+       84372.239,
+       445624.513
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039636",
+    "footprint_area_m2": 8.0,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1988,
+    "status": "Pand in gebruik",
+    "point_count": 442,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0294,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84246.69,
+       445068.114
+      ],
+      [
+       84247.252,
+       445066.616
+      ],
+      [
+       84249.359,
+       445067.407
+      ],
+      [
+       84248.797,
+       445068.905
+      ],
+      [
+       84246.69,
+       445068.114
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039637",
+    "footprint_area_m2": 3.6,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2015,
+    "status": "Pand in gebruik",
+    "point_count": 199,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0754,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84228.777,
+       445058.368
+      ],
+      [
+       84230.427,
+       445053.974
+      ],
+      [
+       84232.048,
+       445054.583
+      ],
+      [
+       84231.952,
+       445054.838
+      ],
+      [
+       84232.292,
+       445055.586
+      ],
+      [
+       84231.116,
+       445058.719
+      ],
+      [
+       84230.398,
+       445058.977
+      ],
+      [
+       84228.777,
+       445058.368
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039638",
+    "footprint_area_m2": 10.38,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 610,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0918,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84036.908,
+       445195.863
+      ],
+      [
+       84037.584,
+       445194.063
+      ],
+      [
+       84040.806,
+       445195.27
+      ],
+      [
+       84040.129,
+       445197.073
+      ],
+      [
+       84036.908,
+       445195.863
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039639",
+    "footprint_area_m2": 6.62,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2018,
+    "status": "Pand in gebruik",
+    "point_count": 265,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1623,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84004.169,
+       445312.114
+      ],
+      [
+       84005.145,
+       445309.036
+      ],
+      [
+       84008.013,
+       445309.945
+      ],
+      [
+       84007.037,
+       445313.023
+      ],
+      [
+       84004.169,
+       445312.114
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039640",
+    "footprint_area_m2": 9.71,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2015,
+    "status": "Pand in gebruik",
+    "point_count": 1100,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0309,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84021.037,
+       445414.601
+      ],
+      [
+       84022.174,
+       445411.085
+      ],
+      [
+       84024.985,
+       445411.991
+      ],
+      [
+       84023.852,
+       445415.508
+      ],
+      [
+       84021.037,
+       445414.601
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039641",
+    "footprint_area_m2": 10.92,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2021,
+    "status": "Pand in gebruik",
+    "point_count": 572,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1294,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84017.461,
+       445425.673
+      ],
+      [
+       84018.807,
+       445421.498
+      ],
+      [
+       84021.535,
+       445422.377
+      ],
+      [
+       84020.189,
+       445426.552
+      ],
+      [
+       84017.461,
+       445425.673
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039642",
+    "footprint_area_m2": 12.57,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2021,
+    "status": "Pand in gebruik",
+    "point_count": 779,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1348,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83996.659,
+       445434.366
+      ],
+      [
+       83997.378,
+       445432.135
+      ],
+      [
+       84000.127,
+       445432.998
+      ],
+      [
+       83999.419,
+       445435.256
+      ],
+      [
+       83996.659,
+       445434.366
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039643",
+    "footprint_area_m2": 6.81,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 736,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.038,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83997.785,
+       445443.314
+      ],
+      [
+       83998.418,
+       445441.35
+      ],
+      [
+       84000.305,
+       445441.958
+      ],
+      [
+       83999.672,
+       445443.922
+      ],
+      [
+       83997.785,
+       445443.314
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039644",
+    "footprint_area_m2": 4.09,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1997,
+    "status": "Pand in gebruik",
+    "point_count": 232,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0345,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83979.049,
+       445430.891
+      ],
+      [
+       83980.03,
+       445427.847
+      ],
+      [
+       83985.12,
+       445429.487
+      ],
+      [
+       83984.139,
+       445432.531
+      ],
+      [
+       83979.049,
+       445430.891
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039645",
+    "footprint_area_m2": 17.1,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2017,
+    "status": "Pand in gebruik",
+    "point_count": 969,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.1073,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83960.075,
+       445409.23
+      ],
+      [
+       83960.646,
+       445407.457
+      ],
+      [
+       83963.138,
+       445408.26
+      ],
+      [
+       83962.567,
+       445410.033
+      ],
+      [
+       83960.075,
+       445409.23
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039646",
+    "footprint_area_m2": 4.88,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 1998,
+    "status": "Pand in gebruik",
+    "point_count": 171,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0292,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83967.448,
+       445396.193
+      ],
+      [
+       83968.754,
+       445392.141
+      ],
+      [
+       83972.508,
+       445393.35
+      ],
+      [
+       83971.201,
+       445397.403
+      ],
+      [
+       83967.448,
+       445396.193
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039647",
+    "footprint_area_m2": 16.79,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 1158,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0579,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83927.272,
+       445540.508
+      ],
+      [
+       83928.15,
+       445537.482
+      ],
+      [
+       83930.846,
+       445538.264
+      ],
+      [
+       83929.968,
+       445541.29
+      ],
+      [
+       83927.272,
+       445540.508
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039648",
+    "footprint_area_m2": 8.84,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2019,
+    "status": "Pand in gebruik",
+    "point_count": 280,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.05,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83868.647,
+       445584.36
+      ],
+      [
+       83869.592,
+       445581.101
+      ],
+      [
+       83873.312,
+       445582.18
+      ],
+      [
+       83872.367,
+       445585.439
+      ],
+      [
+       83868.647,
+       445584.36
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039649",
+    "footprint_area_m2": 13.14,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2014,
+    "status": "Pand in gebruik",
+    "point_count": 676,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0769,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83853.574,
+       445610.807
+      ],
+      [
+       83855.379,
+       445607.03
+      ],
+      [
+       83859.167,
+       445608.171
+      ],
+      [
+       83857.974,
+       445612.132
+      ],
+      [
+       83853.574,
+       445610.807
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039650",
+    "footprint_area_m2": 17.69,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2009,
+    "status": "Pand in gebruik",
+    "point_count": 808,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0421,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83917.029,
+       445642.719
+      ],
+      [
+       83918.145,
+       445638.777
+      ],
+      [
+       83921.583,
+       445639.75
+      ],
+      [
+       83920.466,
+       445643.692
+      ],
+      [
+       83917.029,
+       445642.719
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039651",
+    "footprint_area_m2": 14.64,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2020,
+    "status": "Pand in gebruik",
+    "point_count": 846,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0839,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84295.662,
+       445981.266
+      ],
+      [
+       84296.472,
+       445978.621
+      ],
+      [
+       84299.201,
+       445979.457
+      ],
+      [
+       84298.391,
+       445982.101
+      ],
+      [
+       84295.662,
+       445981.266
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039652",
+    "footprint_area_m2": 7.89,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2017,
+    "status": "Pand in gebruik",
+    "point_count": 296,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0676,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84297.84,
+       445974.155
+      ],
+      [
+       84298.597,
+       445971.682
+      ],
+      [
+       84300.992,
+       445972.415
+      ],
+      [
+       84300.515,
+       445973.972
+      ],
+      [
+       84299.255,
+       445974.588
+      ],
+      [
+       84297.84,
+       445974.155
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039653",
+    "footprint_area_m2": 5.99,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2022,
+    "status": "Pand in gebruik",
+    "point_count": 263,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0837,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84367.716,
+       445948.181
+      ],
+      [
+       84368.266,
+       445946.313
+      ],
+      [
+       84371.922,
+       445947.391
+      ],
+      [
+       84371.372,
+       445949.258
+      ],
+      [
+       84367.716,
+       445948.181
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039654",
+    "footprint_area_m2": 7.42,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2007,
+    "status": "Pand in gebruik",
+    "point_count": 271,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0738,
+    "alt_grup": "A_kucuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       84171.69,
+       446110.805
+      ],
+      [
+       84173.226,
+       446106.089
+      ],
+      [
+       84194.13,
+       446112.899
+      ],
+      [
+       84192.593,
+       446117.614
+      ],
+      [
+       84171.69,
+       446110.805
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000039655",
+    "footprint_area_m2": 109.03,
+    "has_verblijfsobject": false,
+    "aantal_verblijfsobjecten": 0,
+    "gebruiksdoel": "",
+    "bouwjaar": 2002,
+    "status": "Pand in gebruik",
+    "point_count": 3601,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.0142,
+    "alt_grup": "B_buyuk"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       83769.645,
+       445679.81
+      ],
+      [
+       83778.798,
+       445649.145
+      ],
+      [
+       83793.602,
+       445653.392
+      ],
+      [
+       83794.832,
+       445649.272
+      ],
+      [
+       83792.943,
+       445648.73
+      ],
+      [
+       83800.58,
+       445623.144
+      ],
+      [
+       83824.612,
+       445630.038
+      ],
+      [
+       83816.975,
+       445655.624
+      ],
+      [
+       83808.194,
+       445653.105
+      ],
+      [
+       83797.811,
+       445687.89
+      ],
+      [
+       83769.645,
+       445679.81
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "bag_id": "0503100000041285",
+    "footprint_area_m2": 1664.97,
+    "has_verblijfsobject": true,
+    "aantal_verblijfsobjecten": 3,
+    "gebruiksdoel": "onderwijsfunctie,sportfunctie",
+    "bouwjaar": 2026,
+    "status": "Pand in gebruik (niet ingemeten)",
+    "point_count": 124119,
+    "building_class_ratio": 0.0,
+    "ground_class_ratio": 0.6213,
+    "alt_grup": "B_buyuk"
+   }
+  }
+ ]
+}

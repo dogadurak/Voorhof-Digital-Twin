@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-019**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-021**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -966,3 +966,85 @@ kurallari Asama 1 basinda, **hesaptan once** muhurlenir (P-013).
 
 **Onay:** Kullanici talimati, 2026-09-21 ("Asama 1'e bu iki bina
 aciklanmadan gecme").
+
+---
+
+## D-019 · [2026-09-21] · AHN5'te karsiligi olmayan 3 yapi Asama 1'den dislanir
+
+**Karar:** P-013 secenek **(a)** onaylandi. Asagidaki 3 yapi Asama 1
+rekonstruksiyonuna **girmez** ve AGENTS.md Bolum 5'te sinirlama olarak
+raporlanir. Yerlerine basit kutu (LOD1) **uretilmez**.
+
+| bag_id | ayakizi m2 | gebruiksdoel | bouwjaar | mekanizma |
+|---|---|---|---|---|
+| `0503100000041285` | 1.665,0 | onderwijs + sport | 2026 | ucus sirasinda bina yoktu |
+| `0503100000038184` | 996,5 | onderwijs | 2023 | ucus sirasinda bina yoktu |
+| `0503100000039655` | 109,0 | (islev kaydi yok) | 2002 | alcak yapi, maaiveld sayilmis |
+
+**Gerekce — bu karar bir CIKARIMA DEGIL, DOGRUDAN OLCUME dayanir** (kullanici
+tespiti): ayakizi ici nokta sinifi (sinif 6 = 0), maaiveld ustu yukseklik
+dagilimi, zemin sinifi orani (%62,1 / %98,9) ve cok donuslu nokta orani
+(%99,8 ve %100; kontrol binasinda %2,4). Bunlar gozlemdir. Bu yuzden karar
+**Bolum 12.13 kapsamina girmez** ve gorsel dogrulamayi **beklemez**.
+
+> Ayrim onemlidir: "bu ayakizinde sinif 6 noktasi yok ve noktalarin %98,9'u
+> zemin sinifi" bir **olcumdur**; "bu yapi bir depodur" bir **cikarimdir**.
+> Birincisi karar verebilir, ikincisi dogrulanmadan veremez.
+
+**Neden LOD1 kutu uretilmiyor:** olculmemis bir geometriyi olculmus gibi
+gosterirdi. Ayrica `0503100000041285`'in BAG ayakizi zaten
+**`niet ingemeten`** statusundedir — yani sinirinin kendisi de gecicidir.
+
+**Asama 3 (enerji) etkisi:** ucu de konut disidir (ikisi okul, birinin islev
+kaydi yok). A'nin enerji karsilastirmasi PC6 **konut** tuketimi uzerinden
+kuruldugu icin muhtemelen zaten kapsam disindalar — ama bu **acikca yazilir**,
+sessizce dusurulmez (Bolum 12.8).
+
+**Ayrica:** `building_class_ratio` sifir cikan yapilarin ne oldugu bir
+cikarimdir ve **gorsel dogrulama ornegi** olusturulmustur. Orneklem seed'i
+`config/acceptance_criteria.yml -> input_gate_ahn.visual_check.seed` altinda
+**muhurludur** (28992). Bu dogrulama **P-012'yi** bekletir, D-019'u degil.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-020 · [2026-09-21] · Dijital ikizin VERI DONEMI
+
+**Karar:** Dijital ikizin **geometrisi** AHN5 ucus donemini temsil eder:
+**2023-02-08 – 2023-02-14**. **Oznitelikler** BAG anlik goruntusudur:
+**2026-09**. Arada **3,5 yil** vardir ve bu fark **her raporda acikca
+yazilir**.
+
+**Ucustan sonra yapilmis veya degismis binalar:**
+- **"geometrisi yok (ucus sonrasi)"** etiketiyle **listelenir**
+- **modellenmez**
+- web arayuzunde **ayri isaretlenir** (ayri katman/renk, bag_id ve gerekce
+  tiklanabilir)
+
+**Gerekce:** Model "bugunun Voorhof'u" degildir; **2023 basinin geometrisi +
+2026 oznitelikleridir**. Bu fark gizlenirse, Asama 1'de basarisiz cikan bir
+bina "yontem hatasi" sanilir; Asama 3'te bir tuketim sapmasi "model hatasi"
+sanilir. Oysa sebep veri donemidir. Bolum 12.6'nin "nedeni siniflandir" adimi
+bu ayrim olmadan uygulanamaz.
+
+**Ucus tarihi nasil belirlendi:** LAZ nokta kayitlarindaki `gps_time`
+alanindan. `global_encoding` bit 0 "GPS hafta zamani" diyor ama **bayrak
+yanlistir** — degerler hafta zamani ust siniri olan 604.800'un cok uzerinde
+(359,9-360,4 milyon). `lasinfo` ayni celiskiyi kendi uyarisiyla bildiriyor.
+Adjusted Standard GPS Time olarak cozuldugunde Subat 2023 cikiyor; bu, Delft
+icin bilinen AHN5 kampanyasiyla tutarlidir.
+
+**Nereye islendi:**
+- `AGENTS.md` Bolum 5 — sinirlama satiri
+- `AGENTS.md` Bolum 13.1 — asama sonu raporu formatina `veri donemi` alani
+- `AGENTS.md` Asama 5 — web arayuzu gereksinimi
+- `AGENTS.md` Bolum 10 — kontrol listesi maddesi
+- Her raporun basina "VERI DONEMI" notu
+
+**Kapsam notu:** Bu karar AHN5'e ozgu degildir. KNMI, Sentinel/Landsat ve
+Stedin verileri eklendiginde her birinin **kendi donemi** ayni bicimde
+yazilacaktir; "veri donemi" notu tek bir tarih degil, **kaynak basina
+donem listesi** haline gelir.
+
+**Onay:** Kullanici, 2026-09-21.

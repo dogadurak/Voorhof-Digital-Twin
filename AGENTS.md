@@ -174,6 +174,7 @@ Bunlar gizlenmeyecek, raporun "Limitations" bölümünde açıkça yazılacak.
 | **Güneş doğrulaması** | Resmî açık ulusal zonnekaart yok (Zonatlas/MapServices ticari) | PVGIS — ama **aynı fiziksel büyüklük kuralı** geçerli (12.4) |
 | **Rüzgâr doğrulaması** | Bağımsız açık CFD benchmark zayıf | NEN 8100 literatür vakaları; sonuç en fazla "literatürle tutarlı" |
 | **LST çözünürlüğü** | Landsat termal gerçekte 100 m, 30 m'ye resample | Tek mahalle için kaba. ECOSTRESS (~70 m) denenebilir. Sınırlama yazılacak |
+| **VERİ DÖNEMİ — geometri 2023-02, öznitelik 2026-09** | Dijital ikizin **geometrisi** AHN5 uçuş dönemini (**2023-02-08/14**, LAZ `gps_time`'dan ölçüldü) temsil eder. BAG öznitelik anlık görüntüsü **2026-09**'dur. Arada **3,5 yıl** vardır | Uçuştan sonra yapılmış veya değişmiş binaların geometrisi **üretilemez**. Bunlar **"geometrisi yok (uçuş sonrası)"** etiketiyle listelenir ve **modellenmez** (D-020). Model "bugünün Voorhof'u" değil, **2023 başının Voorhof'u + 2026 öznitelikleri**dir. Her raporun başında "veri dönemi" notu zorunludur |
 | **AHN5 sınıflandırma şeması belgesiz** | AHN'in hiçbir yayını AHN5 nokta bulutu sınıflandırmasını belgelemiyor; sayısal kod tablosu veren tek resmî kaynak **AHN4 ihale şartnamesidir** (Besteksvoorwaarden AHN2020-2022 §9, doğrulandı 2026-09-21). Kod **26 = Kunstwerken** belgelidir; **kod 14 belgede hiç geçmez** (çıkarım: hoogspanningsleiding) | Sınıf yorumlarımız AHN4'ten AHN5'e **taşınmıştır**. ahn.nl kendi dipnotunda tanımların sürümler arası değiştiğini söylüyor. Yorumları destekleyen şey belge değil kendi veri ölçümümüzdür (`docs/ahn_class_codes.md`). Aşama 1'de sınıf seçimi P-012 ile karara bağlanır |
 | **AHN sınıf 6, BAG'den türetilmiştir** | Şartname §9.2: bebouwing tanımı için "de BAG pandenkaart **ten tijde van de vlucht**" kullanılır; BAG'de olmayan nesneler "overig" (=1) olur | Sınıf 6, BAG'den **bağımsız** bir gözlem değildir. `building_class_ratio` bir girdi kalitesi göstergesidir; BAG ayakizinin **bağımsız doğrulaması olarak kullanılamaz** (Bölüm 12.10). Ayrıca sınıf 6 cepheleri de içerir — "çatı" demek değildir |
 | **3DBAG karışık AHN kaynağı** | B alanındaki 7.376 binanın **%94,9'u AHN5 (2023)**, %3,5'i **AHN3 (2014)**, %1,6'sı AHN4 (2020) tabanlı — `b3_pw_bron` ile ölçüldü 2026-09-21 | Bizim girdimiz tümüyle AHN5 (D-013). **377 bina** için kriter 1-B'deki fark, rekonstrüksiyon kalitemizi değil binanın 2014'ten beri değişmiş olmasını yansıtabilir. Bu binalar 1-B'de **ayrı raporlanır**; toplu RMSE'ye karıştırılmaz |
@@ -242,9 +243,17 @@ CFD için Bölüm 12.9 listesi eksiksiz. Doğrulanamayan modül 12.5'e göre eti
 - `pg2b3dm` ile 3D Tiles; CesiumJS arayüzü
 - `ATTRIBUTION.md` otomatik üretildi ve arayüzde gösteriliyor
 - Nihai doğrulama raporu
+- **Veri dönemi arayüzde görünür** (D-020): geometrinin **2023-02** uçuşunu,
+  özniteliklerin **2026-09** BAG anlık görüntüsünü temsil ettiği kalıcı olarak
+  yazılı
+- **"Geometrisi yok (uçuş sonrası)" binaları ayrı işaretlenir** (D-020):
+  modellenmemiş binalar arayüzde ayrı bir katman/renkle gösterilir, sessizce
+  yok sayılmaz (12.8). Her birinin `bag_id`'si ve dışlanma gerekçesi
+  tıklanabilir olur.
 
 **Kabul:** Arayüz A alanını sorunsuz yüklüyor; gösterilen her değer bir kaynağa ve
-doğrulama durumuna bağlı; lisans/attribution şartları karşılanıyor.
+doğrulama durumuna bağlı; lisans/attribution şartları karşılanıyor; veri dönemi
+notu ve modellenmemiş bina katmanı mevcut.
 
 ---
 
@@ -371,6 +380,12 @@ Bitirdikten sonra:
 - [ ] Başarısız kayıtlar `failed_buildings.csv`'ye düştü
 - [ ] Sınırlamaları yazdım, gizlemedim
 - [ ] Uydurma sayı yok
+- [ ] Bir grup hakkında genelleme yazdıysam: grubu **etkiye** göre de özetledim
+      ve etkiye göre en büyük 5 üyeyi tek tek kontrol ettim (14.6, M-010)
+- [ ] Rapordaki her **çıkarım** "ÇIKARIM" olarak etiketli; bir kararı
+      etkiliyorsa doğrulama yolunu **ben önerdim** (12.13, M-011)
+- [ ] Yazdığım her sütun/değişken adı, ölçtüğü ifadeyi birebir söylüyor
+- [ ] Raporun başında **veri dönemi** notu var (Bölüm 5, D-020)
 
 ---
 
@@ -510,8 +525,35 @@ Bir ajan kendi ürettiği çıktıyı yalnızca kendi hesabına dayanarak "valid
 Aynı ham veriden türetilmiş iki çıktı bağımsız ground truth sayılmaz.
 
 Uygulama: her aşama sonunda **QA kontrol listesi** (Bölüm 10) ayrı bir adım olarak
-çalıştırılır ve sonucu rapora yazılır. Mümkün olduğunda ikinci bir hesaplama yolu kullanılır
+çalıştırılır ve sonucu rapora yazılır. Bağımsız Reviewer oturumu için ayrı bir
+liste tutulur: `docs/reviewer_checklist.md`. Mümkün olduğunda ikinci bir hesaplama yolu kullanılır
 (örn. geometri için hem 3DBAG karşılaştırması hem AHN nokta bulutuna doğrudan z-fark analizi).
+
+### 12.13 Karar veren çıkarım doğrulanır
+
+> **Bir çıkarım bir metodoloji kararını, dışlamayı veya sınıflandırmayı
+> etkiliyorsa, o karardan ÖNCE bağımsız bir yoldan doğrulanır.**
+
+Uygulama:
+
+1. **Etiketle.** Rapordaki her çıkarım **"ÇIKARIM"** olarak işaretlenir ve
+   ölçümden ayrı yazılır. "Ölçüldü" ile "bundan şu çıkar" aynı cümlede
+   birleştirilmez.
+2. **Doğrula.** Bağımsız yol: görsel örneklem (Luchtfoto / Street View),
+   ikinci bir veri kaynağı veya kullanıcı kontrolü. Aynı veri kaynağının
+   içinden türetilmiş ikinci bir gösterge **bağımsız değildir** (12.10).
+3. **Örneklemi tekrarlanabilir yap.** Sabit `seed` ile seçilir ve seed
+   config'e yazılır. Çıkarım ile gözlem **yan yana** raporlanır — sonradan
+   "zaten öyle diyordum" denemeyecek şekilde.
+4. **Doğrulanamıyorsa karar "çıkarıma dayalı" işaretlenir** ve Bölüm 5
+   sınırlamalarına girer. Bu bir başarısızlık değildir; gizlenmesi
+   başarısızlıktır.
+5. **Ajan doğrulamayı KENDİSİ önerir.** Kullanıcının sormasını beklemek
+   bir denetim boşluğudur (M-011).
+
+**Kapsam dışı:** doğrudan gözleme dayanan sonuçlar. Örnek: "bu ayakizinde
+sınıf 6 noktası yok, noktaların %98,9'u zemin sınıfı, çok dönüşlü oranı
+%99,8" bir **ölçümdür**; "bu yapı bir depodur" bir **çıkarımdır**.
 
 ### 12.12 Girdi kalite kapısı
 
@@ -585,6 +627,7 @@ aşama:             [0.3 / 1 / 3 ...]
 git_commit:        [hash]
 çalıştırma (UTC):  [timestamp]
 süre:              [dk]
+veri dönemi:       geometri AHN5 2023-02-08/14 · öznitelik BAG 2026-09 (D-020)
 
 --- KABUL KRİTERİ ---
 | Metrik | Eşik (config'ten) | Ölçülen | Sonuç |
@@ -788,6 +831,8 @@ biri gerçekleşirse normal kayıt açılır.
 | **Tampon unutma** | Kenar binalar gölgesiz | Analiz B alanında, rapor A alanında |
 | **Kapsam kayması** | Ajan istenmeyen ek işler yapar | Tek görev, tek çıktı; fazlası onay ister |
 | **Sessiz atlama** | Hatalı kayıtlar loglanmadan düşürülür | 12.8 — her atlanan kayıt CSV'ye |
+| **Özet istatistikle genelleme** | Medyan/ortalama çoğunluğu anlatır, etkisi büyük azınlığı gizler | Grubu hem **sayıya** hem **etkiye** (alan, VBO, tüketim) göre özetle; etkiye göre en büyük 5 üyeyi tek tek yaz; uymayan varsa alt gruba böl. "Hepsi/çoğu" ancak etki-ağırlıklı özet de aynı yönü gösteriyorsa (M-010) |
+| **Doğrulanmamış çıkarım** | Makul bir çıkarım ölçüm gibi rapora girer ve bir kararı belirler | 12.13 — "ÇIKARIM" etiketle, karardan önce bağımsız yoldan doğrula (M-011) |
 
 ### 14.7 Kullanıcının rolü
 

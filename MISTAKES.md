@@ -27,7 +27,8 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-007 | 2026-09-21 | 0.3 | Mekansal predicate yonu varsayildi, tum binalar 0 nokta saydi | KAPALI | 0 |
 | M-008 | 2026-09-21 | 0.3 | Config'de `decision_ref: D-015` vardi ama o D kaydi hic yazilmamisti | KAPALI | 0 |
 | M-009 | 2026-09-21 | 0.3 | Olcum metrigi, olcmesi gereken seyi olcmuyordu (tum siniflar sayildi) | KAPALI | 0 |
-| M-010 | 2026-09-21 | 0.3 | Medyanla genelleme, gruptaki en onemli vakalari gizledi; sutun adi da yanlisti | KAPALI | 0 |
+| M-010 | 2026-09-21 | 0.3 | Ozet istatistikle genelleme: medyan cogunlugu anlatti, etkiyi gizledi | KAPALI | 0 |
+| M-011 | 2026-09-21 | 0.3 | Karar veren cikarim bagimsiz dogrulanmadan rapora yazildi | ACIK | 0 |
 
 ---
 
@@ -487,56 +488,123 @@ konut-disi yardimci yapilar. Yani metrik yalnizca ongorulen kor noktayi degil,
 
 ## M-010 · [2026-09-21] · Asama 0.3
 
-**Ne oldu — iki katmanli:**
+**Sinif:** Ozet istatistikle genelleme (Bolum 14.6)
 
-**(a) Yanlis sutun adi.** CSV'de `has_dwellings` adli bir sutun vardi ve
-`aantal_verblijfsobjecten > 0` olmasini "konut" sayiyordu. Bir
-verblijfsobject okul, dukkan veya ofis de olabilir. Sonuc: raporda **iki okul
-"konut: evet"** olarak listelendi.
-
-**(b) Medyanla genelleme.** Sinif 6 orani sifir cikan 67 binayi medyan
-degerlerle ozetledim (ayakizi medyani 8,0 m2, %3 konut, bouwjaar medyani
-2014) ve **"kucuk, konut olmayan yardimci yapilar"** diye tek bir gruba
-indirgedim. Gercekte grupta **996 m2 ve 1.665 m2'lik iki okul** vardi ve
-bunlar enerji analizi icin kritikti. Medyan onlari sayisal olarak dogru
-bicimde gizledi: 67 binanin 64'u gercekten kucuktu.
+**Ne oldu:**
+Sinif 6 orani sifir cikan 67 bina icin **"kucuk, konut disi yardimci yapilar"**
+genellemesi yazildi. Ayni raporun **kendi tablosunun ilk iki satiri**
+(1.665,0 m2 ve 996,5 m2'lik yapilar) bu genellemeyle celisiyordu. Fark
+edilmedi.
 
 **Kok neden:**
-Bir dagilimin **merkezini** ozetlemek ile **icindekileri** aciklamak ayni sey
-degildir. Ozet istatistik, kucuk ama onemli bir alt kume oldugunda onu
-**tanim geregi** siler. Uzerine (a)'daki yanlis etiket geldi ve alt kumenin
-tek gorunur isareti ("konut") da yanlis yone isaret etti.
+Genelleme **MEDYANDAN** yapildi. Medyan **cogunlugu** anlatir, **azinligi
+gizler**. 67 binanin 64'u gercekten kucuktu, yani medyan sayisal olarak
+dogruydu — ama sorulan soru acisindan yanlis sayiydi.
 
-**Neden onemli:**
-Genelleme yanlis olsa bile **tutarli** gorunuyordu: kucuk + konut disi +
-yeni = yardimci yapi. Ic tutarlilik, dogrulugun kaniti DEGILDIR. Kullanici
-listeye tek tek bakmasaydi iki okul Asama 1'e aciklanmadan girecekti.
+**Olculdu (2026-09-21):** ayni grup **alana gore** agirliklandirilinca tablo
+**tersine donuyor**:
 
-**Turetilen kural:**
-Bir alt grup icin ozet istatistik (medyan, ortalama, oran) raporlanirken
-**ayni grubun uc degerleri de listelenir**. Ozellikle: grubun en buyuk /
-en cok noktali / en yuksek etkili **ilk 3 uyesi** ozetin yaninda tek tek
-gosterilir. "Grup sunlardan olusuyor" cumlesi, yalnizca grubun **tum**
-uyeleri o tanima uyuyorsa yazilir; uymayan varsa alt gruba ayrilir.
+| | Sayiya gore | Alana gore |
+|---|---|---|
+| Kucuk yapilar (64 adet) | **%95,5** | 621 m2 = **%18,3** |
+| En buyuk 2 yapi | %3,0 | 2.662 m2 = **%78,5** |
+| En buyuk 3 yapi | %4,5 | 2.771 m2 = **%81,7** |
 
-Ek kural (a icin): bir sutun adi bir **iddiadir**. `has_dwellings` adi,
-`aantal_verblijfsobjecten > 0` hesabina karsilik gelmiyordu. Sutun adi ile
-hesaplanan ifade arasindaki denklik, sutun yazilirken dogrulanir.
+Grubun toplam alani 3.392 m2'dir ve bunun **~%80'i iki binadadir**.
+**Sayica cogunluk, etki olarak cogunluk DEGILDIR.**
+
+Ikinci mekanizma: genelleme bir kez **hikayeye** donusunce (kucuk + konut disi
++ yeni = yardimci yapi) uymayan satirlar **istisna** sayilip atlandi. Ic
+tutarlilik, dogrulugun kaniti degildir.
+
+**Turetilen kural (Bolum 14.6'ya yeni sinif):**
+Bir grup hakkinda sonuc yazmadan once:
+1. Grup hem **SAYIYA** hem **ETKIYE** gore ozetlenir. Etki = o asamada onemli
+   olan buyukluk (taban alani, VBO sayisi, tuketim).
+2. **Etkiye gore en buyuk 5 uye TEK TEK** incelenip rapora yazilir.
+3. Uymayan uye varsa grup **alt gruplara bolunur** veya istisna **acikca**
+   yazilir.
+4. "Hepsi / cogu" ifadesi ancak **etki-agirlikli ozet de ayni yonu
+   gosteriyorsa** kullanilir.
+
+**Otomatik kontrol:** YOK (anlamsal bir hatadir). Bunun yerine Bolum 10
+kontrol listesine ve `docs/reviewer_checklist.md`'ye madde olarak eklendi.
 
 **Nerede uygulanir:** `src/00_acquisition/verify_ahn_quality.py` (alt grup
-ayrimi + `has_verblijfsobject` / `gebruiksdoel` sutunlari), her ozet
-istatistik raporu
-
-**Otomatik kontrol:** `src/qa/check_compliance.py` (Asama 0.5) bu ikisini
-tam olarak denetleyemez (anlamsal), ama sutun adi -> ifade eslesmesi icin
-CSV yazan scriptlerde sutun adlarinin bir sozlukten gelmesi saglanacak.
+ayrimi + alan payi tablosu), her ozet istatistik raporu
 
 **Durum:** KAPALI
-- `has_dwellings` -> `has_verblijfsobject`; `gebruiksdoel`, `bouwjaar`,
-  `status` sutunlari eklendi
-- Sifir grubu iki alt gruba ayrildi (buyuk >= 100 m2 / kucuk < 100 m2) ve
-  buyuk olanlar raporda **tek tek** listeleniyor
-- Iki bina ayri bir raporda incelendi:
-  `reports/00_stage_0_3_zero_ratio_investigation.md`
-- Bulgu: ikisi de **okul**, ikisi de AHN5 ucusundan (Subat 2023) **sonra**
-  yapilmis; girdi kalitesi sorunu degil **zamansal uyusmazlik**
+
+---
+
+### M-010 ek bulgu — sutun adi ile olculen ifade ayni sey degildi
+
+Ayni raporda ikinci bir hata vardi ve **ayni aileden**: CSV'deki
+`has_dwellings` sutunu aslinda `aantal_verblijfsobjecten > 0` olmasini
+olcuyordu. Bir verblijfsobject okul, dukkan veya ofis de olabilir. Sonuc:
+iki **okul** raporda **"konut: evet"** olarak listelendi — ve bu, alt kumenin
+tek gorunur isareti oldugu icin genellemeyi dogrular gibi gorundu.
+
+Yani iki hata birbirini **beslediler**: yanlis etiket, yanlis genellemeyi
+destekledi.
+
+**Ek kural:** **Sutun adlari olctukleri seyi birebir soylemelidir.** Bir sutun
+adi bir **iddiadir**; ad ile hesaplanan ifade arasindaki denklik, sutun
+yazilirken dogrulanir. Ad ile ifade birebir ortusmuyorsa ad degistirilir, ifade
+degil.
+
+**Duzeltme:** `has_dwellings` -> `has_verblijfsobject`; gercek kullanim islevi
+`gebruiksdoel` olarak ayri sutuna yazildi; `bouwjaar` ve `status` da eklendi.
+
+---
+
+## M-011 · [2026-09-21] · Asama 0.3
+
+**Sinif:** Karar veren cikarim dogrulanmadi (Bolum 12.13)
+
+**Ne oldu:**
+"Sifir grubu = berging / depo / bahce evi" sonucu **yalnizca BAG
+ozniteliklerinden** cikarildi (kucuk ayakizi + `gebruiksdoel` bos + VBO yok)
+ve **hicbir bagimsiz dogrulama yapilmadan** rapora yazildi. Bu cikarim
+**P-012 kararini** (Asama 1'e hangi siniflar girecek) dogrudan etkileyecekti.
+
+**Kok neden:**
+Cikarim **makuldu** ve veriyle tutarliydi; bu yuzden "olcum" gibi muamele
+gordu. Ama tek bir veri kaynaginin (BAG) icinden turetilmisti ve o kaynak
+"bu yapi fiziksel olarak nedir" sorusunu **cevaplamiyor**. BAG'de
+`gebruiksdoel` bos olmasi, yapinin depo oldugunu degil, **bir kullanim islevi
+kaydedilmedigini** soyler. Ikisi ayni sey degildir.
+
+**Neden onemli — sorumluluk:**
+Ne ajan ne de asistan **gorsel dogrulama onermedi**; eksik, kullanici
+sorgulayana kadar acik kalmadi. Bir cikarim bir dislama kararina donusuyorsa,
+dogrulamayi **onermek ajanin isidir**; kullanicinin aklina gelmesini beklemek
+bir denetim bosluğudur.
+
+**Turetilen kural (AGENTS.md Bolum 12.13):**
+Bir cikarim bir **metodoloji kararini, dislamayi veya siniflandirmayi**
+etkiliyorsa:
+1. Raporda **"CIKARIM"** olarak etiketlenir — olcum gibi yazilmaz.
+2. Karardan **once** bagimsiz bir yoldan dogrulanir: gorsel orneklem, ikinci
+   veri kaynagi veya kullanici kontrolu.
+3. Orneklem **sabit seed** ile secilir; cikarim ile gozlem **yan yana**
+   raporlanir.
+4. Dogrulanamiyorsa karar **"cikarima dayali"** isaretlenir ve Bolum 5
+   sinirlamalarina girer.
+5. **Ajan gorsel dogrulamayi KENDISI onerir**, kullanicinin sormasini
+   beklemez.
+
+**Ilk uygulama:** `reports/visual_check_sample.csv` (12 bina, sabit seed) +
+`aoi/qa/zero_class6_buildings.geojson` + `docs/visual_check_zero_class6.md`.
+
+**Durum:** ACIK — kullanicinin gorsel kontrolu bekleniyor.
+
+**Neyi bloke eder, neyi etmez (kullanici karari 2026-09-21):**
+- **P-012 BEKLER.** "Sinif 1 rekonstruksiyona girecek mi" sorusu, 64 kucuk
+  yapinin gercekte ne oldugu cikarimina dayanir.
+- **P-013 BEKLEMEZ, ONAYLANDI.** Uc buyuk yapinin dislanmasi bir cikarima
+  degil **dogrudan olcume** dayanir: ayakizi ici nokta sinifi (sinif 6 = 0),
+  maaiveld ustu yukseklik dagilimi ve cok donuslu nokta orani (%99,8 vs
+  kontrol binasinda %2,4). Bunlar gozlemdir, yorum degil — Bolum 12.13
+  kapsamina **girmez**. Bkz. D-019.
+

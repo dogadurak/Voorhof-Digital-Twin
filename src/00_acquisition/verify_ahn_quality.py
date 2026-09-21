@@ -186,6 +186,96 @@ def main() -> int:
                    class_counter, total_points, hard, expect)
 
 
+def _write_visual_check(logger, panden, geoms, areas, is_zero, big_zero,
+                        building_points, cls6_ratio, cls2_ratio) -> None:
+    """Sifir grubunu disa aktarir ve gorsel dogrulama ornegini secer.
+
+    AGENTS.md Bolum 12.13 / MISTAKES.md M-011: bu yapilarin NE OLDUGU bir
+    CIKARIMDIR ve P-012 kararini etkiler. Karardan once bagimsiz yoldan
+    dogrulanmasi gerekir. Orneklem SABIT SEED ile secilir (config'ten okunur)
+    ki kullanici ayni listeyi yeniden uretebilsin.
+    """
+    import random
+
+    cfg = load_acceptance_criteria()["input_gate_ahn"]["visual_check"]
+    seed = int(cfg["seed"])
+    idx_zero = [int(i) for i in np.where(is_zero)[0]]
+
+    # --- GeoJSON: 67 binanin tamami ---
+    feats = []
+    for i in idx_zero:
+        pr = panden[i]["properties"]
+        feats.append({
+            "type": "Feature",
+            "geometry": panden[i]["geometry"],
+            "properties": {
+                "bag_id": pr["identificatie"],
+                "footprint_area_m2": round(float(areas[i]), 2),
+                "has_verblijfsobject": (pr.get("aantal_verblijfsobjecten") or 0) > 0,
+                "aantal_verblijfsobjecten": pr.get("aantal_verblijfsobjecten"),
+                "gebruiksdoel": pr.get("gebruiksdoel") or "",
+                "bouwjaar": pr.get("bouwjaar"),
+                "status": pr.get("status"),
+                "point_count": int(building_points[i]),
+                "building_class_ratio": round(float(cls6_ratio[i]), 4),
+                "ground_class_ratio": round(float(cls2_ratio[i]), 4),
+                "alt_grup": "B_buyuk" if big_zero[i] else "A_kucuk",
+            },
+        })
+    gj_path = resolve("root.aoi") / "qa" / "zero_class6_buildings.geojson"
+    gj_path.parent.mkdir(parents=True, exist_ok=True)
+    gj_path.write_text(json.dumps({
+        "type": "FeatureCollection",
+        "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::28992"}},
+        "features": feats,
+    }, ensure_ascii=False, indent=1), encoding="utf-8")
+    logger.info("Gorsel dogrulama | GeoJSON: %d bina -> %s", len(feats), gj_path.name)
+
+    # --- Orneklem: 2 buyuk (her zaman) + n_small rastgele kucuk ---
+    always = [str(v) for v in cfg["big_always_include"]]
+    by_id = {panden[i]["properties"]["identificatie"]: i for i in idx_zero}
+    chosen = [by_id[b] for b in always if b in by_id]
+    missing = [b for b in always if b not in by_id]
+    if missing:
+        # Bolum 12.8: sessizce atlama yok.
+        raise RuntimeError(
+            f"visual_check.big_always_include'daki su id'ler sifir grubunda "
+            f"bulunamadi: {missing}. Config ile veri uyusmuyor."
+        )
+
+    small_pool = sorted(i for i in idx_zero if not big_zero[i])
+    rng = random.Random(seed)          # SABIT seed - tekrarlanabilir
+    n_small = min(int(cfg["n_small"]), len(small_pool))
+    chosen += rng.sample(small_pool, n_small)
+
+    csv_path = resolve("reports.dir") / "visual_check_sample.csv"
+    with csv_path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["sira", "bag_id", "alt_grup", "footprint_area_m2",
+                    "has_verblijfsobject", "gebruiksdoel", "bouwjaar", "status",
+                    "point_count", "building_class_ratio", "ground_class_ratio",
+                    "merkez_x_rd", "merkez_y_rd",
+                    "CIKARIM", "GOZLEM_kullanici", "NOT_kullanici"])
+        for n, i in enumerate(chosen, 1):
+            pr = panden[i]["properties"]
+            cen = geoms[i].centroid
+            inference = ("ucus sonrasi yapildi (bina yoktu)" if big_zero[i]
+                         else "depo/kulube (berging)")
+            w.writerow([n, pr["identificatie"],
+                        "B_buyuk" if big_zero[i] else "A_kucuk",
+                        f"{areas[i]:.2f}",
+                        "true" if (pr.get("aantal_verblijfsobjecten") or 0) > 0 else "false",
+                        pr.get("gebruiksdoel") or "", pr.get("bouwjaar") or "",
+                        pr.get("status") or "", int(building_points[i]),
+                        f"{cls6_ratio[i]:.4f}", f"{cls2_ratio[i]:.4f}",
+                        f"{cen.x:.1f}", f"{cen.y:.1f}",
+                        inference, "", ""])
+    logger.info("Gorsel dogrulama | orneklem: %d bina (%d buyuk + %d kucuk, "
+                "seed=%d) -> %s", len(chosen), len(always), n_small, seed,
+                csv_path.name)
+    logger.info("  ETIKETLER: %s", " / ".join(cfg["labels"]))
+
+
 def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
             area_b, panden, geoms, building_points, building_points_cls6,
             building_points_cls2, class_counter, total_points, hard, expect) -> int:
@@ -328,8 +418,32 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
          f"{panden[i]['properties'].get('gebruiksdoel') or '(islev yok)'} |"
          for i in np.argsort(-areas * big_zero)[:n_big_zero]]
     )
-    logger.info("  ALT GRUP | buyuk (>=100 m2): %d | kucuk (<100 m2): %d",
-                n_big_zero, n_small_zero)
+    # ETKI-AGIRLIKLI OZET (Bolum 14.6, M-010). Sayica ozet yaniltir:
+    # 67 binanin 64'u kucuktur ama toplam alanin ~%80'i 2 binadadir.
+    zero_area_total = float(areas[is_zero].sum())
+    pct_small_n = 100.0 * n_small_zero / max(1, n_zero)
+    pct_big_n = 100.0 * n_big_zero / max(1, n_zero)
+    small_area = float(areas[small_zero].sum())
+    big_area = float(areas[big_zero].sum())
+    zero_order = np.argsort(np.where(is_zero, -areas, np.inf))
+    top5 = [int(i) for i in zero_order[:5] if is_zero[i]]
+    area_share_top2 = 100 * float(areas[top5[:2]].sum()) / zero_area_total
+    area_share_top5 = 100 * float(areas[top5].sum()) / zero_area_total
+    big_area_share = 100 * float(areas[big_zero].sum()) / zero_area_total
+    small_area_share = 100 * float(areas[small_zero].sum()) / zero_area_total
+    logger.info("  ALT GRUP | buyuk (>=100 m2): %d (alanin %%%.1f'i) | "
+                "kucuk (<100 m2): %d (alanin %%%.1f'i)",
+                n_big_zero, big_area_share, n_small_zero, small_area_share)
+    logger.info("  ETKI | sifir grubu toplam alan %.0f m2 | en buyuk 2 = %%%.1f | "
+                "en buyuk 5 = %%%.1f", zero_area_total, area_share_top2, area_share_top5)
+
+    top5_rows = "\n".join(
+        f"| {r_+1} | `{panden[i]['properties']['identificatie']}` | {areas[i]:,.1f} | "
+        f"%{100*areas[i]/zero_area_total:.1f} | "
+        f"{panden[i]['properties'].get('gebruiksdoel') or '**(islev kaydi yok)**'} | "
+        f"{panden[i]['properties'].get('bouwjaar')} | {cls2_ratio[i]:.3f} |"
+        for r_, i in enumerate(top5)
+    )
 
     z_area, z_small, z_n, z_vbo, z_year = _profile(is_zero)
     o_area, o_small, o_n, o_vbo, o_year = _profile(defined & ~is_zero)
@@ -371,10 +485,20 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
     top = ", ".join(f"{k}:{v}" for k, v in class_counter.most_common(8))
     logger.info("Sinif dagilimi (ilk 8): %s", top)
 
+    _write_visual_check(logger, panden, geoms, areas, is_zero, big_zero,
+                        building_points, cls6_ratio, cls2_ratio)
+
     report = resolve("reports.dir") / "00_stage_0_3_ahn_gate.md"
     report.write_text(f"""# Asama 0.3 — AHN girdi kalite kapisi
 
 **Karar D-015** · AGENTS.md Bolum 12.12 · run_id `{run_id}`
+
+> **VERI DONEMI (D-020).** Bu projede **geometri** AHN5 ucus donemini
+> (**2023-02-08 / 2023-02-14**, LAZ `gps_time`'dan olculdu) temsil eder;
+> **oznitelikler** BAG anlik goruntusudur (**2026-09**). Arada **3,5 yil**
+> vardir. Ucustan sonra yapilmis veya degismis binalarin geometrisi
+> uretilemez; bunlar **"geometrisi yok (ucus sonrasi)"** etiketiyle listelenir
+> ve modellenmez.
 
 Esikler `config/acceptance_criteria.yml` -> `input_gate_ahn` altindan okundu.
 O blok bu olcumden **once** ayri bir commit ile muhurlendi.
@@ -468,43 +592,69 @@ sinif 6 orani medyani **{small_ratio_med:.3f}**, buyuklerinki
 **{large_ratio_med:.3f}** — neredeyse esit. Sorun kucukluk degil, bu belirli
 alt gruptur.
 
-#### Sifir grubu TEK BIR SEY DEGILDIR — iki alt gruba ayrilir
+#### Sifir grubu: SAYIYA gore ve ETKIYE gore — iki farkli tablo
 
-Yukaridaki medyanlar yaniltici bir genelleme uretmisti ("hepsi kucuk yardimci
-yapi"). Ayakizi buyuklugune gore ayrildiginda iki **farkli mekanizma** cikiyor:
+> **Bolum 14.6 / M-010 geregi.** Bu grup once yalnizca medyanla ozetlenmis ve
+> "kucuk, konut disi yardimci yapilar" diye genellenmisti. Medyan **cogunlugu**
+> anlatir, **etkisi buyuk azinligi gizler**. Asagida ayni grup iki ayri
+> agirlikla verilir.
 
-| Alt grup | n | Tanim | Mekanizma |
-|---|---|---|---|
-| **A — kucuk, islevsiz yardimci yapilar** | {n_small_zero} | < 100 m2, `gebruiksdoel` **tamamen bos**, woonfunctie **sifir** | AHN siniflandirmasi bunlari bina saymamis |
-| **B — buyuk yapilar** | {n_big_zero} | >= 100 m2 | tek bir mekanizma DEGIL — asagiya bakiniz |
+| Alt grup | Sayica | Alanca |
+|---|---|---|
+| **A — kucuk yapilar** (< 100 m2) | **{n_small_zero}** bina (%{pct_small_n:.1f}) | {small_area:,.0f} m2 (**%{small_area_share:.1f}**) |
+| **B — buyuk yapilar** (>= 100 m2) | **{n_big_zero}** bina (%{pct_big_n:.1f}) | {big_area:,.0f} m2 (**%{big_area_share:.1f}**) |
+| **Toplam** | {n_zero} bina | {zero_area_total:,.0f} m2 |
 
-Alt grup B tek tek incelenmistir:
-`reports/00_stage_0_3_zero_ratio_investigation.md`.
+**Tablo agirliga gore tersine donuyor:** sayica grubun %{pct_small_n:.1f}'i kucuk
+yapilardir, ama toplam alanin **%{area_share_top2:.1f}'i yalnizca 2 binadadir**.
 
-{big_zero_rows}
+**Etkiye gore en buyuk 5 uye (tek tek):**
 
-**Alt grup B'nin onemi:** bunlar yardimci yapi degildir ve enerji analizi icin
-onemlidir. Tek tek incelendiginde **iki ayri mekanizma** cikti:
+| # | bag_id | ayakizi m2 | alan payi | gebruiksdoel | bouwjaar | zemin orani |
+|---|---|---|---|---|---|---|
+{top5_rows}
 
-- **2 yapi (996,5 ve 1.665,0 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
-  (2023-02-08/14) sirasinda **hicbir bina yoktu**. Zemin noktasi orani %98,9
-  ve %62,1; >8 m noktalarin %99,8-100'u cok donuslu (= bitki ortusu, kontrol
-  binasinda %2,4). Ikisi de 3DBAG'de **yok**. Bu bir girdi KALITESI sorunu
-  degil, **zamansal uyusmazliktir**.
+Ilk ikisi **okuldur** (`onderwijsfunctie`) ve tek tek teshis edilmistir:
+**`reports/00_stage_0_3_zero_ratio_investigation.md`**.
+
+#### Alt grup B — teshis edildi, mekanizma tek degil
+
+- **2 yapi (1.665,0 ve 996,5 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
+  (**2023-02-08/14**) sirasinda **hicbir bina yoktu**. Kanit **olcumdur**,
+  cikarim degil: zemin (sinif 2) noktasi orani %62,1 ve %98,9; >8 m
+  noktalarin **%99,8 ve %100'u cok donuslu** (kontrol binasinda %2,4 — bitki
+  ortusu imzasi); ikisi de **3DBAG'de yok**. Sebep girdi kalitesi degil,
+  **zamansal uyusmazliktir** (D-020).
 - **1 yapi (109,0 m2, bouwjaar 2002):** 8 m ustu hic noktasi yok, cok donuslu
   orani %3,0 — orada alcak, kati bir yapi var ve AHN onu **maaiveld/overig**
-  saymis. Bu, alt grup A ile **ayni mekanizmanin** daha buyuk bir ornegidir.
+  saymis. Alt grup A ile **ayni mekanizmanin** buyuk ornegi.
 
-Asama 1'de bu yapilar rekonstruksiyona **girmemelidir**; girerse mutlaka
-basarisiz olur ve nedeni yanlis siniflandirilir. Filtre `bouwjaar` ile
-kurulamaz (kanit: D-018 ve inceleme raporu Bolum 5.1); `ground_class_ratio`
-ve `building_class_ratio` ile kurulur. Esik **P-013**'te acik karardir.
+**Karar (D-019, kullanici onayi):** bu **3 yapi Asama 1'den dislanir** ve
+sinirlama olarak raporlanir. Karar dogrudan olcume dayandigi icin Bolum 12.13
+kapsaminda **degildir**; gorsel dogrulamayi beklemez.
 
-**Alt grup A icin:** AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes
-zonder fundering" gibi nesnelerin **"overig" (=1)** siniflandirilmasini
-emreder. Bu yapilar BAG'de **vardir**, yani kural birebir uymuyor; AHN5'in
-siniflandirici davranisi belgelenmemistir (bkz. `docs/ahn_class_codes.md`).
-Sebep Asama 1'de kapatilacaktir; burada varsayim yazilmaz.
+#### Alt grup A — aciklama bir CIKARIMDIR, dogrulanmayi bekliyor
+
+> ### CIKARIM (Bolum 12.13 — dogrulanmadan karara baglanmaz)
+>
+> 64 kucuk yapinin **berging / bisiklet deposu / bahce evi** oldugu
+> dusunulmektedir. Dayanak: ayakizi medyani {z_area:.1f} m2, `gebruiksdoel`
+> **{n_small_zero}/{n_small_zero}'unde tamamen bos**, woonfunctie **sifir**.
+>
+> **Bu bir OLCUM DEGILDIR.** BAG'de `gebruiksdoel` bos olmasi, yapinin depo
+> oldugunu degil, **bir kullanim islevi kaydedilmedigini** soyler. Ikisi ayni
+> sey degildir (MISTAKES.md **M-011**).
+>
+> **Dogrulama:** sabit seed ile secilmis 12 binalik gorsel orneklem —
+> `reports/visual_check_sample.csv`, `aoi/qa/zero_class6_buildings.geojson`,
+> sonuclar `docs/visual_check_zero_class6.md`.
+> **P-012 bu dogrulama bitmeden karara baglanmayacaktir.**
+
+Destekleyici belge (kanit degil): AHN4 sartnamesi Bolum 9.2, BAG'de olmayan
+"tuinhuisjes zonder fundering" gibi nesnelerin **"overig" (=1)**
+siniflandirilmasini emreder. Ancak bu yapilar BAG'de **vardir**, yani kural
+birebir uymuyor; AHN5'in siniflandirici davranisi belgelenmemistir (bkz.
+`docs/ahn_class_codes.md`).
 
 **Asama 1'e etkisi:** bu {n_zero} bina basarisiz olursa sebep **ne girdi
 yogunlugu ne bizim yontemimizdir** — AHN'in siniflandirma politikasidir.

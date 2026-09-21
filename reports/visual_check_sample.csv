@@ -1,0 +1,13 @@
+sira,bag_id,alt_grup,footprint_area_m2,has_verblijfsobject,gebruiksdoel,bouwjaar,status,point_count,building_class_ratio,ground_class_ratio,merkez_x_rd,merkez_y_rd,CIKARIM,GOZLEM_kullanici,NOT_kullanici
+1,0503100000041285,B_buyuk,1664.97,true,"onderwijsfunctie,sportfunctie",2026,Pand in gebruik (niet ingemeten),124119,0.0000,0.6213,83797.0,445656.3,ucus sonrasi yapildi (bina yoktu),,
+2,0503100000038184,B_buyuk,996.55,true,onderwijsfunctie,2023,Pand in gebruik,81963,0.0000,0.9891,84003.8,445063.0,ucus sonrasi yapildi (bina yoktu),,
+3,0503100000039626,A_kucuk,3.15,false,,2009,Pand in gebruik,262,0.0000,0.1679,84491.4,445615.5,depo/kulube (berging),,
+4,0503100000038679,A_kucuk,4.49,false,,2007,Pand in gebruik,172,0.0000,0.0407,84569.6,445464.8,depo/kulube (berging),,
+5,0503100000039603,A_kucuk,7.78,false,,1988,Pand in gebruik,259,0.0000,0.0347,84640.8,445207.1,depo/kulube (berging),,
+6,0503100000039621,A_kucuk,5.02,false,,1998,Pand in gebruik,146,0.0000,0.0616,84536.2,445405.3,depo/kulube (berging),,
+7,0503100000039618,A_kucuk,4.70,false,,1997,Pand in gebruik,140,0.0000,0.1143,84558.5,445406.4,depo/kulube (berging),,
+8,0503100000038260,A_kucuk,4.19,false,,2023,Pand in gebruik,221,0.0000,0.9955,83882.2,446221.7,depo/kulube (berging),,
+9,0503100000039604,A_kucuk,13.81,false,,2020,Pand in gebruik,668,0.0000,0.1138,84632.6,445206.9,depo/kulube (berging),,
+10,0503100000039608,A_kucuk,13.77,false,,2001,Pand in gebruik,1249,0.0000,0.0633,84572.7,445184.0,depo/kulube (berging),,
+11,0503100000039629,A_kucuk,2.81,false,,2022,Pand in gebruik,224,0.0000,0.1562,84470.2,445613.4,depo/kulube (berging),,
+12,0503100000039630,A_kucuk,2.06,false,,2016,Pand in gebruik,197,0.0000,0.1574,84458.2,445616.5,depo/kulube (berging),,

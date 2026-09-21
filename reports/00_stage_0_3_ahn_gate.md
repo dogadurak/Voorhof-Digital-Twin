@@ -1,6 +1,13 @@
 # Asama 0.3 — AHN girdi kalite kapisi
 
-**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-021`
+**Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-022`
+
+> **VERI DONEMI (D-020).** Bu projede **geometri** AHN5 ucus donemini
+> (**2023-02-08 / 2023-02-14**, LAZ `gps_time`'dan olculdu) temsil eder;
+> **oznitelikler** BAG anlik goruntusudur (**2026-09**). Arada **3,5 yil**
+> vardir. Ucustan sonra yapilmis veya degismis binalarin geometrisi
+> uretilemez; bunlar **"geometrisi yok (ucus sonrasi)"** etiketiyle listelenir
+> ve modellenmez.
 
 Esikler `config/acceptance_criteria.yml` -> `input_gate_ahn` altindan okundu.
 O blok bu olcumden **once** ayri bir commit ile muhurlendi.
@@ -106,47 +113,73 @@ sinif 6 orani medyani **0.854**, buyuklerinki
 **0.885** — neredeyse esit. Sorun kucukluk degil, bu belirli
 alt gruptur.
 
-#### Sifir grubu TEK BIR SEY DEGILDIR — iki alt gruba ayrilir
+#### Sifir grubu: SAYIYA gore ve ETKIYE gore — iki farkli tablo
 
-Yukaridaki medyanlar yaniltici bir genelleme uretmisti ("hepsi kucuk yardimci
-yapi"). Ayakizi buyuklugune gore ayrildiginda iki **farkli mekanizma** cikiyor:
+> **Bolum 14.6 / M-010 geregi.** Bu grup once yalnizca medyanla ozetlenmis ve
+> "kucuk, konut disi yardimci yapilar" diye genellenmisti. Medyan **cogunlugu**
+> anlatir, **etkisi buyuk azinligi gizler**. Asagida ayni grup iki ayri
+> agirlikla verilir.
 
-| Alt grup | n | Tanim | Mekanizma |
-|---|---|---|---|
-| **A — kucuk, islevsiz yardimci yapilar** | 64 | < 100 m2, `gebruiksdoel` **tamamen bos**, woonfunctie **sifir** | AHN siniflandirmasi bunlari bina saymamis |
-| **B — buyuk yapilar** | 3 | >= 100 m2 | tek bir mekanizma DEGIL — asagiya bakiniz |
+| Alt grup | Sayica | Alanca |
+|---|---|---|
+| **A — kucuk yapilar** (< 100 m2) | **64** bina (%95.5) | 621 m2 (**%18.3**) |
+| **B — buyuk yapilar** (>= 100 m2) | **3** bina (%4.5) | 2,771 m2 (**%81.7**) |
+| **Toplam** | 67 bina | 3,392 m2 |
 
-Alt grup B tek tek incelenmistir:
-`reports/00_stage_0_3_zero_ratio_investigation.md`.
+**Tablo agirliga gore tersine donuyor:** sayica grubun %95.5'i kucuk
+yapilardir, ama toplam alanin **%78.5'i yalnizca 2 binadadir**.
 
-| bag_id | ayakizi m2 | bouwjaar | status | gebruiksdoel |
-|---|---|---|---|---|
-| `0503100000041285` | 1665.0 | 2026 | Pand in gebruik (niet ingemeten) | onderwijsfunctie,sportfunctie |
-| `0503100000038184` | 996.5 | 2023 | Pand in gebruik | onderwijsfunctie |
-| `0503100000039655` | 109.0 | 2002 | Pand in gebruik | (islev yok) |
+**Etkiye gore en buyuk 5 uye (tek tek):**
 
-**Alt grup B'nin onemi:** bunlar yardimci yapi degildir ve enerji analizi icin
-onemlidir. Tek tek incelendiginde **iki ayri mekanizma** cikti:
+| # | bag_id | ayakizi m2 | alan payi | gebruiksdoel | bouwjaar | zemin orani |
+|---|---|---|---|---|---|---|
+| 1 | `0503100000041285` | 1,665.0 | %49.1 | onderwijsfunctie,sportfunctie | 2026 | 0.621 |
+| 2 | `0503100000038184` | 996.5 | %29.4 | onderwijsfunctie | 2023 | 0.989 |
+| 3 | `0503100000039655` | 109.0 | %3.2 | **(islev kaydi yok)** | 2002 | 0.014 |
+| 4 | `0503100000038212` | 28.5 | %0.8 | **(islev kaydi yok)** | 2023 | 0.261 |
+| 5 | `0503100000038258` | 24.2 | %0.7 | **(islev kaydi yok)** | 2023 | 0.296 |
 
-- **2 yapi (996,5 ve 1.665,0 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
-  (2023-02-08/14) sirasinda **hicbir bina yoktu**. Zemin noktasi orani %98,9
-  ve %62,1; >8 m noktalarin %99,8-100'u cok donuslu (= bitki ortusu, kontrol
-  binasinda %2,4). Ikisi de 3DBAG'de **yok**. Bu bir girdi KALITESI sorunu
-  degil, **zamansal uyusmazliktir**.
+Ilk ikisi **okuldur** (`onderwijsfunctie`) ve tek tek teshis edilmistir:
+**`reports/00_stage_0_3_zero_ratio_investigation.md`**.
+
+#### Alt grup B — teshis edildi, mekanizma tek degil
+
+- **2 yapi (1.665,0 ve 996,5 m2, ikisi de OKUL):** ayakizinde AHN5 ucusu
+  (**2023-02-08/14**) sirasinda **hicbir bina yoktu**. Kanit **olcumdur**,
+  cikarim degil: zemin (sinif 2) noktasi orani %62,1 ve %98,9; >8 m
+  noktalarin **%99,8 ve %100'u cok donuslu** (kontrol binasinda %2,4 — bitki
+  ortusu imzasi); ikisi de **3DBAG'de yok**. Sebep girdi kalitesi degil,
+  **zamansal uyusmazliktir** (D-020).
 - **1 yapi (109,0 m2, bouwjaar 2002):** 8 m ustu hic noktasi yok, cok donuslu
   orani %3,0 — orada alcak, kati bir yapi var ve AHN onu **maaiveld/overig**
-  saymis. Bu, alt grup A ile **ayni mekanizmanin** daha buyuk bir ornegidir.
+  saymis. Alt grup A ile **ayni mekanizmanin** buyuk ornegi.
 
-Asama 1'de bu yapilar rekonstruksiyona **girmemelidir**; girerse mutlaka
-basarisiz olur ve nedeni yanlis siniflandirilir. Filtre `bouwjaar` ile
-kurulamaz (kanit: D-018 ve inceleme raporu Bolum 5.1); `ground_class_ratio`
-ve `building_class_ratio` ile kurulur. Esik **P-013**'te acik karardir.
+**Karar (D-019, kullanici onayi):** bu **3 yapi Asama 1'den dislanir** ve
+sinirlama olarak raporlanir. Karar dogrudan olcume dayandigi icin Bolum 12.13
+kapsaminda **degildir**; gorsel dogrulamayi beklemez.
 
-**Alt grup A icin:** AHN4 sartnamesi Bolum 9.2, BAG'de olmayan "tuinhuisjes
-zonder fundering" gibi nesnelerin **"overig" (=1)** siniflandirilmasini
-emreder. Bu yapilar BAG'de **vardir**, yani kural birebir uymuyor; AHN5'in
-siniflandirici davranisi belgelenmemistir (bkz. `docs/ahn_class_codes.md`).
-Sebep Asama 1'de kapatilacaktir; burada varsayim yazilmaz.
+#### Alt grup A — aciklama bir CIKARIMDIR, dogrulanmayi bekliyor
+
+> ### CIKARIM (Bolum 12.13 — dogrulanmadan karara baglanmaz)
+>
+> 64 kucuk yapinin **berging / bisiklet deposu / bahce evi** oldugu
+> dusunulmektedir. Dayanak: ayakizi medyani 8.0 m2, `gebruiksdoel`
+> **64/64'unde tamamen bos**, woonfunctie **sifir**.
+>
+> **Bu bir OLCUM DEGILDIR.** BAG'de `gebruiksdoel` bos olmasi, yapinin depo
+> oldugunu degil, **bir kullanim islevi kaydedilmedigini** soyler. Ikisi ayni
+> sey degildir (MISTAKES.md **M-011**).
+>
+> **Dogrulama:** sabit seed ile secilmis 12 binalik gorsel orneklem —
+> `reports/visual_check_sample.csv`, `aoi/qa/zero_class6_buildings.geojson`,
+> sonuclar `docs/visual_check_zero_class6.md`.
+> **P-012 bu dogrulama bitmeden karara baglanmayacaktir.**
+
+Destekleyici belge (kanit degil): AHN4 sartnamesi Bolum 9.2, BAG'de olmayan
+"tuinhuisjes zonder fundering" gibi nesnelerin **"overig" (=1)**
+siniflandirilmasini emreder. Ancak bu yapilar BAG'de **vardir**, yani kural
+birebir uymuyor; AHN5'in siniflandirici davranisi belgelenmemistir (bkz.
+`docs/ahn_class_codes.md`).
 
 **Asama 1'e etkisi:** bu 67 bina basarisiz olursa sebep **ne girdi
 yogunlugu ne bizim yontemimizdir** — AHN'in siniflandirma politikasidir.

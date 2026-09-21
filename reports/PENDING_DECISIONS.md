@@ -19,8 +19,8 @@
 | P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
 | P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
 | P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
-| P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **Asama 1 baslangici** |
-| P-013 | 1 | AHN5'te karsiligi olmayan binalar ne yapilacak (3 yapi) | Asama 1 + Asama 3 enerji | **Asama 1 baslangici** |
+| P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **GORSEL DOGRULAMAYI BEKLIYOR** (M-011) |
+| ~~P-013~~ | 1 | AHN5'te karsiligi olmayan binalar (3 yapi) | — | **KAPANDI -> D-019** (secenek a) |
 
 ---
 
@@ -517,3 +517,41 @@ sessizce dusurulmemelidir (Bolum 12.8).
 3DBAG donduruyor ama bu binalar 3DBAG'de yok. **BAG Individuele Bevragingen
 API** ayri bir veri kaynagi olarak eklenmelidir — Bolum 12.11 geregi
 kullanici karari.
+
+
+---
+
+## [2026-09-21] P-013 KAPANDI -> D-019
+
+Kullanici secenek **(a)**'yi onayladi: 3 yapi Asama 1'den **dislanir**,
+sinirlama olarak raporlanir, LOD1 kutu uretilmez.
+
+**Onemli gerekce notu:** Bu karar gorsel dogrulamayi **beklemedi**, cunku
+dogrudan olcume dayaniyor (nokta sinifi, dz dagilimi, cok donus orani) —
+bir cikarima degil. Bolum 12.13 yalnizca **cikarim** temelli kararlari
+bekletir. Bkz. D-019.
+
+---
+
+## [2026-09-21] [1] P-012 — GORSEL DOGRULAMA BEKLIYOR
+
+**Durum:** ACIK · **Bekledigi sey:** `docs/visual_check_zero_class6.md`
+
+P-012 (Asama 1'e hangi AHN siniflari girecek) sorusunun kritik bileseni,
+sinif 6 orani sifir cikan **64 kucuk yapinin gercekte ne oldugudur**. Sinif 1
+dislanirsa bu yapilar **hic nokta gormez**.
+
+Bu yapilarin "berging/depo" oldugu su an bir **CIKARIMDIR** (MISTAKES.md
+M-011) ve yalnizca BAG ozniteliklerinden turetilmistir. Bolum 12.13 geregi
+karardan once bagimsiz yoldan dogrulanmalidir.
+
+**Dogrulama paketi hazir:**
+- `aoi/qa/zero_class6_buildings.geojson` — 67 binanin tamami (EPSG:28992)
+- `reports/visual_check_sample.csv` — 12 bina (2 okul + 10 rastgele kucuk),
+  seed **28992**, config'te muhurlu
+- `docs/visual_check_zero_class6.md` — kullanicinin dolduracagi sablon
+
+**Iki okul orneklemde neden var:** guncel Luchtfoto'da (2025/2026) okul
+binasi **goruluyorsa**, "ucustan sonra yapildi" aciklamasi bagimsiz olarak
+dogrulanmis olur. Yani ayni orneklem hem alt grup A'nin cikarimini hem alt
+grup B'nin olcumunu sinar.

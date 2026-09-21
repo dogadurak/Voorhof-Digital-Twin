@@ -1128,6 +1128,29 @@ input_gate_ahn:
       en dusuk 10 listesine ALINMAZ (0/0 yapay olarak 0 gosterilmez).
     reported:
       - lowest_10_building_class_ratio   # raporda tablo olarak
+
+  # --- GORSEL DOGRULAMA ORNEKLEMI (D-019, AGENTS.md Bolum 12.13) ---
+  # Sinif 6 orani sifir cikan yapilarin NE OLDUGU bir CIKARIMDIR; karardan
+  # once bagimsiz yoldan (Luchtfoto / Street View) dogrulanir. Orneklem
+  # tekrarlanabilir olmak zorundadir, bu yuzden seed BURAYA yazilir.
+  visual_check:
+    decision_ref: D-019
+    seed: 28992                    # RD New EPSG kodu; anlamli bir sabit
+    n_small: 10                    # rastgele secilen kucuk yapi (< 100 m2)
+    n_big: 2                       # iki okul - HER ZAMAN dahil, rastgele DEGIL
+    big_always_include:
+      - "0503100000041285"         # 1.665,0 m2 - onderwijs + sport, bouwjaar 2026
+      - "0503100000038184"         #   996,5 m2 - onderwijs, bouwjaar 2023
+    big_rationale: >
+      Bu ikisi orneklemde KALIR cunku gorsel kontrol burada ikinci bir ise
+      yarar: guncel Luchtfoto'da (2025/2026) okul binasi GORUNUYORSA,
+      "ucustan sonra yapildi" aciklamasi bagimsiz olarak dogrulanmis olur.
+      Yani ayni orneklem hem A hem B alt grubunu sinar.
+    labels: ["depo/kulube", "ev", "baska", "goruntude yok"]
+    output_geojson: aoi/qa/zero_class6_buildings.geojson
+    output_csv: reports/visual_check_sample.csv
+    result_doc: docs/visual_check_zero_class6.md
+    blocks: "P-012 (P-013 BEKLEMEZ - dogrudan olcume dayanir, D-019)"
     csv_scope_note: >
       CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
       "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
