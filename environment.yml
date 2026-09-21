@@ -42,3 +42,11 @@ dependencies:
 
   # --- Test / QA (Asama 0.5) ---
   - pytest
+
+# --- Ortam degiskenleri ---
+# PYTHONUTF8=1: Python'un tum I/O'sunu UTF-8'e zorlar (PEP 540 UTF-8 modu).
+# Bu makinede konsol kodlamasi cp1254 (Turkce yerel ayar); UTF-8 modu olmadan
+# ASCII disi karakter iceren log satirlari TERMINALE HIC YAZILMAZ.
+# Bkz. MISTAKES.md M-006 ve ENVIRONMENT.md "Bu makineye ozgu tuzaklar".
+variables:
+  PYTHONUTF8: "1"

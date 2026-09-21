@@ -1,0 +1,43 @@
+{
+  "run_id": "RUN-2026-09-21-011",
+  "git_commit": "345356c-dirty",
+  "created_utc": "2026-09-21T12:08:36Z",
+  "output": {
+    "path": "aoi/area_B_context.geojson",
+    "sha256": "23a13eca32f47a8542a8d063780ecc213e141a83fd9fb3cf8a7227ce14c624a0",
+    "size_bytes": 8620
+  },
+  "inputs": [
+    {
+      "path": "data/raw/cbs/voorhof_buurten.geojson",
+      "sha256": "972383b7da84c6e7699c49c2731da9a7cf4522e4836c03749b678d458449fb97",
+      "size_bytes": 31765
+    }
+  ],
+  "parameters": {
+    "included_buurtcodes": [
+      "BU05032400",
+      "BU05032401",
+      "BU05032403",
+      "BU05032404",
+      "BU05032405",
+      "BU05032406",
+      "BU05032407"
+    ],
+    "excluded_buurtcodes": [
+      "BU05032402",
+      "BU05032408"
+    ],
+    "buffer_m": 300.0,
+    "area_ha": 277.76,
+    "geom_type": "Polygon",
+    "parts": 1
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "shapely_op": "unary_union + buffer"
+  },
+  "random_seed": null,
+  "notes": "CRS EPSG:28992, kaynaktan okundu ve dogrulandi. Karar D-009."
+}

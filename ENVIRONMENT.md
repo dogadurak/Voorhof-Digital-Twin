@@ -127,6 +127,44 @@ Ortam dogrulamasi her zaman gercek bir CRS olusturarak yapilir.
 
 ---
 
+## 3.2 BU MAKINEYE OZGU BILINEN TUZAKLAR
+
+Asagidakiler kodun hatasi degil, bu is istasyonunun yapilandirmasindan kaynaklanir.
+Baska bir makinede farkli gorunebilirler; bu yuzden her biri icin kodda savunma var.
+
+| # | Tuzak | Belirti | Savunma |
+|---|---|---|---|
+| T-1 | **Konsol kodlamasi cp1254** (Windows, Turkce yerel ayar) | ASCII disi karakter iceren log satiri terminale HIC yazilmaz; stderr'e "Logging error" duser | `logging_setup.py` stdout'u UTF-8'e zorlar + `PYTHONUTF8=1` (M-006) |
+| T-2 | **Sistem `PROJ_LIB` / `GDAL_DATA`** PostgreSQL/PostGIS 3.6'ya isaret ediyor | `EPSG:28992` olusturulamiyor, "no database context" | `proj_env.py` paket import'unda dizini ortama sabitler (M-003) |
+| T-3 | **`conda run` cok satirli `-c` desteklemiyor** | `NotImplementedError: arguments contain newlines` | Script dosyaya yazilir veya ortamin `python.exe`'si dogrudan cagrilir |
+| T-4 | **`conda env create` basarisiz olsa da cikis kodu 0** | Kurulum basarili sanilir | Kurulumdan sonra ortam FIILEN yoklanir (M-002) |
+| T-5 | **Conda ortam degiskenleri yalnizca aktivasyonla gelir** | `python.exe` dogrudan cagrilinca `PYTHONUTF8` uygulanmaz | Savunma tek katmanli birakilmadi: `logging_setup.py` kodda da duzeltiyor |
+
+### T-1 ayrintisi — konsol kodlamasi
+
+```
+Yerel ayar        : Turkce (Turkiye)
+Konsol kodlamasi  : cp1254
+Etkilenen         : sys.stdout (dosya logu UTF-8 oldugu icin etkilenmiyor)
+```
+
+**Iki katmanli savunma:**
+1. `environment.yml` -> `variables: PYTHONUTF8: "1"` — ortam aktive edildiginde
+   Python'un tum I/O'su UTF-8 olur (PEP 540).
+2. `src/common/logging_setup.py` -> `sys.stdout.reconfigure(encoding="utf-8",
+   errors="replace")` — ortam aktive edilmeden `python.exe` dogrudan cagrilsa bile
+   calisir. `errors="replace"` sayesinde kodlanamayan bir karakter olsa dahi satir
+   **asla dusmez**, en kotu ihtimalle karakter yerine bir isaret konur.
+
+**Dogrulandi (2026-09-21):**
+
+| Senaryo | Baslangic `stdout.encoding` | `setup_logging` sonrasi | `∩ ≤ °C m²` iki sink'e de ulasti mi |
+|---|---|---|---|
+| `python.exe` dogrudan | cp1254 | utf-8 | EVET |
+| `PYTHONUTF8=1` ile | utf-8 | utf-8 | EVET |
+
+---
+
 ## 4. Docker image'lari (Asama 1+)
 
 | Amac | Image | Tag | Durum |

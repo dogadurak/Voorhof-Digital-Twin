@@ -1,0 +1,55 @@
+{
+  "run_id": "RUN-2026-09-21-007",
+  "git_commit": "345356c-dirty",
+  "created_utc": "2026-09-21T12:06:28Z",
+  "output": {
+    "path": "reports/00_stage_0_2_aoi.md",
+    "sha256": "44eb8d0df241bd65e0d5651610d016015a17099040329c9547149cab55d30b42",
+    "size_bytes": 2923
+  },
+  "inputs": [
+    {
+      "path": "data/raw/bag/bag_pand.geojson",
+      "sha256": "c934461cd06459d3a6b9a34359cf9445fbcc413d323a6332c364b3252ef079c1",
+      "size_bytes": 5151041
+    },
+    {
+      "path": "data/raw/bag/bag_verblijfsobject.geojson",
+      "sha256": "a9987407b49d74d027a4aaa84ada52d507928cef58802c9e485d13ceb19a4182",
+      "size_bytes": 13185218
+    }
+  ],
+  "parameters": {
+    "area_a_ha": 109.62,
+    "area_b_ha": 277.76,
+    "stats_a": {
+      "pand_count": 1259,
+      "panden_with_dwellings": 898,
+      "panden_without_dwellings": 361,
+      "verblijfsobjecten": 8246,
+      "woonfunctie_ratio_pct": 92.6,
+      "bouwjaar_1960_1975_ratio_pct": 75.1,
+      "mean_bouwjaar": 1977.8
+    },
+    "stats_context": {
+      "pand_count": 2776,
+      "panden_with_dwellings": 1534,
+      "panden_without_dwellings": 1242,
+      "verblijfsobjecten": 5505,
+      "woonfunctie_ratio_pct": 93.5,
+      "bouwjaar_1960_1975_ratio_pct": 42.4,
+      "mean_bouwjaar": 1984.0
+    },
+    "industry_in_b_ha": 17.14,
+    "excluded_by_status": {
+      "pand": 47,
+      "verblijfsobject": 668
+    }
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Esik uygulanmadi (D-009). Metrik tanimlari D-008."
+}

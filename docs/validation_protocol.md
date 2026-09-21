@@ -106,6 +106,27 @@ tanimlanmadan karsilastirma yapilamaz.
 `Stedin_PC6.tz: null`). Saatlik model ciktisi yillik toplama indirilmeden
 karsilastirilamaz; saatlik kalibrasyon esikleri bu veriye uygulanamaz.
 
+### 3.1b PC6 dislama kurali (Karar D-009)
+
+A, Voorhof'un 7 resmi konut buurt'unun birlesimidir; iki sanayi buurt'u
+dislanmistir. Bir PC6 kumesi bu iki grup arasinda **bolunmus** olabilir.
+
+**Baglayici kural:** Sanayi buurt'lariyla (`BU05032402`, `BU05032408`) kesisen
+PC6 kumeleri Asama 3 enerji karsilastirmasindan **DISLANIR**.
+
+- Dislanan PC6 sayisi ve bunlarin A icindeki bina sayisi **raporlanir**
+  (`reports/03_energy_validation.md`). Sessizce atilmaz (Bolum 12.8).
+- Gerekce: bolunmus bir PC6'nin agregat tuketimi hem konut hem sanayi
+  baglantilarini icerir. Model ciktisi yalnizca A'daki konut binalarindan
+  toplandigi icin **iki taraf ayni fiziksel buyuklugu olcmez** (Bolum 12.4).
+  Bolunmus PC6'yi dahil etmek, karsilastirmaya sistematik bir yanlilik sokar.
+- Dislama orani yuksek cikarsa (`TODO_ASAMA_3`: esik kullanici onayiyla) bu
+  durum raporun Limitations bolumune girer; PC6 kapsaminin daralmasi
+  karsilastirmanin gucunu dusurur.
+
+**Bir PC6'nin tek bir binaya atanmasi yine YASAKTIR** (Bolum 12.3). Bu kural
+dislamadan bagimsiz olarak gecerlidir.
+
 ### 3.2 EP-Online etiket eslestirmesi
 
 **Yalnizca geometrik yakinlikla adres eslestirilemez** (Bolum 12.3). Kullanilacak
@@ -117,6 +138,29 @@ Belirsiz veya coklu adresli vakalar **ayri raporlanir**, sessizce bir secenek
 secilmez. `TODO_ASAMA_3`: belirsiz vaka sayisi ve ele alma kurali.
 
 ---
+
+## 3.3 Rol bazli cikti etiketleme (Karar D-009)
+
+Her binanin `role` ozniteligi vardir: `analysis` (A icinde) veya `context`
+(B icinde, A disinda — sanayi buurt'lari dahil).
+
+| Cikti | `analysis` | `context` |
+|---|---|---|
+| Cati gunes potansiyeli | hesaplanir; A'nin dogrulama istatistiklerine **girer** | hesaplanir ve ikizde gosterilir; etiket **`indicative`**; dogrulama istatistiklerine **GIRMEZ** |
+| Enerji tuketimi | hesaplanir (konut binalari) | hesaplanmaz; gosterilen deger **"modellenmedi — endustriyel surec yuku acik veriyle bilinemez"** |
+
+**Gunes neden context icin de hesaplanir:** cati isinimi bir **fiziksel
+buyukluktur** ve binanin kullanim tipinden bagimsizdir. Hesaplanmamasi icin
+fiziksel bir gerekce yoktur; dogrulama istatistigine katilmamasinin gerekcesi
+ise A disinda kalmasidir, fizik degil kapsamdir.
+
+**Enerji alani neden bos birakilmaz:** bos bir alan "hesaplanmadi" ile "sifir"
+arasindaki farki gizler. Bolum 1 kural 5 belirsizligi gizlemeyi yasaklar; bu
+yuzden alan acik bir gerekce metniyle doldurulur.
+
+**Uyari:** `context` ciktilari raporun ozet tablolarina ve kabul kriteri
+hesaplarina **hicbir kosulda** karistirilmaz. Karistirilirsa A'nin metrikleri
+B'nin dokusuyla kirlenir ve Bolum 3'un "B raporlanmaz" kurali ihlal edilir.
 
 ## 4. Mikroklima ve LST — Asama 4
 

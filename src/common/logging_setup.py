@@ -87,11 +87,21 @@ def setup_logging(
 
     formatter = _UtcFormatter(LOG_FORMAT, datefmt=DATE_FORMAT)
 
+    # Terminal akisi UTF-8'e zorlanir (MISTAKES.md M-006).
+    # Windows konsolu varsayilan olarak cp1254 kullanir ve kodlayamadigi bir
+    # karakterle karsilasinca SATIRI HIC YAZMAZ — hata log'a degil stderr'e
+    # dusen bir "Logging error" olarak gider. Bir dogrulama satirinin sessizce
+    # kaybolmasi, bu projede kabul edilemez bir hata sinifidir.
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, OSError):
+        pass  # yeniden yapilandirilamayan akislar icin asagidaki errors= yeterli
+
     stream_handler = logging.StreamHandler(stream=sys.stdout)
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
 
-    file_handler = logging.FileHandler(log_file, encoding="utf-8")
+    file_handler = logging.FileHandler(log_file, encoding="utf-8", errors="replace")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 

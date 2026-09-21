@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-009**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-010**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -20,6 +20,7 @@
 | D-006 | 2026-09-21 | Indirmeler B alani bbox'i ile sinirlanir | ONAYLANDI |
 | D-007 | 2026-09-21 | AOI merkezi kural tabanli secilir + kor karsilastirma | ONAYLANDI |
 | D-008 | 2026-09-21 | 0.2a metrik paydalari ve status filtresi | ONAYLANDI |
+| D-009 | 2026-09-21 | AOI = 7 resmi konut buurt'u; aday izgarasi iptal | ONAYLANDI |
 
 ---
 
@@ -359,5 +360,112 @@ PDOK BAG WFS, BAG'in **kismi secimidir**; coklu adresli nesnelerde yalnizca
 **hoofdadres** sunulur. 0.2 icin etkisi yok; **Asama 2 EP-Online eslestirmesinde
 ciddi olabilir** (Bolum 12.3 hiyerarsisi nevenadres gerektirebilir).
 AGENTS.md Bolum 5'e islendi; azaltim plani PENDING_DECISIONS -> P-007.
+
+**Onay:** Kullanici, 2026-09-21.
+
+---
+
+## D-009 · [2026-09-21] · A = Voorhof'un 7 resmi konut buurt'u; aday izgarasi iptal
+
+**Karar:** Calisma alani **aranmaz, resmi birimlerden birlestirilir**.
+
+| Alan | Tanim | Olculen |
+|---|---|---|
+| **A** | Voorhof (WK050324) **7 resmi konut buurt'unun birlesimi** | 109,62 ha · 1.259 pand |
+| **B** | A + 300 m tampon (programatik) | 277,76 ha · 4.035 pand |
+| **C** | A icinde 150 x 150 m, kullanici secer | Asama 4 |
+| **D** | COST 732 / AIJ, H olculunce | Asama 3 sonu (P-001) |
+
+**Dahil edilen buurt kodlari** (veriden dogrulandi, 7 adet):
+`BU05032400` Poptahof-Noord · `BU05032401` Poptahof-Zuid · `BU05032403`
+Mythologiebuurt · `BU05032404` Aart van der Leeuwbuurt · `BU05032405` Roland
+Holstbuurt · `BU05032406` Voorhof-Hoogbouw · `BU05032407` Multatulibuurt
+
+**Dislanan:** `BU05032402` Bedrijventerrein Voorhof · `BU05032408`
+Bedrijventerrein Vulcanusweg
+
+**Raporda kullanilacak tanim:** *"Calisma alani = Voorhof'un 7 resmi konut
+buurt'u; iki sanayi buurt'u dislanmistir."* Alan **turetilmis** degil, resmi
+birimlerin birlesimidir — elle cizilmis hicbir cizgi yoktur, tekrarlanabilirdir.
+
+### Aday izgarasi ve kor karsilastirma IPTAL
+
+D-007'nin 25 m izgara aramasi ve kor karsilastirmasi kaldirildi. Gerekce:
+secimde **oznel karar kalmadi**, dolayisiyla dogrulanacak bir secim de yok.
+`config/acceptance_criteria.yml` -> `stage_0_2` blogu **silinmedi**,
+`superseded_by: D-009` ile isaretlendi; esiklerin sonuctan once kilitlendigi iz
+korunuyor (Bolum 12.2). O kriterlerle **hicbir hesap calistirilmadi**;
+`aoi/candidates/` hicbir zaman olusmadi.
+
+**400-700 bina araligi artik ESIK DEGILDIR.** A resmi sinirdan turedigi icin
+bina sayisi raporlanan bir olcumdur. Kriter 0-B'nin dongusellik uyarisi
+**cozuldu** olarak guncellendi.
+
+### Kararin tetikleyicisi hatali bir gozlemdi (kullanici notu)
+
+Karar, "Voorhof ~450-550 m eninde, 600 m kare her durumda tasiyor" gozlemiyle
+tetiklendi. **Bu gozlem yanlisti.** Olcum:
+
+| Iddia | Olculen |
+|---|---|
+| ~450-550 m en | medyan **814 m** (kesitlerin yalnizca %27'si 600 m'den dar) |
+| kare her durumda tasar | **137 konumda kare tamamen A icinde** |
+| tasarsa sanayiye girer | bu 137 karenin **58'i sanayiye hic degmiyor** |
+
+Kullanici hatayi kabul etti ve kaydedilmesini istedi. **Karar yine de
+korundu, cunku dogru gerekce baskaydi:** kareyi "en iyi skoru veren yere"
+koymak, AOI'yi enerji dogrulamasi iyi gorunsun diye secmektir. Resmi sinir bu
+yanliligi tamamen ortadan kaldirir. Yani sonuc dogru yone gitti, ama
+**DECISIONS'a yazilan gerekce tasma degil, yanlilik olmamasidir.**
+
+Bu, M-005 ile ayni kalip: yanlis gerekce, dogru yontem. Gerekce duzeltilmeden
+birakilsaydi sonraki oturum "kare sigmiyor" diye yanlis bir kisit tasiyacakti.
+
+### Dislamanin olculen etkisi — durustce
+
+| | Tum poligon (9 buurt) | A (7 konut buurt'u) |
+|---|---|---|
+| pand | 1.433 | 1.259 |
+| woonfunctie orani | %92,0 | **%92,6** |
+| bouwjaar 1960-1975 | %71,3 | **%75,1** |
+
+Iyilesme **gercek ama mutevazi**: woonfunctie +0,6 puan, kohort +3,8 puan.
+
+**Onemli nitelendirme:** Dislanan iki "bedrijventerrein"in kendisi saf sanayi
+DEGILDIR — icindeki 174 pand'in 164'u konut birimi tasiyor ve VBO woonfunctie
+orani **%84,4**. CBS'in "Bedrijventerrein" etiketi arazi kullanim sinifidir,
+bina kullanimini birebir yansitmaz. Dislama yine de savunulabilir (kohort ve
+konut orani olculebilir bicimde iyilesiyor, PC6 homojenligi guclenir), ama
+"sanayi alanlarini cikardik" ifadesi bu veriyle **tam dogru degildir**.
+Raporda bu nitelendirme yer alacaktir.
+
+### SANAYI BUURT'LARI MODELDEN CIKARILMIYOR
+
+Dislama **yalnizca A'nin raporlama ve dogrulama kapsami** icindir.
+
+- B icinde kalan sanayi binalari indirilir, LOD2 rekonstruksiyonuna girer,
+  3B modelde yer alir, gunes/golge ve CFD hesaplarina **girdi olur**.
+- Olculen: sanayi buurt'larinin **%100'u (17,14 ha) B icinde**; 174 pand.
+- Asama 2'de her binaya `role` ozniteligi yazilir: **`analysis`** (centroid A
+  icinde, raporlanir) / **`context`** (centroid B icinde A disinda, raporlanmaz).
+  Web arayuzunde context binalari farkli stilde gosterilir.
+- B = A + 300 m kurali degismedi.
+
+### Gunes ve enerji ayrimi
+
+| Cikti | `analysis` | `context` (sanayi dahil) |
+|---|---|---|
+| Cati gunes potansiyeli | hesaplanir, dogrulama istatistigine girer | **hesaplanir ve ikizde gosterilir**, `indicative` etiketli, dogrulama istatistigine GIRMEZ |
+| Enerji tuketimi | hesaplanir (yalnizca konut) | **hesaplanmaz**; alan "modellenmedi — endustriyel surec yuku acik veriyle bilinemez" olarak isaretlenir, **bos birakilmaz** |
+
+Gunes potansiyeli bir fiziksel buyukluktur ve kullanim tipinden bagimsizdir;
+bu yuzden context binalari icin de uretilir. Bos birakilan bir enerji alani
+"hesaplanmadi" ile "sifir" arasindaki farki gizler — Bolum 1 kural 5 bunu yasaklar.
+
+### PC6 riski
+
+Sanayi buurt'lariyla kesisen PC6 kumeleri Asama 3 karsilastirmasindan
+**dislanacak ve sayilari raporlanacaktir**. `docs/validation_protocol.md`'ye
+islendi; acik kalem P-009.
 
 **Onay:** Kullanici, 2026-09-21.

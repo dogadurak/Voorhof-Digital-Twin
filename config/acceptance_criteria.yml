@@ -92,11 +92,15 @@ stage_0:
         sanity_range bir ESIK DEGILDIR, akil saglamasidir. Sayim bu araligin disinda
         cikarsa AOI siniri veya filtre sorgulanir; sayi degistirilmez.
       circularity_warning: >
-        DIKKAT (Karar D-007): AOI merkezi, bu araliga girecek sekilde SECILMEKTEDIR
-        (stage_0_2 kriteri 0.2-A). Bu nedenle 0-B ARTIK BAGIMSIZ KONTROL DEGILDIR.
-        Raporda "bina sayisi beklenen aralikta, demek ki AOI dogru" DENEMEZ — dongusel
-        olur. 0-B bir tutarlilik kaydidir; AOI'nin bagimsiz dogrulamasi kullanicinin
-        QGIS'teki gorsel kontrolu (0.2b) ve kor karsilastirmadir.
+        COZULDU (Karar D-009, 2026-09-21). D-007 doneminde AOI bu araliga girecek
+        sekilde SECILECEKTI ve 0-B dongusel hale gelecekti. D-009 ile secim tamamen
+        kaldirildi: A, resmi CBS buurt'larindan turetiliyor ve bina sayisi hicbir
+        sekilde AOI'yi belirlemiyor. 0-B artik saf gozlemdir.
+      threshold_status_note: >
+        DIKKAT: 400-700 araligi ARTIK ESIK DEGILDIR (Karar D-009, kullanici talimati).
+        A resmi sinirdan turedigi icin bina sayisi bir kabul kriteri degil, RAPORLANAN
+        bir olcumdur. Olculen deger bu araligin disinda cikarsa bu bir BASARISIZLIK
+        DEGILDIR; AGENTS.md Bolum 3'un tahmininin gercekle farki olarak raporlanir.
     - id: "0-C"
       description: "Eksik veya bozuk dosya yok"
       metric: corrupt_file_count
@@ -348,6 +352,22 @@ stage_0_2:
   source: "Karar D-007, kullanici onayi 2026-09-21"
   method: rule_based_grid_search
 
+  # ========================================================================
+  status: SUPERSEDED
+  superseded_by: D-009
+  superseded_at: "2026-09-21"
+  superseded_reason: >
+    Aday izgarasi ve kor karsilastirma IPTAL EDILDI. A artik aranmiyor, resmi
+    birimlerden turetiliyor (bkz. aoi_definition). Secimde oznel karar kalmadigi
+    icin dogrulanacak bir secim de kalmadi.
+    Bu blok SILINMEDI: esiklerin sonuctan once kilitlendigi ve sonradan
+    degistirilmedigi izi korunuyor (Bolum 12.2). Kriterleri ARTIK UYGULANMAZ.
+  never_executed: >
+    Bu bloktaki kriterlerle HICBIR aday hesabi calistirilmadi. aoi/candidates/
+    hicbir zaman olusturulmadi. Esikler uretilmis bir sonuca gore degistirilmedi
+    cunku uretilmis sonuc yoktur.
+  # ========================================================================
+
   # --- Arama alani ---
   study_area:
     source: "CBS Wijken en Buurten 2025 (PDOK WFS)"
@@ -554,3 +574,134 @@ stage_0_2:
       Tamponsuz indirme kenar adaylarin bina sayimini eksik gosterir ve secimi
       sistematik olarak merkeze kaydirir.
     note: "Bu tampon 0.2a'ya ozgudur. Asama 0.3 indirmeleri D-006 uyarinca B alani bbox'i ile sinirlanir."
+
+# ============================================================================
+#  AOI TANIMI (Karar D-009, kullanici onayi 2026-09-21)
+#  A aranmaz, TURETILIR. Oznel karar yoktur; elle cizilmis hicbir cizgi yoktur.
+# ============================================================================
+aoi_definition:
+  decision_ref: D-009
+  crs: "EPSG:28992"
+
+  area_a:
+    name: "Analiz alani"
+    method: union_of_official_buurten
+    source: "CBS Wijken en Buurten 2025, wijkcode WK050324"
+    rule: >
+      A = WK050324'un 9 buurt'undan, sanayi/is alani olan 2 tanesi DISINDA kalan
+      7 buurt'un birlesimi. Sinir tamamen resmi birimlerden turer; elle cizim yoktur,
+      dolayisiyla tekrarlanabilirdir ve AOI'yi "sonuc iyi ciksin diye" secme
+      yanliligi tasimaz.
+    included_buurtcodes:          # veriden dogrulandi 2026-09-21, 7 adet
+      - "BU05032400"   # Poptahof-Noord
+      - "BU05032401"   # Poptahof-Zuid
+      - "BU05032403"   # Mythologiebuurt
+      - "BU05032404"   # Aart van der Leeuwbuurt
+      - "BU05032405"   # Roland Holstbuurt
+      - "BU05032406"   # Voorhof-Hoogbouw
+      - "BU05032407"   # Multatulibuurt
+    excluded_buurten:
+      - code: "BU05032402"
+        name: "Bedrijventerrein Voorhof"
+        area_ha: 10
+        reason: "Sanayi/is alani — konut dokusu degil"
+      - code: "BU05032408"
+        name: "Bedrijventerrein Vulcanusweg"
+        area_ha: 7
+        reason: "Sanayi/is alani — konut dokusu degil"
+    exclusion_rationale: >
+      AGENTS.md Bolum 2: PC6 agregat enerji karsilastirmasi "SADECE HOMOJEN KONUT
+      DOKUSUNDA anlamlidir". Iki bedrijventerrein WK050324'un %13,5'ini kapliyor ve
+      konut disi tuketim profili tasiyor; A icinde birakilsalardi Bolum 12.3'un
+      PC6 karsilastirmasi karma bir dokuyu olcerdi.
+    known_risk: >
+      Sinir artik tek bir resmi birim degil, resmi birimlerden TURETILMIS bir
+      birlesimdir. Bir PC6 kumesi dislanan buurt'larla A arasinda bolunuyorsa
+      Bolum 12.3 karsilastirmasi karisir. Asama 3'te PC6 sinirlari A ile kesistirilip
+      bolunmus PC6'lar AYRI RAPORLANIR; sessizce bir tarafa atanmaz.
+      Bkz. reports/PENDING_DECISIONS.md -> P-009.
+
+  area_b:
+    name: "Baglam / tampon"
+    method: buffer
+    rule: "B = A.buffer(300)"
+    buffer_m: 300
+    source: "AGENTS.md Bolum 3 (A + ~300 m halka)"
+    note: >
+      Programatik uretilir, elle cizilmez. B SIMULE EDILIR, RAPORLANMAZ (Bolum 3).
+      Tamponsuz simulasyonda kenar binalar golgelenmemis gorunur ve gunes potansiyeli
+      SISTEMATIK OLARAK YUKSEK cikar.
+    contains_industry: >
+      B, A'dan dislanan iki bedrijventerrein'i buyuk olcude tekrar icine alir.
+      BU DOGRUDUR VE ISTENIR: o binalar golge ve ruzgar geometrisine katkida bulunur.
+      Dislama yalnizca RAPORLANAN alan (A) icin gecerlidir.
+
+  area_c:
+    name: "Mikroklima alt-alani"
+    size_m: [150, 150]
+    method: manual_user_selection
+    status: TODO_ASAMA_4
+    note: "A icinde kullanici secer (ENVI-met LITE 50x50x25 grid siniri)."
+
+  area_d:
+    name: "CFD domeni"
+    method: "COST 732 / AIJ: giris 5H, cikis 15H, yanlar/ust 5H"
+    status: TODO_ASAMA_3_SONU
+    blocked_by: "H (en yuksek bina) henuz olculmedi — P-001"
+
+  # --- Raporlanan metrikler (ESIK DEGIL - Karar D-009) ---
+  reported_metrics:
+    - building_count
+    - panden_with_dwellings
+    - woonfunctie_ratio_pct
+    - bouwjaar_1960_1975_ratio_pct
+    - total_verblijfsobjecten
+  metric_definitions: "stage_0_2 altindaki D-008 paydalari ve status_filter aynen gecerlidir"
+  no_thresholds: >
+    Bu metriklerin HICBIRI icin PASS/FAIL beyan edilmez. A resmi birimlerden
+    turedigi icin bunlar kabul kriteri degil, alanin tanimlayici olcumleridir.
+
+# ============================================================================
+#  ROL OZNITELIGI ve ETIKETLEME (Karar D-009)
+#  Sanayi buurt'lari MODELDEN CIKARILMIYOR; yalnizca A'nin raporlama ve
+#  dogrulama kapsamindan cikiyor.
+# ============================================================================
+building_roles:
+  decision_ref: D-009
+  attribute_name: role
+  written_in: "Asama 2, 3DCityDB — her binaya kalici oznitelik"
+  values:
+    analysis:
+      rule: "pand centroid'i A icinde"
+      reported: true
+      in_validation: true
+      note: "Bina istatistikleri, enerji karsilastirmasi ve kabul kriterleri YALNIZCA bunlardan hesaplanir."
+    context:
+      rule: "pand centroid'i B icinde, A disinda (sanayi buurt'lari dahil)"
+      reported: false
+      in_validation: false
+      note: >
+        LOD2 rekonstruksiyonuna girer, 3B modelde yer alir, golge/gunes ve CFD
+        hesaplarina GIRDI olur. A'nin dogrulama istatistiklerine girmez.
+        Web arayuzunde farkli stilde gosterilir.
+
+  # --- Cikti alanlarinin rol bazinda ele alinisi ---
+  solar:
+    analysis: {computed: true, label: null, in_validation_stats: true}
+    context:  {computed: true, label: indicative, in_validation_stats: false}
+    rationale: >
+      Cati gunes potansiyeli bir FIZIKSEL BUYUKLUKTUR ve binanin kullanim tipinden
+      bagimsizdir. Context binalari icin de hesaplanir ve ikizde gosterilir, ancak
+      "indicative" etiketiyle ve A'nin dogrulama istatistiklerine KATILMADAN
+      (Bolum 12.5 etiketleme kurali).
+  energy:
+    analysis: {computed: true, scope: residential_only}
+    context:
+      computed: false
+      display_value: "modellenmedi"
+      display_reason: "endustriyel surec yuku acik veriyle bilinemez"
+    rationale: >
+      Enerji tuketimi yalnizca konut binalari icin hesaplanir. Sanayi/context
+      binalarinda alan BOS BIRAKILMAZ — acik gerekceyle isaretlenir. Bos alan
+      "hesaplanmadi" ile "sifir" arasindaki farki gizler; Bolum 1 kural 5
+      (belirsizligi gizleme) bunu yasaklar.

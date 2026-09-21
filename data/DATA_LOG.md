@@ -39,6 +39,56 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
+## AOI — B — baglam/tampon  ·  2026-09-21T12:08:36Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `aoi/area_B_context.geojson` |
+| kaynak_url | turetilmis (CBS Wijken en Buurten 2025'ten) |
+| saglayici | Voorhof Digital Twin / Karar D-009 |
+| surum | D-009 |
+| veri_uretim_tarihi | TODO_DOLDURULACAK |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-21T12:08:36Z |
+| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| sorgu_parametreleri | A.buffer(300) |
+| crs | EPSG:28992 |
+| zaman_referansi | yok (idari sinir, CBS 2025) |
+| lisans | TODO_0.3: CBS kaynak lisansindan turer |
+| attribution_sarti | TODO_0.3 |
+| sha256 | `23a13eca32f47a8542a8d063780ecc213e141a83fd9fb3cf8a7227ce14c624a0` |
+| dosya_boyutu_bytes | 8620 |
+| run_id | RUN-2026-09-21-011 |
+| uygulanan_islemler | unary_union + buffer(300 m) |
+
+A + 300 m tampon, programatik uretildi. Sanayi buurt'larinin 17.14 ha'i (100%) B icinde ve modelde KALIYOR (golge/CFD girdisi). B raporlanmaz.
+
+---
+## AOI — A — analiz alani  ·  2026-09-21T12:08:36Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `aoi/area_A_analysis.geojson` |
+| kaynak_url | turetilmis (CBS Wijken en Buurten 2025'ten) |
+| saglayici | Voorhof Digital Twin / Karar D-009 |
+| surum | D-009 |
+| veri_uretim_tarihi | TODO_DOLDURULACAK |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-21T12:08:36Z |
+| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| sorgu_parametreleri | buurtcode in ['BU05032400', 'BU05032401', 'BU05032403', 'BU05032404', 'BU05032405', 'BU05032406', 'BU05032407'] |
+| crs | EPSG:28992 |
+| zaman_referansi | yok (idari sinir, CBS 2025) |
+| lisans | TODO_0.3: CBS kaynak lisansindan turer |
+| attribution_sarti | TODO_0.3 |
+| sha256 | `f501b26fa4632784e35a5820c3a05e6f8da8bf4786360a3feff76dd1e774599b` |
+| dosya_boyutu_bytes | 6330 |
+| run_id | RUN-2026-09-21-011 |
+| uygulanan_islemler | unary_union |
+
+7 resmi konut buurt'unun birlesimi: BU05032400, BU05032401, BU05032403, BU05032404, BU05032405, BU05032406, BU05032407. Dislanan 2 sanayi buurt'u: BU05032402, BU05032408. A ∩ sanayi = 0.0000 ha. Tek parca, gecerli geometri. CBS kara alani 107 ha, geometrik alan 109.62 ha (fark su yuzeyi).
+
+---
 ## BAG — bag:verblijfsobject  ·  2026-09-21T10:08:17Z
 
 | Alan | Deger |

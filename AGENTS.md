@@ -101,15 +101,25 @@ Orada yüksek hata çıkması beklenen sonuçtur, başarısızlık değildir.
 
 | Katman | Boyut | Yaklaşık bina | Ne için | Not |
 |---|---|---|---|---|
-| **A — Analiz alanı** | ~600 × 600 m | **~400-700** | Güneş + enerji. **Tüm doğrulama burada** | Raporlanan alan |
-| **B — Bağlam/tampon** | A + ~300 m halka | ~1.500-2.500 | Gölgeleme ve rüzgâr geometrisi | Simüle edilir, **raporlanmaz** |
+| **A — Analiz alanı** | **109,6 ha** — Voorhof'un 7 resmî konut buurt'u | **1.259** (ölçüldü) | Güneş + enerji. **Tüm doğrulama burada** | Raporlanan alan |
+| **B — Bağlam/tampon** | A + 300 m tampon → **277,8 ha** | **4.035** (ölçüldü) | Gölgeleme ve rüzgâr geometrisi | Simüle edilir, **raporlanmaz** |
 | **C — Mikroklima alt-alanı** | ~150 × 150 m | ~30-60 | ENVI-met | LITE 50×50×25 grid sınırı |
 | **D — CFD domeni** | H = en yüksek bina: girişte 5H, çıkışta 15H, yanlar/üst 5H | Geometri B'den | OpenFOAM | COST 732 / AIJ kuralı |
 
 **B katmanı atlanamaz.** Tamponsuz simülasyonda kenar binalar gölgelenmemiş görünür ve
 güneş potansiyeli **sistematik olarak yüksek** çıkar.
 
-> ⚠️ **AÇIK KARAR:** B ve D boyutları donanıma göre sabitlenecek. RAM/CPU/GPU bilgisi
+> ✅ **GÜNCELLEME (2026-09-21, Karar D-009):** A ve B **ölçülmüş ve sabitlenmiştir.**
+> Bu tablonun önceki sürümü A'yı ~600 × 600 m / ~400-700 bina olarak tahmin ediyordu;
+> A artık resmî CBS buurt sınırlarından türediği için gerçek değerler yukarıdadır
+> (bina sayısı tahminin ~2,3 katı). Bu bir başarısızlık değil, varsayımsal bir
+> tahminin ölçümle değişmesidir — ama **Aşama 3-4 hesap yükünü doğrudan etkiler.**
+>
+> A = `BU05032400`, `01`, `03`, `04`, `05`, `06`, `07` buurt'larının birleşimi.
+> Dışlanan: `BU05032402`, `BU05032408` (bedrijventerrein) — **yalnızca raporlama
+> kapsamından**; bu binalar B'de kalır ve modele girer (bkz. `role` özniteliği).
+>
+> ⚠️ **AÇIK KARAR:** D boyutu donanıma göre sabitlenecek. RAM/CPU/GPU bilgisi
 > henüz alınmadı. Bu bilgi gelene kadar CFD ve ENVI-met aşamalarına **başlanmaz**;
 > Aşama 0-3 donanımdan bağımsız ilerler.
 

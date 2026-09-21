@@ -15,7 +15,9 @@
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
 | ~~P-006~~ | 0.2a | ~~woonfunctie ve bina sayimi paydalari~~ | — | **KAPANDI 2026-09-21 (D-008)** |
 | P-007 | 2 | PDOK BAG WFS kismi — nevenadres yok | Asama 2 EP-Online eslestirmesi | Asama 1 sonunda |
-| P-008 | 0.2a | "Verbouwing pand" sayima girsin mi? | Aday hesabi (teyit) | **Adim 4'ten once** |
+| P-008 | 0.2 | "Verbouwing pand" sayima girsin mi? | Teyit (etkisi dusuk) | Asama 0 sonunda |
+| P-009 | 3 | Sanayi buurt'lariyla bolunmus PC6'lar | Asama 3 enerji karsilastirmasi | Asama 2 sonunda |
+| P-010 | 3 | CBS Kerncijfers buurt duzeyi tuketim (ikinci referans) | Yok (oneri) | Asama 3 oncesi |
 
 ---
 
@@ -304,3 +306,65 @@ PDOK bu WFS'te onlari sunmuyor. Filtrenin fiili islevi yikilmislari elemek degil
 
 **Eger DISLANSIN dersen:** config'te `pand_include` ve `vbo_include` listelerinden
 iki satir cikarilir; hesap henuz yapilmadigi icin Bolum 12.2 ihlali olusmaz.
+
+---
+
+## [2026-09-21] [3] P-009 — Sanayi buurt'lariyla bolunmus PC6 kumeleri
+
+**Baglam (Karar D-009):** A, Voorhof'un 7 konut buurt'udur; `BU05032402` ve
+`BU05032408` dislandi. Bir PC6 kumesi bu sinirin iki tarafina bolunmus olabilir.
+
+**Karar verilmis kisim (kullanici, 2026-09-21):** Sanayi buurt'lariyla kesisen
+PC6'lar Asama 3 karsilastirmasindan **dislanir** ve **sayilari raporlanir**.
+`docs/validation_protocol.md` Bolum 3.1b'ye islendi.
+
+**Acik kalan:** Dislama oraninin kabul edilebilir ust siniri.
+
+PC6 sinirlari henuz indirilmedi (Stedin verisi Asama 3'te gelecek), bu yuzden
+kac PC6'nin bolundugu **HENUZ BILINMIYOR**. Tahmin yazilmiyor (Bolum 1 kural 1).
+
+**Ajanin onerisi:** Asama 2 sonunda, PC6 sinirlari elde edildikten sonra olcum
+yapilir ve esik o zaman kullanici onayiyla belirlenir. Dislama orani yuksek
+cikarsa bu, karsilastirmanin gucunu dusuren bir **sinirlama** olarak raporlanir —
+dislama kurali gevsetilmez (Bolum 12.2).
+
+**Bu karar verilmeden ilerlenemeyen isler:** Asama 3 enerji karsilastirmasinin
+kapsam beyani. Asama 0-2 etkilenmez.
+
+---
+
+## [2026-09-21] [3] P-010 — CBS Kerncijfers buurt duzeyi tuketim: ikinci enerji referansi?
+
+**ONERI — VERI KAYNAGI OLARAK EKLENMEDI.** Kullanici acikca "simdilik veri
+kaynagi olarak ekleme (Bolum 12.11), sadece Asama 3 oncesi degerlendirilmek uzere
+oneri olarak dus" dedi. AGENTS.md Bolum 4 envanteri **degistirilmemistir**.
+
+**Fikir:** A artik buurt sinirlariyla tam hizali oldugu icin, **CBS Kerncijfers
+Wijken en Buurten**'deki buurt duzeyi ortalama gaz/elektrik tuketimi, Stedin PC6
+agregatinin yaninda **ikinci bir bagimsiz enerji referansi** olabilir.
+
+**Neden cekici:**
+- A = 7 buurt'un birlesimi; buurt duzeyi veri A ile **birebir** ortusur,
+  PC6'daki bolunme sorunu (P-009) burada YOKTUR.
+- Stedin'den **farkli bir saglayici ve farkli bir agregasyon yontemi** — Bolum
+  12.10 "mumkun oldugunda ikinci bir hesaplama yolu kullanilir" ilkesine uyar.
+
+**Karar verilmeden once cevaplanmasi gerekenler:**
+1. **Ayni fiziksel buyukluk mu?** (Bolum 12.4) Kerncijfers "ortalama tuketim"
+   veriyor — hane basina mi, baglanti basina mi, konut basina mi? Model ciktisi
+   bina duzeyinde toplam kWh/yil. Donusum gosterilemezse bu bir `validation`
+   degil `contextual comparison` olur.
+2. **Bagimsiz mi?** CBS bu rakamlari sebeke isletmecilerinden (Stedin dahil)
+   aliyor olabilir. Oyleyse Stedin ile **ayni ham kaynaktan** turemis olur ve
+   Bolum 12.10 geregi bagimsiz ground truth SAYILMAZ — "tutarlilik kontrolu"
+   olarak etiketlenir. **Bu arastirilmadan kaynak eklenmemelidir.**
+3. Gizlilik esikleri nedeniyle kac buurt'un degeri gizlenmis?
+4. Referans yili model yiliyla ortusuyor mu? (Bolum 12.1 zaman uyumu)
+
+**Ajanin onerisi:** Asama 2 sonunda arastirilir; 2. madde olumlu cikarsa
+(gercekten bagimsiz) Bolum 12.11 kapsaminda yeni veri kaynagi olarak onaya
+sunulur. Olumsuzsa ikincil tutarlilik kontrolu olarak kullanilabilir ama
+"bagimsiz dogrulama" DENMEZ.
+
+**Bu karar verilmeden ilerlenemeyen isler:** Yok. Mevcut plan (Stedin PC6)
+degismeden ilerler; bu yalnizca bir guclendirme firsatidir.

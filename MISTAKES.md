@@ -23,6 +23,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | KAPALI | 0 |
 | M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
 | M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | KAPALI | 0 |
+| M-006 | 2026-09-21 | 0.2 | Konsol kodlamasi bir DOGRULAMA log satirini sessizce dusurdu | KAPALI | 0 |
 
 ---
 
@@ -274,3 +275,66 @@ o oznitelik ilgili ham dosyada gercekten var mi?
 - Ayni oturumda kural fiilen ise yaradi: status alan adi ve degerleri indirilen
   veriden dogrulandi ve kullanicinin "yikilmis binalar var" varsayiminin bu veri
   icin gecersiz oldugu olculdu (D-008).
+
+---
+
+## M-006 · [2026-09-21] · Asama 0.2
+
+**Ne oldu:**
+`build_aoi.py` calisirken `A ∩ sanayi = 0.0000 ha` satiri **terminale hic
+yazilmadi**. Bu satir, dislanan sanayi buurt'larinin A ile kesismedigini kanitlayan
+DOGRULAMA satiriydi. Yerine stderr'e bir `--- Logging error ---` izi dustu.
+
+**Kok neden:**
+Windows + Turkce yerel ayar -> konsol kodlamasi **cp1254**. `logging.StreamHandler`
+varsayilan olarak `sys.stdout`'un kodlamasini kullanir; cp1254 `∩` (U+2229)
+karakterini kodlayamaz ve `UnicodeEncodeError` firlatir. `logging` bu hatayi
+yutar, satiri ATLAR ve calismaya devam eder. Cikis kodu 0'dir.
+
+**Neden tehlikeli:**
+Kaybolan satir bir suslemeydi degil, bir **kanitti**. Log'a bakan biri satiri
+gormedigi icin "kontrol yapilmadi" mi yoksa "kontrol yapildi ama yazilamadi" mi
+oldugunu ayirt edemez. Dosya logu UTF-8 oldugu icin orada duruyordu — yani iki
+sink AYRISMISTI ve bu ayrisma sessizdi. Asama 0.1 kabul kriteri 0.1-C "iki sink'e
+de yaziliyor" diyordu; o test yalnizca ASCII bir satirla yapilmisti.
+
+**Turetilen kural (iki katmanli, tek katman yeterli degil):**
+1. `logging_setup.py` konsol akisini UTF-8'e zorlar:
+   `sys.stdout.reconfigure(encoding="utf-8", errors="replace")`.
+   `errors="replace"` kritiktir: kodlanamayan karakter olsa bile satir **asla
+   dusmez**, karakter yerine isaret konur.
+2. `environment.yml` -> `variables: PYTHONUTF8: "1"`. Ortam aktive edildiginde
+   Python'un tum I/O'su UTF-8 olur.
+
+Iki katman gerekli cunku conda ortam degiskenleri **yalnizca aktivasyonla** gelir;
+`python.exe` dogrudan cagrildiginda (bu oturumda yapildigi gibi) `PYTHONUTF8`
+uygulanmaz. Kod icindeki duzeltme o durumu da kapsar.
+
+**Ek ders — hatali test:**
+Ilk dogrulama denemem `contextlib.redirect_stdout` ile yapildi. Bu, `sys.stdout`'u
+`StringIO` ile degistirdigi icin `reconfigure` cagrisi `AttributeError` firlatti,
+sessizce yutuldu ve test **gercek konsolu hic sinamadan** "GECTI" dedi.
+**Bir kodlama sorununu, akisi degistirerek test edemezsin.** Dogru test, gercek
+`sys.stdout` uzerinde yapilir ve `sys.stdout.encoding` degerini kontrol eder.
+
+**Nerede uygulanir:** `src/common/logging_setup.py`, `environment.yml`,
+`ENVIRONMENT.md` T-1
+
+**Otomatik kontrol (kullanici talimati):**
+`src/qa/check_compliance.py` (Asama 0.5) — logging testi ASCII disi karakter
+iceren bir satir (`∩ ≤ °C m²`) loglar ve **iki sink'e de**
+ulastigini dogrular. `sys.stdout.encoding` ayrica raporlanir. Kriter 0.1-C bu
+testle guclendirilir; yalnizca ASCII ile yapilan sink testi yetersizdir.
+
+**Dogrulandi (2026-09-21):**
+
+| Senaryo | Baslangic kodlama | setup_logging sonrasi | `∩ ≤ °C m²` iki sink |
+|---|---|---|---|
+| `python.exe` dogrudan | cp1254 | utf-8 | GECTI |
+| `PYTHONUTF8=1` | utf-8 | utf-8 | GECTI |
+
+`build_aoi.py` yeniden calistirildi; `A ∩ sanayi = 0.0000 ha` satiri hem
+terminalde hem disk logunda gorundu, `Logging error` izi kalmadi.
+
+**Durum:** KAPALI (iki katmanli duzeltme yazildi ve fiilen dogrulandi;
+kalici otomatik kontrol Asama 0.5'e planlandi)
