@@ -1,0 +1,75 @@
+# config/paths.yml
+# Tum yollar depo kokune GORELIDIR. Koda mutlak yol gomulmez (AGENTS.md Bolum 8).
+# Okuma tek noktadan: src/common/config.py -> load_paths()
+#
+# Asama: 0.1  |  Olusturma: 2026-09-21
+
+schema_version: 1
+
+# --- Kok dizinler ---
+root:
+  data: data
+  aoi: aoi
+  config: config
+  src: src
+  reports: reports
+  docs: docs
+  web: web
+
+# --- Veri katmanlari ---
+data:
+  # HAM VERI - SALT OKUNUR. Hicbir script buraya YAZMAZ (AGENTS.md Bolum 8).
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  logs: data/logs
+  data_log: data/DATA_LOG.md
+
+# --- Alan sinirlari (Bolum 3) — Asama 0.2'de QGIS'te elle cizilecek ---
+# CRS: EPSG:28992 (RD New). Dosyalar 0.2 tamamlanana kadar MEVCUT DEGILDIR.
+aoi:
+  crs: "EPSG:28992"
+  area_a: aoi/area_A_analysis.geojson      # ~600 x 600 m  — tum dogrulama burada, raporlanan alan
+  area_b: aoi/area_B_context.geojson       # A + ~300 m halka — simule edilir, RAPORLANMAZ
+  area_c: aoi/area_C_microclimate.geojson  # ~150 x 150 m  — ENVI-met (Asama 4)
+  area_d: aoi/area_D_cfd_domain.geojson    # CFD domeni    — Asama 4, donanim karari bekliyor
+
+# --- Kaynak kod ---
+src:
+  common: src/common
+  qa: src/qa
+  acquisition: src/00_acquisition
+  reconstruction: src/01_reconstruction
+  database: src/02_database
+  solar_energy: src/03_solar_energy
+  microclimate: src/04_microclimate_wind_flood
+  publication: src/05_publication
+
+# --- Raporlar (Bolum 6 kabul kriterleri buraya yazilir) ---
+reports:
+  dir: reports
+  pending_decisions: reports/PENDING_DECISIONS.md
+  geometry_validation: reports/01_geometry_validation.md
+  energy_validation: reports/03_energy_validation.md
+  failed_buildings: reports/failed_buildings.csv
+  final: reports/FINAL_VALIDATION_REPORT.md
+
+# --- Belgeler ---
+docs:
+  validation_protocol: docs/validation_protocol.md   # Bolum 12.4 — ayni fiziksel buyukluk mu?
+  assumptions: docs/assumptions.md
+  manual_steps: docs/manual_steps.md
+
+# --- Kok belgeler ---
+documents:
+  agents: AGENTS.md
+  decisions: DECISIONS.md
+  mistakes: MISTAKES.md
+  environment: ENVIRONMENT.md
+  attribution: ATTRIBUTION.md
+
+# --- Config dosyalari (kendine referans; qa scriptleri diff icin kullanir) ---
+config:
+  paths: config/paths.yml
+  units: config/units.yml
+  acceptance_criteria: config/acceptance_criteria.yml

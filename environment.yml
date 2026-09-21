@@ -1,0 +1,44 @@
+# environment.yml — Voorhof Digital Twin
+# Karar D-001: conda-forge. Gerekce: GDAL/PDAL/laspy/rasterio Windows'ta pip ile
+# kaynaktan derleme gerektiriyor; conda-forge hazir binary sunuyor.
+#
+# Kurulum:  conda env create -f environment.yml
+# Guncelle: conda env update -f environment.yml --prune
+# Aktive:   conda activate voorhof-twin
+#
+# KAPSAM: Asama 0 (0.1-0.5). Asama 1+ kendi bagimliliklarini Docker icinde tasir
+# (roofer/geoflow, val3dity, 3DCityDB) — bu dosyaya eklenmez.
+#
+# Cozulen kesin surumler ENVIRONMENT.md'ye yazilir (AGENTS.md Bolum 8).
+
+name: voorhof-twin
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  # --- Calisma zamani ---
+  - python=3.12          # geospatial yigin icin en genis tekerlek destegi olan surum
+
+  # --- Cekirdek / Asama 0.1 ---
+  - pyyaml               # config/*.yml okuma
+  - requests             # PDOK / 3DBAG / AHN indirme (0.3)
+  - python-dotenv        # .env'den API key okuma — key ASLA repoda durmaz
+
+  # --- Veri isleme / Asama 0.3-0.4 ---
+  - numpy
+  - pandas
+  - geopandas            # BAG GPKG, AOI GeoJSON
+  - shapely
+  - fiona
+  - pyproj               # EPSG:28992 <-> EPSG:7415 donusumleri (Bolum 1, kural 6)
+  - rasterio             # AHN GeoTIFF (DTM/DSM)
+  - laspy                # AHN5 LAZ nokta bulutu
+  - lazrs-python         # laspy icin LAZ arka ucu.
+                         # DIKKAT: PyPI adi 'lazrs', conda-forge adi 'lazrs-python'
+                         # (bkz. MISTAKES.md M-002)
+  - gdal                 # vektor/raster CRS dogrulama
+
+  # --- Test / QA (Asama 0.5) ---
+  - pytest

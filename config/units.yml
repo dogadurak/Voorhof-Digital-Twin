@@ -1,0 +1,113 @@
+# config/units.yml
+# AGENTS.md Bolum 12.1 — birim ve zaman sozlugu.
+# Amac: "Birim karismasi" hata sinifini (Bolum 14.6) kaynakta engellemek.
+#
+# Asama: 0.1  |  Olusturma: 2026-09-21
+
+schema_version: 1
+
+# --- Kanonik birimler (Bolum 12.1 tablosu) ---
+# Depolanan her fiziksel deger BU birimlerdedir. Baska birimde gelen veri
+# okuma aninda donusturulur ve donusum .meta.json'a yazilir.
+canonical_units:
+  distance:          m
+  height:            m
+  area:              m2
+  volume:            m3
+  temperature:       degC
+  wind_speed:        m_s
+  irradiance:        W_m2
+  irradiation_total: kWh_m2_yr
+  energy:            kWh_yr
+  energy_intensity:  kWh_m2_yr
+  precipitation:     mm
+
+# --- Degisken adlandirma kurali ---
+# Bolum 14.6: "Degisken adina birim ekle (area_m2, eui_kwh_m2_yr)".
+# Fiziksel buyukluk tasiyan her degisken adi asagidaki son eklerden biriyle biter.
+naming_suffixes:
+  m:            "uzunluk / yukseklik   — ornek: roof_height_m"
+  m2:           "alan                  — ornek: footprint_area_m2"
+  m3:           "hacim                 — ornek: building_volume_m3"
+  degc:         "sicaklik              — ornek: air_temp_degc"
+  m_s:          "hiz                   — ornek: wind_speed_m_s"
+  w_m2:         "anlik isinim          — ornek: global_irradiance_w_m2"
+  kwh_m2_yr:    "yillik isinim/EUI     — ornek: roof_irradiation_kwh_m2_yr"
+  kwh_yr:       "yillik enerji         — ornek: gas_demand_kwh_yr"
+  mm:           "yagis                 — ornek: rainfall_mm"
+  pct:          "yuzde                 — ornek: nodata_fraction_pct"
+
+# --- Yasak / karistirilan birim ciftleri ---
+# Bu birimlerde veri GORULURSE donusturulur; kanonik olmayan birim saklanmaz.
+forbidden_storage_units:
+  - unit: ha
+    convert_to: m2
+    factor: 10000.0
+    note: "1 ha = 10 000 m2"
+  - unit: MJ
+    convert_to: kWh
+    factor: 0.2777777778
+    note: "1 MJ = 1/3.6 kWh"
+  - unit: GJ
+    convert_to: kWh
+    factor: 277.7777778
+    note: "1 GJ = 1000/3.6 kWh. Hollanda gaz verisi sik sik GJ veya m3 gelir."
+  - unit: degF
+    convert_to: degC
+    formula: "(F - 32) * 5/9"
+  - unit: km_h
+    convert_to: m_s
+    factor: 0.2777777778
+    note: "1 km/h = 1/3.6 m/s"
+
+# DIKKAT: Dogalgaz m3 -> kWh donusumu SABIT DEGILDIR (kalorifik degere bagli).
+# Hollanda Groningen gazi icin ust isil deger kullanilir; kesin katsayi Asama 3'te
+# kaynagiyla birlikte sabitlenecek. Simdi sayi yazilmaz (Bolum 1, kural 1).
+gas_volume_to_energy:
+  status: TODO_ONAY_BEKLIYOR
+  note: >
+    m3 dogalgaz -> kWh donusumu icin kalorifik deger gerekir. Stedin/CBS kaynagi
+    Asama 3'te dogrulanacak, katsayi ve kaynagi DECISIONS.md'ye yazilacak.
+    O zamana kadar gaz verisi GELDIGI birimde saklanir, donusum YAPILMAZ.
+
+# --- Zaman (Bolum 12.1) ---
+# "Depolamada UTC esastir." Saat kaymasi enerji/mikroklima karsilastirmasinda
+# ciddi hata kaynagidir (Bolum 14.6 "Zaman dilimi" hata sinifi).
+time:
+  storage_timezone: UTC
+  storage_format: "ISO 8601, ornek: 2026-09-21T14:30:00Z"
+  local_timezone: Europe/Amsterdam      # DST var: UTC+1 kis / UTC+2 yaz
+  rule: >
+    Her zaman serisi tasiyan veri kumesinin tz bilgisi ACIKCA yazilir.
+    tz'si bilinmeyen zaman serisi kullanilmaz. Donusumler kodda gorunur
+    olarak yapilir, orntulu varsayim yasaktir.
+
+  # Kaynak bazli zaman referanslari — DATA_LOG.md'ye de islenir
+  source_time_reference:
+    KNMI_uurgegevens:
+      tz: UTC
+      note: "KNMI saatlik veri UTC. Saat 1-24 araligindadir, 0-23 DEGIL — kaydirma hatasi riski."
+    EPW:
+      tz: local_standard_time
+      note: "EPW yerel standart saat (DST YOK). UTC'ye cevrilirken DST uygulanmaz."
+    Landsat_overpass:
+      tz: UTC
+      note: "Sahne metadatasinda UTC gecis saati. LST karsilastirmasi bu ana sabitlenir."
+    Sentinel2:
+      tz: UTC
+    Stedin_PC6:
+      tz: null
+      note: "Yillik agregat — zaman damgasi yok, yalnizca yil. Saatlik kiyas YAPILAMAZ."
+
+# --- CRS (Bolum 1, kural 6: CRS varsayma) ---
+crs:
+  planimetric: "EPSG:28992"   # RD New — BAG, BGT, NWB, AOI
+  with_height: "EPSG:7415"    # RD New + NAP — AHN, 3DBAG
+  geographic:   "EPSG:4326"   # WGS84 — PVGIS, EPW
+  rule: >
+    Her raster/vektor okumasinda CRS loglanir ve beklenen CRS ile karsilastirilir;
+    uyusmazsa exception firlatilir (Bolum 14.6 "CRS / yukseklik datumu" hata sinifi).
+  vertical_datum: NAP
+  vertical_datum_note: >
+    Yukseklik karsilastirmalarinda 3DBAG b3_h_maaiveld referansi ile mutlak z
+    karistirilmaz. Mutlak z kullanilacaksa NAP sifiri acikca ele alinir.

@@ -1,0 +1,332 @@
+# config/acceptance_criteria.yml
+# ============================================================================
+#  ESIKLER — SONUCTAN ONCE KILITLENIR (AGENTS.md Bolum 12.2)
+# ============================================================================
+#  BU DOSYA SONUC GORULDUKTEN SONRA DEGISTIRILEMEZ.
+#  12.2 : esik saglanmazsa esik degistirilmez, failure raporlanir (12.6)
+#  13.2-3: her asama sonunda `git diff` bu dosyada bos olmali, degilse FAIL
+#  13.2-1: esikler KODA GOMULEMEZ, yalnizca buradan okunur
+#  12.11 : degisiklik sadece kullanici onayi + DECISIONS.md kaydiyla
+#
+#  Asama: 0.1  |  Kilitleme: 2026-09-21
+# ============================================================================
+
+schema_version: 1
+locked_at: "2026-09-21"
+
+# Durum sozlugu:
+#   LOCKED             : sayisal esik sabit, uygulanabilir
+#   TODO_ONAY_BEKLIYOR : AGENTS.md sayi vermiyor; onaysiz sayi YAZILMAZ (Karar D-003)
+#   QUALITATIVE        : sayisal esik degil, kanit dosyasiyla dogrulanir
+
+global_rules:
+  bias_with_rmse:
+    rule: >
+      Yukseklik ve enerji karsilastirmalarinda ortalama fark (bias / NMBE) HER ZAMAN
+      RMSE ile BIRLIKTE raporlanir. Yalniz RMSE raporlamak yasaktir.
+    reason: "Sistematik sapmayi toplu RMSE maskeler (Bolum 14.6)."
+  rounding:
+    rule: "Yuvarlayarak esik gecirmek yasak. Esik 0.25 m iken olcum 0.254 m ise FAIL (Bolum 13.3)."
+  unmeasured:
+    rule: "Olcum yapilamadiysa PASS verilmez; OLCULEMEDI yazilir ve nedeni aciklanir (13.3)."
+  reporting_area:
+    rule: "Metrikler yalnizca A alanindan hesaplanir. B simule edilir, RAPORLANMAZ (Bolum 3)."
+
+# ============================================================================
+stage_0_1:
+  name: "Depo iskeleti"
+  source: "Kullanici onayi 2026-09-21 (Bolum 6'da 0.1 icin sayisal kriter yoktu)"
+  criteria:
+    - id: "0.1-A"
+      description: "Bolum 8'deki her dizin ve kok belge mevcut"
+      metric: missing_paths_count
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "0.1-B"
+      description: "src/common/config.py uc yml dosyasini hatasiz yukluyor"
+      metric: config_load_errors
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "0.1-C"
+      description: "logging_setup.py test satirini hem terminale hem dosyaya yaziyor"
+      metric: log_sinks_working
+      comparator: "=="
+      threshold: 2
+      status: LOCKED
+    - id: "0.1-D"
+      description: "git diff config/acceptance_criteria.yml bos (13.2-3)"
+      metric: acceptance_criteria_diff_lines
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "0.1-E"
+      description: "Repoda secret yok (.env izlenmiyor, key deseni bulunmuyor)"
+      metric: secrets_found
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+
+# ============================================================================
+stage_0:
+  name: "Veri edinimi"
+  source: "AGENTS.md Bolum 6, Asama 0"
+  evidence: data/DATA_LOG.md
+  criteria:
+    - id: "0-A"
+      description: "Her katmanin CRS'i okundu ve beklenen CRS ile eslesti"
+      metric: crs_mismatch_count
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "0-B"
+      description: "A alanindaki bina sayisi BAG'den sayildi ve loglandi"
+      metric: building_count_area_a_logged
+      comparator: "=="
+      threshold: true
+      status: LOCKED
+      sanity_range: "400-700 (Bolum 3)"
+      note: >
+        sanity_range bir ESIK DEGILDIR, akil saglamasidir. Sayim bu araligin disinda
+        cikarsa AOI siniri veya filtre sorgulanir; sayi degistirilmez.
+    - id: "0-C"
+      description: "Eksik veya bozuk dosya yok"
+      metric: corrupt_file_count
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "0-D"
+      description: "Her indirmenin SHA-256 checksum'i kayitli"
+      metric: files_without_checksum
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+
+# ============================================================================
+stage_1:
+  name: "LOD2 rekonstruksiyon"
+  source: "AGENTS.md Bolum 6, Asama 1"
+  evidence: reports/01_geometry_validation.md
+  criteria:
+    - id: "1-A"
+      description: "val3dity geometri gecerlilik orani"
+      metric: val3dity_valid_pct
+      comparator: ">="
+      threshold: 97.0
+      unit: pct
+      status: LOCKED
+      reference_note: "3DBAG genelinde 99.15 pct (Bolum 6)"
+    - id: "1-B"
+      description: "3DBAG ile cati yuksekligi RMSE"
+      metric: roof_height_rmse_m
+      comparator: "<="
+      threshold: 0.25
+      unit: m
+      target: "0.10-0.20"
+      status: LOCKED
+      validation_label: consistency_check
+      label_reason: >
+        3DBAG de AHN + roofer ile uretiliyor; ayni ham veriden turemis iki cikti
+        BAGIMSIZ ground truth sayilmaz (Bolum 5 ve 12.10). Bu bir tutarlilik
+        kontroludur, bagimsiz dogrulama DEGILDIR.
+      requires: "Bias ile birlikte raporlanir (global_rules.bias_with_rmse)"
+    - id: "1-C"
+      description: "AHN nokta bulutuna dogrudan z-fark analizi (BAGIMSIZ kontrol)"
+      metric: ahn_z_diff_rmse_m
+      comparator: "<="
+      threshold: TODO_ONAY_BEKLIYOR
+      unit: m
+      status: TODO_ONAY_BEKLIYOR
+      decision_ref: D-003
+      blocking_for: "Asama 1 baslangici"
+      proposal_note: >
+        Bolum 4: resmi AHN kalite belgesi duseyde sistematik <=5 cm ve stokastik
+        sigma <=5 cm veriyor; AHN5 ihale belgesi sigma <=3 cm diyor. Bu CELISKI
+        raporda acikca not dusulecek, sessizce tek deger secilmeyecek. Esik bu
+        celiski kullaniciyla cozulmeden sayisallastirilmaz.
+    - id: "1-D"
+      description: "Basarisiz rekonstruksiyon orani"
+      metric: failed_reconstruction_pct
+      comparator: "<="
+      threshold: 2.0
+      unit: pct
+      status: LOCKED
+      evidence: reports/failed_buildings.csv
+      note: "Bolum 12.8 — her atlanan kayit CSV'ye yazilir, sessiz atlama yasak."
+
+# ============================================================================
+stage_2:
+  name: "Semantik veritabani"
+  source: "AGENTS.md Bolum 6, Asama 2"
+  criteria:
+    - id: "2-A"
+      description: "A alanindaki her bina sorgulanabilir"
+      metric: unqueryable_buildings_area_a
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "2-B"
+      description: "BAG identificatie ID kaybi yok (import oncesi = sonrasi)"
+      metric: id_loss_count
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+      note: "Bolum 14.6 sessiz veri kaybi — her join oncesi/sonrasi satir sayisi loglanir."
+    - id: "2-C"
+      description: "Belirsiz / coklu adresli vakalar ayri raporlandi"
+      metric: ambiguous_address_report_exists
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+      note: "Bolum 12.3 — sessizce bir secenek secilmez."
+
+# ============================================================================
+stage_3:
+  name: "Gunes + enerji (CEKIRDEK)"
+  source: "AGENTS.md Bolum 6, Asama 3"
+  evidence: reports/03_energy_validation.md
+
+  matching_method:
+    energy_comparison_level: PC6_cluster
+    rule: >
+      Stedin PC6 verisi bina duzeyinde olcum DEGILDIR (satir basina en az 10 baglanti
+      birlestirilmis anonim agregat). PC6 tuketimi HICBIR KOSULDA tek bir binaya
+      atanmaz. Model ciktisi da ayni PC6 kumesine toplanir; karsilastirma iki
+      AGREGAT arasindadir.
+    forbidden_phrase: "PC6 ground truth"
+    correct_phrase: "PC6 duzeyinde agregat karsilastirma"
+    required_reporting:
+      - "Her PC6'daki bina sayisi"
+      - "Konut disi kullanim orani"
+      - "Bosluk (vacancy) durumu"
+    eponline_matching: "BAG pand -> verblijfsobject -> adresseerbaar object -> EP-Online label"
+    documented_in: docs/validation_protocol.md
+
+  archetype_rule:
+    rule: >
+      5-8 arsetip (bouwjaar + gebruiksdoel + bina tipi), her biri bir kez EnergyPlus'ta
+      simule edilir ve geometriyle olceklenir. 400-700 bina TEK TEK SIMULE EDILMEZ.
+    source: "AGENTS.md Bolum 6, Asama 3"
+
+  criteria:
+    - id: "3-A"
+      description: "PVGIS karsilastirmasinda ayni fiziksel buyukluk kullanildigi gosterildi"
+      metric: same_quantity_proof_documented
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+      evidence: docs/validation_protocol.md
+      note: >
+        Bolum 12.4 — SOLWEIG/UMEP yuzeye gelen isinim uretir; PVGIS belirli bir PV
+        sistem konfigurasyonunun uretimini verir. Dogrudan esitlenemez. Donusum
+        gosterilemezse kiyas contextual_comparison olarak etiketlenir.
+    - id: "3-B"
+      description: "PC6 duzeyinde NMBE"
+      metric: nmbe_pct
+      comparator: "abs<="
+      threshold: TODO_ONAY_BEKLIYOR
+      unit: pct
+      status: TODO_ONAY_BEKLIYOR
+      decision_ref: D-003
+      blocking_for: "Asama 3 baslangici"
+      proposal_note: >
+        Bolum 9 referans olarak ASHRAE Guideline 14'u gosteriyor fakat sayisal esik
+        VERMIYOR. Kullanici Asama 3 baslamadan once kaynak gostererek onaylar;
+        onaylanan deger DECISIONS.md'ye kaynagiyla yazilir.
+    - id: "3-C"
+      description: "PC6 duzeyinde CV(RMSE)"
+      metric: cv_rmse_pct
+      comparator: "<="
+      threshold: TODO_ONAY_BEKLIYOR
+      unit: pct
+      status: TODO_ONAY_BEKLIYOR
+      decision_ref: D-003
+      blocking_for: "Asama 3 baslangici"
+    - id: "3-D"
+      description: "PC6 sapma dagilim grafigi uretildi"
+      metric: deviation_distribution_plot_exists
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+    - id: "3-E"
+      description: "EP-Online etiket dagilimi ile model tutarliligi kontrol edildi"
+      metric: eponline_consistency_checked
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+
+# ============================================================================
+stage_4:
+  name: "Ikincil moduller"
+  source: "AGENTS.md Bolum 6, Asama 4"
+  blocked_by: "Donanim karari — B ve D boyutlari sabitlenmeden BASLANMAZ (Bolum 3)"
+  criteria:
+    - id: "4-A"
+      description: "Her modul icin girdi, cozum ayarlari ve sinirlamalar belgelendi"
+      metric: module_documentation_complete
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+    - id: "4-B"
+      description: "CFD icin Bolum 12.9 listesi eksiksiz"
+      metric: cfd_qa_checklist_items_missing
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+      checklist:
+        - hesaplama_domeni
+        - mesh_cozunurlugu
+        - mesh_bagimsizlik_calismasi
+        - sinir_kosullari
+        - giris_ruzgar_profili
+        - turbulans_modeli
+        - yuzey_puruzlulugu
+        - y_plus_degerleri
+        - solver_ayarlari
+        - residual_kriterleri
+        - kutle_korunumu
+        - yakinsama_gecmisi
+      note: "Bolum 12.9 — solver yakinsamasi TEK BASINA kabul gerekcesi DEGILDIR."
+
+  validation_labels:
+    flood_module: screening
+    flood_forbidden_phrases:
+      - "dogrulanmis hidrolik sel modeli"
+      - "sel tahmini"
+    flood_note: >
+      AHN DTM tabanli topografik screening. Klimaateffectatlas ile yalnizca GORSEL
+      karsilastirma (Bolum 5 ve 12.5).
+    wind_module: literature_consistent
+    wind_note: "Bagimsiz acik CFD benchmark zayif; sonuc en fazla NEN 8100 literaturuyle tutarli."
+    lst_module: contextual_comparison
+    lst_note: >
+      Landsat LST = YUZEY sicakligi, ENVI-met HAVA sicakligi uretir; dogrudan
+      kiyaslanmaz (12.4). Landsat termal gercekte 100 m, 30 m'ye resample edilmistir.
+
+# ============================================================================
+stage_5:
+  name: "Yayin"
+  source: "AGENTS.md Bolum 6, Asama 5"
+  criteria:
+    - id: "5-A"
+      description: "Arayuz A alanini sorunsuz yukluyor"
+      metric: interface_loads_area_a
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+    - id: "5-B"
+      description: "Gosterilen her deger bir kaynaga VE dogrulama durumuna bagli"
+      metric: values_without_provenance
+      comparator: "=="
+      threshold: 0
+      status: LOCKED
+    - id: "5-C"
+      description: "Lisans / attribution sartlari karsilaniyor (3DBAG CC BY 4.0 dahil)"
+      metric: attribution_complete
+      comparator: "=="
+      threshold: true
+      status: QUALITATIVE
+      note: >
+        Bolum 7: bir bilesenin lisansi web arayuzunun yayinini engelliyorsa YAYIN
+        ASAMASINA GECILMEZ, durum raporlanir.

@@ -1,0 +1,64 @@
+# ---------------------------------------------------------------------------
+# Voorhof Digital Twin — .gitignore
+# Ilke: HAM VERI REPOYA GIRMEZ. Provenance data/DATA_LOG.md'de yasar (Bolum 12.7),
+# dosyanin kendisi degil. Checksum + kaynak URL ile her dosya yeniden indirilebilir.
+# ---------------------------------------------------------------------------
+
+# --- Veri dizinleri (icerik izlenmez, dizin yapisi .gitkeep ile korunur) ---
+data/raw/*
+data/interim/*
+data/processed/*
+data/logs/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/logs/.gitkeep
+!data/raw/README.md
+
+# --- Buyuk cografi veri formatlari (nereye dusersa dussun) ---
+*.laz
+*.las
+*.tif
+*.tiff
+*.gpkg
+*.gml
+*.jp2
+*.nc
+*.city.json
+*.pcd
+*.ply
+
+# --- Kimlik bilgileri — ASLA repoya girmez (Bolum 8) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# --- Simulasyon ciktilari (Asama 4 — GB mertebesinde) ---
+*.foam
+processor*/
+postProcessing/
+ENVImet_output/
+
+# --- Isletim sistemi / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# --- Istisna: .meta.json HER ZAMAN izlenir ---
+# Tekrarlanabilirlik kaydi ciktinin kendisinden bagimsiz olarak korunur.
+!*.meta.json

@@ -1,0 +1,13 @@
+# requirements.txt — pip tamamlayicisi
+#
+# Karar D-001: ASIL ortam dosyasi environment.yml'dir (conda-forge).
+# Bu dosya yalnizca conda-forge'da bulunmayan paketler icindir.
+# Geospatial bagimliliklari (gdal, rasterio, laspy, fiona) BURAYA EKLENMEZ —
+# Windows'ta kaynaktan derlemeye calisir ve kurulum kirilir.
+#
+# Kullanim (conda ortami aktifken):  pip install -r requirements.txt
+
+# Asama 0.1 itibariyle pip-only bagimlilik YOKTUR.
+# Asama 1'de CityJSON sema dogrulayicisi (cjval) gerekecek; paket adi ve surumu
+# PyPI'da dogrulanmadan buraya yazilmaz (AGENTS.md Bolum 1, kural 1: sayi/surum uydurma).
+# TODO_ASAMA_1: cjval baglayicisini dogrula, kesin surumle pinle, ENVIRONMENT.md'ye isle.
