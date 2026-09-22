@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-025**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-027**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1121,6 +1121,8 @@ Bu iddia **bizim verimizde sinandi** — varsayimla kapatilmadi:
 goruntusune** aittir *(⚠️ GERI CEKILDI 2026-09-22 — asagidaki aciklama surum etiketine dayaniyordu, bkz. D-023)*; v2023.10.08 Ekim 2023'te yayinlandi ve AHN5 o tarihte
 ulke genelinde hala uculuyordu.
 
+> ⚠️ **KOSULLU HALE GELDI (2026-09-22, D-026):** "Bizim AHN5'imiz bosluksuz" olcumu TUM siniflari sayiyordu. 3DBAG yalnizca sinif 2+6'yi sayar ve o binalarda noktalarin ~%93'u sinif 1'dedir. Asama 1 yalnizca sinif 6 kullanirsa sorun bizim de sorunumuz olur (P-012).
+
 **Sonuc:** Kriter 1-B'de bu 377 binada cikacak fark, **bizim rekonstruksiyon
 kalitemizin degil, referansin eskiliginin** olcusudur. Ayristirma bu yuzden
 *daha da* gereklidir ve raporda bu cerceveyle sunulur.
@@ -1319,3 +1321,80 @@ dislanir; Stedin'de birlesik satir varsa birlesik satirin tamami dislanir.
 secenegi var; kural bu durumu tanimlamiyor. Ajan bu boslugu doldurmadi.
 
 **Onay:** Kullanici, 2026-09-22.
+
+---
+
+## D-025 · [2026-09-22] · P-014 karari: yukseklik kaynagi ve lineage atamasi
+
+**Karar (kullanici):**
+- A'daki 3 konut blogu **S2 veya S3 cikarsa**: yukseklik = **Street View kat
+  sayisi x kat yuksekligi**, `height_uncertainty_m` ile -> `estimated_lod1`.
+  Kat sayimini kullanici yapacak. (S1 cikarsa `measured_lod2`; tahmin gerekmez.)
+- Diger ucus sonrasi yapilar -> `footprint_only`.
+- **OSM kullanilmayacak.**
+
+**Uygulanirken olculen iki sey:**
+
+**1. "Diger ucus sonrasi yapilar kucuk" onermesi tutmuyor (Bolum 14.6).**
+30 adayin **6'si >= 100 m2**: toplam 4.580 m2 (ucus sonrasi
+alanin %78'i) ve 74 konut VBO; liste P-018'de.
+Bunlar `footprint_only` olursa **B'deki golge geometrisinden duser** — B'nin
+varlik nedeni tam da budur (AGENTS.md Bolum 3). Karar ajan tarafindan
+verilmedi: lineage kuralinin varsayilani (`height_source` yoksa
+`footprint_only`) **gecici** olarak uygulandi, soru **P-018**'de. < 100 m2
+olan 24 yapi icin talimat nettir: `footprint_only`.
+
+**2. Kat yuksekligi kaynagi dogrulandi — ama bir DEGER vermiyor (P-019).**
+Resmi metin okundu (Bbl, BWBR0041297, versie 2024-01-01; basligi dogrulandi):
+Artikel 4.164 lid 4 + Tabel 4.162, "andere woonfunctie": verblijfsgebied ve
+verblijfsruimte *"ten minste ... hoogte boven de vloer"* **2,6 m**.
+- Doseme ustu **serbest yuksekligin ALT SINIRIDIR**.
+- Kat-kat arasi yukseklik **degildir** (doseme kalinligi yok, Bbl vermiyor).
+- Tipik deger **degildir**.
+- 2023'te tamamlanan binalar muhtemelen Bouwbesluit 2012'ye tabidir — o
+  yonetmeligin degeri **dogrulanmadi**.
+- 3DBAG `b3_bouwlagen` **reddedildi**: ML tahmini, en guclu girdisi yukseklik
+  -> kismen dongusel; ayrica bu binalar 3DBAG'de yok.
+
+Sonuc: `storey_height_m` ve `height_uncertainty_m` config'te
+**TODO_ONAY_BEKLIYOR**. Varsayilan bir deger yazilmadi.
+
+**Onay:** Kullanici, 2026-09-22 (karar); uygulama bulgulari P-018 / P-019'da.
+
+---
+
+## D-026 · [2026-09-22] · 3DBAG "yetersiz AHN5 kapsamasi" celiskisi COZULDU — tanim farki
+
+**Kaynak (birincil, okundu 2026-09-22):** https://docs.3dbag.nl/en/schema/attributes/
+`b3_nodata_fractie_ahn5`: *"Fraction of the footprint area that has no point
+data ... Only points classified as building or ground are considered."*
+(Sayfa AHN5 alani icin "AHN4" diyor — sayfada kopyalama hatasi.)
+
+**Olculdu (yalnizca A alani; LAZ okunmadan, mevcut CSV'den):**
+
+| 3DBAG `b3_pw_bron` | n | **Bizim** sinif 2+6 payi (medyan) | 3DBAG nodata_ahn5 (medyan) |
+|---|---|---|---|
+| ahn5 | 1.174 | 0,883 | 0,000 |
+| ahn4 | 14 | 0,619 | 0,109 |
+| ahn3 | 30 | 0,068 | 0,678 |
+
+*(Tablo bu kaydi yazan yama scriptinde `reports/ahn_point_density_by_building.csv`
+ve `data/raw/3dbag/3dbag_pand.city.jsonl`'den hesaplandi — elle aktarilmadi.)*
+
+**Sonuc:** 3DBAG'in AHN5'i yetersiz bulup AHN3'e dustugu binalarda **nokta var
+ama ~%93'u sinif 1'de**. 3DBAG yalnizca sinif 2+6'yi saydigi icin bunu
+"veri yok" goruyor. D-021'deki "bizim AHN5'imizde bosluk yok" olcumu **tum
+siniflari** sayiyordu. Ikisi farkli seyi olcuyordu — **celiski bir tanim
+farkiydi.** D-023'te "nedeni bilinmiyor" diye birakilan soru cevaplandi.
+
+**D-021'i DEGISTIREN sonuc:** "girdimiz saglam" **kosulludur**:
+- Asama 1'de **sinif 1 de kullanilirsa**: girdimiz bu binalarda saglamdir.
+- Asama 1'de **yalnizca sinif 6** kullanilirsa: 3DBAG'in yasadigi sorunu **biz
+  de yasariz**; bu bir **girdi** sinirlamasi olur.
+Bu, **P-012**'nin (sinif secimi) dogrudan bir sonucudur.
+
+**Kapsam siniri:** Olcum yalnizca A'da; B'de olculmedi. Nokta payi (bizim) ile
+alan payi (3DBAG) ayni metrik degildir; yon ve buyukluk tutarlidir, esitlik
+iddia edilmez.
+
+**Onay:** Olcum ve kayit; karar gerektiren kisim P-012'de.

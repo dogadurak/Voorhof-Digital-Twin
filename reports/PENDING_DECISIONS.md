@@ -21,10 +21,12 @@
 | P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
 | P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **GORSEL DOGRULAMAYI BEKLIYOR** (M-011) |
 | ~~P-013~~ | 1 | AHN5'te karsiligi olmayan binalar (3 yapi) | — | **KAPANDI -> D-019** (secenek a) |
-| P-014 | 1 | Ucus sonrasi binalar icin yukseklik kaynagi (ARASTIRMA YAPILDI, karar yok) | lineage `estimated_lod1` | **Gorsel kontroller sonrasi** |
+| ~~P-014~~ | 1 | Ucus sonrasi binalar icin yukseklik kaynagi | — | **KAPANDI -> D-025** (kalan sorular P-018, P-019) |
 | P-015 | 5 | EPSG:28992 -> 4326 icin bagimsiz referans noktasi (M-003 sessiz varyanti) | Asama 5 WGS84 ciktisi | **Asama 5 oncesi** |
 | P-016 | 1 | Kriter 1-B icin 3DBAG referans surumu sabitlensin mi, hangisi | Kriter 1-B | **Asama 1 baslangici** |
 | P-017 | 1 | D-024 kurali "karar veremedim" durumunu tanimlamiyor | 3 konut binasinin siniflamasi | **Gorsel kontrol sonucu uygulanmadan ONCE** |
+| P-018 | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar: footprint_only mi, Street View yontemi mi | B golge geometrisi | **Asama 1 baslangici** |
+| P-019 | 1 | Kat yuksekligi degeri ve belirsizligi (Bbl yalnizca alt sinir veriyor) | estimated_lod1 yuksekligi | **Kat sayimindan ONCE** |
 
 ---
 
@@ -539,6 +541,13 @@ bekletir. Bkz. D-019.
 
 ## [2026-09-21] [1] P-012 — GORSEL DOGRULAMA BEKLIYOR
 
+> **YENI KANIT (2026-09-22, D-026):** 3DBAG'in AHN5'i "yetersiz" bulup AHN3'e
+> dustugu 30 A binasinda noktalarin **~%93'u sinif 1'de** (bizim
+> sinif 2+6 payimiz medyan 0,068). Yani sinif 6 disindaki noktalari
+> dislemek, 64 kucuk yapinin yaninda **3DBAG'in de zorlandigi binalari**
+> etkiler. Bu, P-012 secenek (b) lehine bir kanittir — gorsel dogrulama hala
+> beklenir.
+
 **Durum:** ACIK · **Bekledigi sey:** `docs/visual_check_zero_class6.md`
 
 P-012 (Asama 1'e hangi AHN siniflari girecek) sorusunun kritik bileseni,
@@ -676,3 +685,72 @@ soylemiyor. Ajan boslugu kendi karariyla doldurmadi (Bolum 12.11).
 **Onerim:** (c). Gerekce: belirsiz bir binayi dogrulama istatistigine sokmak,
 dogrulamanin kendisini belirsizlestirir; disarida birakmak yalnizca kapsami
 daraltir ve raporlanir.
+
+
+---
+
+## [2026-09-22] P-014 KAPANDI -> D-025
+
+Kullanici karari: 3 konut blogu (S2/S3 ise) Street View kat sayisi x kat
+yuksekligi; diger ucus sonrasi yapilar `footprint_only`; OSM kullanilmaz.
+Uygulamada iki acik soru cikti -> P-018, P-019.
+
+---
+
+## [2026-09-22] [1] P-018 — Buyuk ucus sonrasi yapilar icin de tahmini yukseklik mi?
+
+**Durum:** ACIK · **Gecici uygulama:** `footprint_only` (lineage varsayilani)
+
+Talimat "diger ucus sonrasi **kucuk** yapilar footprint_only" idi. Olculdu:
+30 adayin **6'si >= 100 m2** (4.580 m2, 74 konut VBO):
+
+| bag_id | m2 | alan | bouwjaar | konut VBO | islev |
+|---|---|---|---|---|---|
+| `0503100000038250` | 2.111,9 | B | 2024 | 0 | onderwijsfunctie |
+| `0503100000038184` | 996,5 | A | 2023 | 0 | onderwijsfunctie |
+| `0503100000038253` | 496,1 | B | 2025 | 33 | woonfunctie |
+| `0503100000038699` | 340,0 | B | 2026 | 18 | kantoorfunctie,woonfunctie |
+| `0503100000038426` | 336,7 | B | 2026 | 15 | kantoorfunctie,woonfunctie |
+| `0503100000040432` | 298,3 | B | 2026 | 8 | woonfunctie |
+
+*(Tablo bu kaydi yazan yama scriptinde `reports/post_flight_buildings.csv` ve
+BAG VBO katmanindan hesaplandi — elle aktarilmadi.)*
+
+**Neden onemli:** `footprint_only` binalar 3B hacim olarak modele girmez ->
+**B'deki golge geometrisinden duserler.** B'nin varlik nedeni kenar binalarin
+golgelenmesidir (AGENTS.md Bolum 3). Etkisi, A'nin kenarindaki binalarin gunes
+potansiyelinde **sistematik yukari sapma** olabilir.
+
+**Secenekler:** (a) `footprint_only` kalsin, sinirlama olarak raporlansin ·
+(b) ayni Street View yontemi bunlara da uygulansin · (c) yalnizca A'ya yakin
+olanlara uygulansin (mesafe olculur).
+
+**Onerim:** (b) veya (c) — Asama 3 gunes analizi B'deki golge hacimlerine
+dayanir. Ama kullanicinin is yukunu arttirir; karar kullanicinin.
+
+---
+
+## [2026-09-22] [1] P-019 — Kat yuksekligi: hangi deger, hangi belirsizlik?
+
+**Durum:** ACIK · **Kat sayimindan ONCE** cevaplanmali (yontemi belirler)
+
+**Dogrulanan (D-025):** Bbl Art. 4.164 lid 4 / Tabel 4.162 -> yeni konut icin
+doseme ustu serbest yukseklik **>= 2,6 m**. Bu bir **alt sinirdir**; kat-kat
+arasi yuksekligi **vermez** (doseme kalinligi yok). Tipik bir deger veren resmi
+bir kaynak **bulunamadi**. `b3_bouwlagen` dongusel oldugu icin reddedildi.
+
+**Onerim — yerel kalibrasyon (olculmus, bagimsiz):**
+Kullanici zaten Street View'da kat sayacak. Ayni oturumda, **olculmus AHN5
+yuksekligi olan** ve benzer tipte (yakin tarihli, cok katli konut) **8-10
+kontrol binasinin** katlarini da sayarsa:
+`kat_yuksekligi = olculmus_cati_yuksekligi / sayilan_kat`
+Dagilimin medyani deger, p10-p90 araligi `height_uncertainty_m`'nin kaynagi
+olur. Kontrol binalari **sabit seed ile** secilir ve secim kurali **kat
+sayimindan once** muhurlenir (Bolum 12.2, 12.13-3).
+
+Bbl'nin 2,6 m alt siniri bir **tutarlilik kontrolu** olarak kullanilir:
+kalibre edilen deger 2,6 m + makul bir doseme payinin altinda cikarsa bir sey
+yanlistir.
+
+**Alternatif:** tek bir literatur degeri — ama dogrulanmis bir kaynak
+bulunmadan yazilmaz (M-005, M-013).

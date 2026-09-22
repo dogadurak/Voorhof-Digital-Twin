@@ -1384,6 +1384,56 @@ building_lineage:
     sessizce dusurulmez de).
   web_requirement: >
     Arayuzde lineage'a gore ayri gosterim zorunludur (D-020, Asama 5).
+
+  # --- P-014 karari (D-025): kim hangi lineage'i alir ---
+  assignment:
+    decision_ref: D-025
+    residential_blocks_S2_S3:
+      applies_to: building_scenario_rule.applies_to   # 3 konut blogu, YALNIZCA S2/S3 ise
+      lineage: estimated_lod1
+      height_source: "Street View gorsel kat sayimi (kullanici)"
+      height_method: "kat_sayisi * kat_yuksekligi_m"
+      storey_height_m: TODO_ONAY_BEKLIYOR               # P-019
+      height_uncertainty_m: TODO_ONAY_BEKLIYOR          # P-019 ile birlikte tanimlanacak
+    post_flight_small:
+      rule: "ucus sonrasi aday VE ayakizi < 100 m2"
+      lineage: footprint_only
+      count_measured: 24                         # post_flight_buildings.csv, 2026-09-22
+    post_flight_large:
+      rule: "ucus sonrasi aday VE ayakizi >= 100 m2"
+      lineage: footprint_only                           # GECICI - P-018
+      count_measured: 6
+      note: >
+        Kullanici talimati "diger ucus sonrasi KUCUK yapilar footprint_only"
+        idi. Olculdu: 30 adayin 6'si >= 100 m2 (4.580 m2,
+        74 konut VBO). Onerme bu 6 bina icin tutmuyor. Lineage
+        kuralinin varsayilani (height_source yoksa footprint_only) GECICI olarak
+        uygulanir; karar P-018.
+    osm: "KULLANILMAZ (kullanici karari 2026-09-22)"
+
+  # --- Kat yuksekligi: DOGRULANAN kaynak ve SINIRI (P-019) ---
+  storey_height_evidence:
+    regulation:
+      source: "Besluit bouwwerken leefomgeving (Bbl), BWBR0041297, versie 2024-01-01"
+      url: "https://wetten.overheid.nl/BWBR0041297/2024-01-01"
+      article: "Artikel 4.164 lid 4 + Tabel 4.162, '1 Woonfunctie c andere woonfunctie'"
+      verbatim: "Een verblijfsgebied en een verblijfsruimte hebben ten minste de in tabel 4.162 aangegeven hoogte boven de vloer."
+      value_m: 2.6
+      verified_at: "2026-09-22"
+      what_it_is: "Doseme USTU serbest yukseklik icin ALT SINIR (yeni yapi)"
+      what_it_is_not: >
+        Kat-kat arasi yukseklik (verdiepingshoogte) DEGILDIR: doseme kalinligini
+        icermez ve Bbl doseme kalinligi vermez. Tipik deger de degildir, asgari
+        degerdir. Tek basina kat_yuksekligi_m olarak KULLANILAMAZ.
+      regime_caveat: >
+        Bbl 2024-01-01'den sonraki basvurulara uygulanir. 2023'te tamamlanan
+        binalar muhtemelen Bouwbesluit 2012'ye tabidir; o yonetmeligin degeri
+        DOGRULANMADI.
+    rejected:
+      b3_bouwlagen: >
+        3DBAG kat sayisi bir makine ogrenmesi tahminidir (Roy 2022); en guclu
+        girdisi bina yuksekliginin kendisidir -> yukseklik tahmininde kullanmak
+        kismen donguseldir. Ayrica ucus sonrasi binalar 3DBAG'de yoktur.
     csv_scope_note: >
       CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
       "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
