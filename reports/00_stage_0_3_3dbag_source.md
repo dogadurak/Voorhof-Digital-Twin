@@ -1,10 +1,12 @@
 # 3DBAG'in nokta bulutu kaynağı — ölçüm sonucu
 
+> ⚠️ **DUZELTME 2026-09-22 (D-023, M-013):** Bu raporda gecen `v2023.10.08` surum etiketi API'nin kendi beyanidir ve **icerikle celisir**; oznitelik parmak izi yalnizca **2025.09.03** ile tutarli (2024.12.16'da eklenen 5 oznitelik VAR, 2025.09.03'te kaldirilan `b3_succes` YOK). Surum **BELIRSIZ**. Olcumler (`b3_pw_bron`, `b3_puntdichtheid_*`, bizim AHN5 sinamamiz) gecerlidir; surum etiketine dayanan **aciklamalar** gecerli degildir.
+
 **Tarih:** 2026-09-21 · **Aşama:** 0.3 madde 3 · **Karar:** D-013, D-021
 
 > **VERİ DÖNEMİ (D-020).** Geometri AHN5 uçuş dönemini (**2023-02-08 / 02-14**)
 > temsil eder; BAG öznitelikleri **2026-09** anlık görüntüsüdür. 3DBAG sürümü
-> **v2023.10.08** (BAG anlık görüntüsü ~2023).
+> **BELİRSİZ** — API etiketi `v2023.10.08`, içerik parmak izi 2025.09.03 (D-023).
 
 Kapsam: B alanı + 50 m, **7.376 bina** (`Building` nesnesi).
 
@@ -96,7 +98,7 @@ M-007 yön testi geçti):
 
 Bizim AHN5 verimiz bu 349 binanın **tamamını** iyi kapsıyor; hiçbirinde boşluk
 yok. Dolayısıyla 3DBAG'in `INSUFFICIENT_COVERAGE` gerekçesi **kendi AHN5 anlık
-görüntüsüne** aittir — 3DBAG v2023.10.08 Ekim 2023'te yayınlandı ve o tarihte
+görüntüsüne** aittir *(⚠️ bu açıklama GERİ ÇEKİLDİ, D-023)* — 3DBAG v2023.10.08 Ekim 2023'te yayınlandı ve o tarihte
 AHN5 ülke genelinde hâlâ uçuluyordu.
 
 **D-013'ün güncellenmesi gerekiyor:** 377 binalık ayrıştırma kuralı korunur,
@@ -119,7 +121,7 @@ değil, 3DBAG modelinin 2014/2020 verisine dayanmasıdır.** Ayrıştırma bu y�
 **4.1 — `collection_version` alanı yanlış etiketliydi.**
 `data/raw/3dbag/3dbag_metadata.json` ve `DATA_LOG.md` sürümü **"2.0"** olarak
 kaydetmişti. Bu değer **CityJSON şema sürümüdür**, dataset sürümü değil.
-Gerçek dataset sürümü API'den doğrulandı: **`v2023.10.08`**
+~~Gerçek dataset sürümü API'den doğrulandı: **`v2023.10.08`**~~ *(⚠️ YANLIŞ — API yalnızca kendi etiketini bildirir; doğrulama değildir. D-023)*
 (`/collections/pand` → `version.collection`). Düzeltildi.
 
 > Bu, M-010 ek bulgusuyla **aynı aile**: alan adının söylediği ile içindeki
@@ -127,7 +129,7 @@ Gerçek dataset sürümü API'den doğrulandı: **`v2023.10.08`**
 > kaydıydı — yanlış kalsaydı hangi 3DBAG sürümüyle karşılaştırdığımız
 > belgelenmemiş olurdu.
 
-**4.2 — 3DBAG API'sinde daha yeni sürüm YOK.**
+**4.2 — ~~3DBAG API'sinde daha yeni sürüm YOK.~~** *(⚠️ YANLIŞ — sürüm notları 2024.02.28, 2024.04.20, 2024.12.16, 2025.09.03'ü listeliyor. D-023)*
 `https://api.3dbag.nl/collections/pand` bugün (2026-09-21) hâlâ
 **`v2023.10.08`** döndürüyor. Yani daha güncel bir 3DBAG sürümüne geçme
 seçeneği **mevcut değil**; bu, P-014'ün (uçuş sonrası binalar için yükseklik
@@ -135,8 +137,14 @@ kaynağı) bir kapısını kapatır.
 
 **4.3 — 3DBAG'de olup BAG'imizde olmayan 28 bina.**
 3DBAG 377 bina için eski AHN kullanmış, ama bunların yalnızca **349**'u
-güncel BAG indirmemizde var. Kalan **28** bina 3DBAG'in 2023 BAG anlık
-görüntüsünde vardı, 2026 BAG'inde yok — muhtemelen **yıkılmış**. Bu, D-020'nin
+güncel BAG indirmemizde var. Kalan **28** bina 3DBAG'in BAG anlık
+görüntüsünde vardı, 2026 BAG'inde yok — muhtemelen **yıkılmış**.
+
+> ⚠️ **DÜZELTME 2026-09-22:** "2023 BAG anlık görüntüsü" ifadesi sürüm etiketine
+> dayanıyordu (D-023) ve kaldırıldı. "Muhtemelen yıkılmış" bir **ÇIKARIMDIR**
+> (§12.13): alternatif açıklama, PDOK BAG WFS'in **kısmi bir seçim** olmasıdır
+> (AGENTS.md §5, D-008) — bu 28 bina WFS'in sunmadığı bir statüde olabilir.
+> İkisi ayrıştırılmadı. Aşama 1'de eşleşme dışı sayılmaları kuralı değişmez. Bu, D-020'nin
 **ters yönüdür**: uçuş sonrası yapılanlar kadar, uçuştan sonra **yıkılanlar**
 da vardır. Aşama 1'de 3DBAG karşılaştırması yapılırken bu 28 bina eşleşmeyecek
 ve **"eksik" sayılmamalıdır**.

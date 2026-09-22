@@ -46,7 +46,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | dosya | `data/raw/3dbag/3dbag_pand.city.jsonl` |
 | kaynak_url | https://api.3dbag.nl/collections/pand/items |
 | saglayici | TU Delft 3D geoinformation |
-| surum | v2023.10.08 (dataset surumu; onceki kayit 'collection 2.0' idi - o CityJSON SEMA surumu, duzeltildi 2026-09-21) |
+| surum | **BELIRSIZ** (duzeltildi 2026-09-22). Ham metadata `collection_version: 2.0` = CityJSON SEMA surumu, dataset surumu degil. API `/collections/pand` etiketi `v2023.10.08` der, ama oznitelik parmak izi yalnizca **2025.09.03** ile tutarli (2024.12.16'da eklenen 5 oznitelik VAR, 2025.09.03'te kaldirilan `b3_succes` YOK). Etiket icerikle CELISIYOR. 2026-09-21'deki 'v2023.10.08, dogrulandi' notu YANLISTI: yalnizca API'nin kendi beyani okunmustu (MISTAKES.md M-013) |
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T14:59:55Z |

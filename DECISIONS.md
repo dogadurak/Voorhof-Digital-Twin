@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-023**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-024**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -737,7 +737,7 @@ Asama 1 yukseklik hatasi o sinirda sistematik olur ve sonradan ayristirilamaz.
 
 ### OLCULEN SONUC (2026-09-21, 3DBAG indirildikten sonra)
 
-3DBAG collection **v2023.10.08**. B+50 m icindeki 7.376 bina icin `b3_pw_bron`:
+3DBAG collection **v2023.10.08** *(⚠️ DUZELTME 2026-09-22: bu etiket API'nin beyanidir ve icerikle celisir; surum BELIRSIZ, parmak izi 2025.09.03 — bkz. D-023)*. B+50 m icindeki 7.376 bina icin `b3_pw_bron`:
 
 | Kaynak | Bina | Pay | `b3_pw_datum` |
 |---|---|---|---|
@@ -1118,7 +1118,7 @@ Bu iddia **bizim verimizde sinandi** — varsayimla kapatilmadi:
 
 **Bizim AHN5 verimiz bu binalarin tamamini iyi kapsiyor.** 3DBAG'in
 `_HIGHEST_YET_INSUFFICIENT_COVERAGE` gerekcesi **kendi AHN5 anlik
-goruntusune** aittir; v2023.10.08 Ekim 2023'te yayinlandi ve AHN5 o tarihte
+goruntusune** aittir *(⚠️ GERI CEKILDI 2026-09-22 — asagidaki aciklama surum etiketine dayaniyordu, bkz. D-023)*; v2023.10.08 Ekim 2023'te yayinlandi ve AHN5 o tarihte
 ulke genelinde hala uculuyordu.
 
 **Sonuc:** Kriter 1-B'de bu 377 binada cikacak fark, **bizim rekonstruksiyon
@@ -1131,7 +1131,7 @@ kalitemizin degil, referansin eskiliginin** olcusudur. Ayristirma bu yuzden
   eslesme disidir, **kayip sayilmaz**. Bu, D-020'nin **ters yonudur**:
   ucus sonrasi yapilanlar kadar, sonradan **yikilanlar** da vardir.
 - **3DBAG API'sinde daha yeni surum yok** (2026-09-21 itibariyla hala
-  `v2023.10.08`). P-014 icin bir secenek daha kapandi.
+  `v2023.10.08`). P-014 icin bir secenek daha kapandi. *(⚠️ YANLIS — daha yeni surumler VAR; bkz. D-023)*
 - 3DBAG'in kendi olcumunde **AHN4 yogunlugu (33,02) AHN5'ten (22,42)
   yuksektir**. Bu, "yeni surum daha yogundur" ortuk varsayimini desteklemez.
   Eslik ettigi esikler (0-E, 0-F) degismez; yalnizca gerekce duzeltildi.
@@ -1225,3 +1225,67 @@ cok farkli sonuclar dogurur, bu yuzden gorsel olarak ayrilmalidir:
 **Onay:** Kullanici, 2026-09-21 ("K1 <= 0,02, K2 >= 0,70 (durustluk
 notuyla), K3 tek donuslu < 1,0 p/m2 onayli, muhurle" + yeniden yapim
 senaryosu).
+
+---
+
+## D-023 · [2026-09-22] · 3DBAG surum kimligi BELIRSIZ — D-013 ve D-021 duzeltildi
+
+**Karar:** Indirdigimiz 3DBAG verisinin surumu **"belirsiz"** olarak kaydedilir.
+Hicbir raporda `v2023.10.08` **kesin surum olarak** yazilmaz.
+
+**Olculdu (2026-09-22):** Birincil kaynak — https://docs.3dbag.nl/en/overview/release_notes/
+— 2023.10.08'den sonra dort surum listeliyor: **2024.02.28, 2024.04.20, 2024.12.16,
+2025.09.03**. Surum notlarindaki oznitelik degisiklikleri, elimizdeki veriyle
+karsilastirildi:
+
+| Oznitelik | Surum notu | Bizim veride |
+|---|---|---|
+| `b3_puntdichtheid_ahn5` | 2024.12.16'da **eklendi** | VAR |
+| `b3_nodata_fractie_ahn5` | 2024.12.16'da **eklendi** | VAR |
+| `b3_mutatie_ahn4_ahn5` | 2024.12.16'da **eklendi** | VAR |
+| `b3_extrusie` | 2024.12.16'da **eklendi** | VAR |
+| `b3_pw_onvoldoende` | 2024.12.16'da **eklendi** | VAR |
+| `b3_reconstructie_onvolledig` | 2024.12.16'da **kaldirildi** | YOK |
+| `b3_succes` | 2024.12.16'da eklendi, **2025.09.03'te kaldirildi** | **YOK** |
+| `b3_bouwlagen` | 2024.02.28'de **eklendi** | VAR |
+
+**Sekiz kontrolun hepsiyle tutarli tek surum 2025.09.03'tur.** API'nin
+`/collections/pand -> version.collection = v2023.10.08` etiketi icerikle
+**celisiyor**. Bu bir cikarimdir ama cok guclu: 2023.10.08'de bu bes
+oznitelik **yoktu**.
+
+**Neden "2025.09.03" diye kesin yazilmiyor:** API etiketi ve icerik celisiyor;
+hangisinin dogru oldugunu soyleyen birinci el bir beyan yok. Ikisinden birini
+secip digerini sessizce atmak Bolum 1-5'i ihlal ederdi.
+
+**D-013'te ne degisti:** yalnizca surum etiketi. `b3_pw_bron` dagilimi
+(%94,9 ahn5) **olcumdur** ve gecerlidir.
+
+**D-021'de ne degisti:**
+- **Gecerli kalan (olcum):** 3DBAG'in eski AHN kullandigi 349 binada bizim
+  AHN5'imiz iyi kapsiyor (medyan 25-30 p/m2, sifir bosluk). Kriter 1-B'de bu
+  binalarin ayristirilmasi **korunur**.
+- **GERI CEKILEN (aciklama):** "3DBAG v2023.10.08 Ekim 2023'te yayinlandi ve
+  AHN5 o tarihte hala uculuyordu" aciklamasi **surum etiketine dayaniyordu**.
+  Veri 2025.09.03 ise Delft icin AHN5 (Subat 2023) tamamen mevcuttu. 3DBAG'in
+  bu binalarda neden AHN5 kapsamasini yetersiz buldugu **bilinmiyor**.
+  `b3_nodata_fractie_ahn5` bizim nokta sayimizla ayni seyi olcmuyor olabilir
+  (tanimi: https://docs.3dbag.nl/en/schema/attributes/ — **okunmadi**).
+- **YANLIS OLAN:** "3DBAG'de daha yeni surum yok -> P-014 icin bir secenek
+  kapandi". Daha yeni surumler **var**.
+
+**P-014 icin dogru sonuc (gerekce degisti, sonuc ayni):** 3DBAG ucus sonrasi
+binalar icin yine de bir yukseklik kaynagi **degildir**, cunku:
+1. Hicbir 3DBAG surumu AHN6 kullanmaz (surum notlarinda AHN6 gecmiyor).
+   Delft icin en yeni girdi AHN5 (Subat 2023) — bizimkiyle ayni.
+2. 2025.09.03 bilinen sorunu: *"397 512 BAG features without 3D model
+   (typically due to a lack of elevation data) are missing from the output."*
+   Iki okulun 3DBAG'de olmamasi bununla **tutarlidir**.
+
+**Yeni acik karar:** Kriter 1-B'nin karsilastirma referansi **hangi surum**
+olacak? Indirme sayfasi belirli surumleri sunuyor (2024.02.28 notu:
+"Previous versions ... available on the Downloads page, starting from
+version 2023.10.08"). Referans surumu sabitlemek Bolum 12.11 geregi kullanici
+kararidir -> **P-016**.
+
+**Onay:** Duzeltme kaydi; karar gerektiren kisim P-016'da.

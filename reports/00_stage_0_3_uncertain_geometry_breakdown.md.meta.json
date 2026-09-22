@@ -1,0 +1,25 @@
+{
+  "run_id": "RUN-2026-09-22-003",
+  "git_commit": "227d717-dirty",
+  "created_utc": "2026-09-22T13:27:44Z",
+  "output": {
+    "path": "reports/00_stage_0_3_uncertain_geometry_breakdown.md",
+    "sha256": "4b8b9d2f539a67d71f158ae2254fffe31cf6ac4d5dbbaab0cb91588dc5e4dd93",
+    "size_bytes": 4531
+  },
+  "inputs": [],
+  "parameters": {
+    "A_konut_vbo": 7637,
+    "belirsiz_konut_vbo": 412,
+    "belirsiz_konut_bina": 3,
+    "A_bina": 1259,
+    "BA_bina": 2776,
+    "supheli_rebuild_overlap": 10
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "LAZ okunmadi; detect_post_flight_buildings.py ciktisi kullanildi."
+}

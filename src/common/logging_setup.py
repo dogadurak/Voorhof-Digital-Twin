@@ -106,6 +106,16 @@ def setup_logging(
     logger.addHandler(file_handler)
 
     logger.info("run_id=%s script=%s log=%s", run_id, name, log_file.name)
+
+    # PROJ oz-testi (MISTAKES.md M-003, tekrar 2026-09-22). Her calistirmada
+    # FIILEN bir donusum yapilir ve sonuc loglanir. Konsolda pyproj'un
+    # "unable to set PROJ database path" uyarisi gorulurse, bu satir onun
+    # duzeltilip duzeltilmedigini soyler. Basarisizlik RuntimeError'dur.
+    from .proj_env import assert_proj_works
+    pj = assert_proj_works()
+    logger.info("PROJ dogrulandi | PROJ %s | veri dizini %s | test noktasi geri "
+                "donus hatasi %.1e m", pj["proj_version"], pj["data_dir"],
+                pj["roundtrip_error_m"])
     return logger, run_id, log_file
 
 

@@ -46,6 +46,7 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 - [ ] **D-1** Her sütun/değişken adı, hesapladığı ifadeyi **birebir** söylüyor mu?
       (M-010 ek bulgu: `has_dwellings` aslında `VBO > 0` ölçüyordu)
 - [ ] **D-2** Birim, ada yazılı mı (`area_m2`, `eui_kwh_m2_yr`)? (§14.6)
+- [ ] **D-3** Raporda **kesilmiş** kategorik değer var mı (`[:N]`)? Rapordaki her tablo depodaki bir scriptten mi üretilmiş, yoksa elle mi aktarılmış? (M-010 tekrarı: kesilen metin 260 konutlu bir binayı konut dışı gösterdi)
 
 ## E. Veri dönemi ve kaynak (D-020, §5)
 
@@ -71,6 +72,8 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 - [ ] **G-1** Uydurma sayı, sürüm veya paket adı var mı? (M-001, M-005)
 - [ ] **G-2** Exit code 0, "başarılı" kanıtı olarak kullanılmış mı? (M-002)
 - [ ] **G-3** Mekânsal yüklem kullanan her yerde yön testi var mı? (M-007)
+- [ ] **G-6** Log/konsol çıktısında **uyarı** var mı ve açıklanmış mı? Ajanın komutlarında uyarıları silen `grep -v` var mı? (M-012)
+- [ ] **G-7** Her logda `PROJ dogrulandi` satırı var mı? (M-003 tekrarı)
 - [ ] **G-4** Sınırlamalar yazılmış mı, gizlenmiş mi?
 - [ ] **G-5** Başarısız kayıtlar CSV'ye düşmüş mü? (§12.8)
 

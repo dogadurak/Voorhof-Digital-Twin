@@ -20,15 +20,17 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 |---|---|---|---|---|---|
 | M-001 | 2026-09-21 | 0.1 | Dogrulanmamis paket surumu yazildi | KAPALI | 0 |
 | M-002 | 2026-09-21 | 0.1 | conda-forge'da olmayan paket adi varsayildi | KAPALI | 0 |
-| M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | KAPALI | 0 |
+| M-003 | 2026-09-21 | 0.1 | Sistem PROJ_LIB pyproj'u ele gecirdi, CRS tamamen bozuktu | **TEKRARLANDI -> KAPALI** | **1** |
 | M-004 | 2026-09-21 | 0.2a | WFS filtresi sessizce yok sayildi, 61 MB ulke geneli veri indi | KAPALI | 0 |
 | M-005 | 2026-09-21 | 0.2a | Servis semasi dogrulanmadan config'e olgu yazildi | KAPALI | 0 |
 | M-006 | 2026-09-21 | 0.2 | Konsol kodlamasi bir DOGRULAMA log satirini sessizce dusurdu | KAPALI | 0 |
 | M-007 | 2026-09-21 | 0.3 | Mekansal predicate yonu varsayildi, tum binalar 0 nokta saydi | KAPALI | 0 |
-| M-008 | 2026-09-21 | 0.3 | Config'de `decision_ref: D-015` vardi ama o D kaydi hic yazilmamisti | KAPALI | 0 |
+| M-008 | 2026-09-21 | 0.3 | Config'de `decision_ref: D-015` vardi ama o D kaydi hic yazilmamisti | **TEKRARLANDI -> KAPALI** | **1** |
 | M-009 | 2026-09-21 | 0.3 | Olcum metrigi, olcmesi gereken seyi olcmuyordu (tum siniflar sayildi) | KAPALI | 0 |
-| M-010 | 2026-09-21 | 0.3 | Ozet istatistikle genelleme: medyan cogunlugu anlatti, etkiyi gizledi | KAPALI | 0 |
+| M-010 | 2026-09-21 | 0.3 | Ozet istatistikle genelleme: medyan cogunlugu anlatti, etkiyi gizledi | **TEKRARLANDI -> KAPALI** | **1** |
 | M-011 | 2026-09-21 | 0.3 | Karar veren cikarim bagimsiz dogrulanmadan rapora yazildi | ACIK | 0 |
+| M-012 | 2026-09-22 | 0.3 | Uyari satirlari grep ile filtrelendi; M-003 tekrari tum asama boyunca gorulmedi | KAPALI | 1 (ilki kayitsizdi) |
+| M-013 | 2026-09-22 | 0.3 | Veri surumu kaynagin KENDI etiketinden okunup "dogrulandi" yazildi; ham dosya elle duzenlendi | KAPALI | 0 |
 
 ---
 
@@ -608,3 +610,244 @@ etkiliyorsa:
   kontrol binasinda %2,4). Bunlar gozlemdir, yorum degil — Bolum 12.13
   kapsamina **girmez**. Bkz. D-019.
 
+
+---
+
+## M-003 TEKRARI · [2026-09-22] · Asama 0.3
+
+**Tekrar sayisi:** 1 (Bolum 14.5)
+
+**Ne oldu:**
+`report_uncertain_geometry.py` bir `EPSG:28992 -> EPSG:4326` donusumunde
+`no database context specified` hatasiyla dustu — M-003'un birebir ayni
+belirtisi. M-003'un duzeltmesi (`src/common/proj_env.py`) yerindeydi.
+
+**Kok neden — kural yetersizdi (14.5-3'un cevabi):**
+Duzeltme ortam degiskenlerini `src.common` ice aktarildiginda ayarliyordu.
+Ama pyproj veri dizinini **kendi ice aktarimi aninda** okur. `laspy` ve
+`shapely` pyproj'u kendi ice aktarimlarinda yukler; bir script bunlari
+`src.common`'dan ONCE ice aktarirsa pyproj PostgreSQL'in PROJ dizinine
+kilitlenir ve duzeltme **sessizce etkisiz** kalir.
+
+**Olculdu (2026-09-22):**
+- `import pyproj; import src.common` -> **HATA**
+- `import src.common; import pyproj` -> **CALISTI**
+- `import laspy` tek basina pyproj'u yukluyor -> **0.3'teki HER LAZ scriptinde
+  duzeltme etkisizdi.**
+
+**Gecmis sonuclar etkilendi mi — HAYIR, ama bu TASARIM DEGIL SANSTI:**
+`src/` icinde 2026-09-22'ye kadar **hicbir script CRS donusumu yapmadi**
+(`grep Transformer|to_crs|from_crs` ile dogrulandi). Tum isler yerel RD
+koordinatlarinda kaldi: LAZ EPSG:7415, BAG EPSG:28992, yatay olarak ayni.
+Ilk donusum ihtiyaci dogdugu anda hata gorundu.
+
+**Neden daha once gorulmedi:** bkz. **M-012**. Her calistirmada pyproj
+`unable to set PROJ database path` uyarisi basiyordu ve ben bu satiri her
+komutta `grep -v pyproj` ile **filtreledim**.
+
+**Guclendirilmis kural:**
+1. Duzeltme **siradan bagimsiz** olmalidir: `proj_env` artik
+   `pyproj.datadir.set_data_dir()` cagiriyor; bu, pyproj zaten yuklenmis
+   olsa bile baglami duzeltir. Olculdu: `import laspy` once gelse de gecti.
+2. Duzeltmenin **calistigi kanitlanir, varsayilmaz**: `assert_proj_works()`
+   her calistirmada gercek bir donusum yapar (RD -> WGS84 -> RD geri donus
+   < 1 cm + Delft enlem/boylam kutusu) ve sonucu loga **olumlu satir** olarak
+   yazar: `PROJ dogrulandi | PROJ 9.8.1 | veri dizini ...`. Basarisizlik
+   RuntimeError'dur.
+
+**Otomatik kontrol:** `setup_logging()` her scriptte `assert_proj_works()`
+cagirir. Hicbir script logging kurmadan calismadigi icin atlanamaz.
+
+**Acikca yazilan SINIRLAMA:** Bu test M-003'un **sessiz** varyantini
+(uyumlu ama farkli surumde bir veritabaninin metre mertebesinde farkli datum
+donusumu uygulamasi) **YAKALAMAZ**. Geri donus tutarli kalir, kutu metreleri
+gormez. Bagimsiz bir referans noktasi gerekir — Asama 5'te WGS84 cikti
+uretilmeden once kapatilacak (bkz. P-015).
+
+**Durum:** KAPALI (siradan bagimsiz duzeltme + her calistirmada oz-test)
+
+---
+
+## M-010 TEKRARI · [2026-09-22] · Asama 0.3
+
+**Tekrar sayisi:** 1 — M-010'un **ek bulgusuyla** ayni kok neden:
+**gosterilen deger, verinin soyledigi ile ayni degildi.**
+
+**Ne oldu:**
+`reports/00_stage_0_3_zero_ratio_investigation.md` Bolum 5.1 tablosunda
+`0503100000037336` icin `gebruiksdoel` **"bijeenkomst, overige"** yazildi.
+Gercek deger `bijeenkomstfunctie,overige gebruiksfunctie,woonfunctie` ve
+binanin **264 VBO'sunun 260'i konut**. Yani **260 konutlu bir bina**, konut
+disi bir yapi gibi raporlandi — konut stoku hakkindaki bir raporda.
+
+**Kok neden:**
+Tabloyu uretmek icin kullandigim gecici scriptte metin `gd[i][:40]` ile
+**40 karakterde kesilmisti**; `woonfunctie` kesimin arkasinda kaldi. Tabloyu
+o ciktidan **elle** rapora aktardim. Kesme bir **gosterim kolayligi** olarak
+yazilmisti ama bir **icerik kaybina** donustu. Ayni kalip
+`verify_ahn_quality.py`'de `[:34]` olarak **canli** duruyordu (bu sefer
+cikti etkilenmedi: >34 karakterli 30 binanin hicbiri o tabloya girmiyordu —
+olculdu).
+
+**Nasil yakalandi:** Kirilim scripti VBO duzeyinden 260 konut saydi; pand
+duzeyi raporla celisti. Celiski varsayilmadi, veriden sinandi.
+
+**Guclendirilmis kural:**
+- **Kategorik degerler raporda KESILMEZ.** Cok uzunsa kisaltma + lejant
+  kullanilir; asla bastan-N-karakter kesme.
+- **Gecici bir scriptin ciktisi rapora elle aktarilmaz.** Rapora giren her
+  tablo, depodaki bir scriptten uretilir (Bolum 13.1 "olcumun kaynagi").
+  Elle aktarim, hem kesmenin hem de yazim hatasinin girdigi kapidir.
+
+**Otomatik kontrol:** `src/qa/check_compliance.py` (Asama 0.5) `src/`
+altinda rapor ureten satirlarda `)[:N]` / `][:N]` metin kesmesi arayacak.
+`docs/reviewer_checklist.md` D-3 maddesi eklendi.
+
+**Durum:** KAPALI (rapor satiri duzeltildi, koddaki kesme kaldirildi)
+
+---
+
+## M-012 · [2026-09-22] · Asama 0.3
+
+**Sinif:** Sinyal kaybi — ciktiyi okuyana ulasmadan filtrelemek
+
+**Ne oldu:**
+Asama 0.3 boyunca calistirdigim neredeyse her komutta
+`| grep -v pyproj` veya `| grep -v "pyproj\|_set_context"` kullandim.
+Filtrelenen satir, pyproj'un `unable to set PROJ database path` uyarisiydi —
+yani **M-003 duzeltmesinin calismadigini** soyleyen tek sinyal. Uyari her
+calistirmada oradaydi; ben onu her calistirmada sildim.
+
+**Kok neden:**
+Uyariyi **bir kez gorup "gurultu" olarak siniflandirdim** ve sonra onu
+gorunmez kilan bir aliskanlik edindim. Siniflandirma hic sinanmadi. Filtre,
+uyarinin anlamini degil **varligini** ortadan kaldirdi.
+
+**Bu ilk degil — ilki KAYDEDILMEDI:**
+Asama 0.3'te 3DBAG indirmesi `offset=0` ile HTTP 500 verdiginde, grep
+filtrem traceback'i gizlemisti. O zaman bunu sozlu olarak "M-006 ailesi"
+diye not ettim ama **kayit acmadim** — Bolum 14.3 ("kucuk hata ayrimi yoktur")
+ihlali. Bu kayit o eksigi de kapatir.
+
+**Turetilen kural:**
+1. **Uyarilar grep ile silinmez.** Bir uyari bilinen-zararsiz ise, ya
+   **kaynaginda** susturulur (ve susturma kodda gerekcesiyle yazilir) ya da
+   gorunur birakilir.
+2. Cikti kisaltmak gerekiyorsa **filtrelenen satir sayisi da basilir**
+   (`grep -c`), boylece "hic uyari yok" ile "uyarilar silindi" ayirt edilir.
+3. Bir uyari "gurultu" diye siniflandirilmadan once **ne dedigi okunur ve
+   kaynagi sinanir**. "unable to set PROJ database path" gurultu degil,
+   tanimdir.
+
+**Otomatik kontrol:** Kismen — `assert_proj_works()` artik bu uyarinin
+ardindan loga olumlu bir dogrulama satiri yaziyor; uyari gorunse bile
+duzeltmenin calisip calismadigi ayri bir satirda okunur. Filtreleme
+davranisinin kendisi otomatik denetlenemez (komut satiri aliskanligi);
+Bolum 10 kontrol listesine eklendi.
+
+**Durum:** KAPALI
+
+---
+
+## M-013 · [2026-09-22] · Asama 0.3
+
+**Sinif:** Dogrulanmamis olgu (M-005 ailesi) + ham veri kurali ihlali
+
+**Ne oldu — uc parca:**
+
+1. **Surum.** 2026-09-21'de 3DBAG dataset surumunu API'nin
+   `/collections/pand -> version.collection` alanindan okudum (`v2023.10.08`)
+   ve DATA_LOG, D-013, D-021, AGENTS.md Bolum 5 ve iki rapora
+   **"API'den dogrulandi"** diye yazdim. 2026-09-22'de birincil kaynak
+   (3DBAG surum notlari) ile karsilastirildiginda veride 2024.12.16'da
+   eklenen bes oznitelik bulundu ve 2025.09.03'te kaldirilan `b3_succes`
+   bulunmadi. **Icerik, etiketle celisiyor** (D-023).
+2. **Olumsuz genelleme.** Yalnizca API'yi kontrol edip **"3DBAG'de daha yeni
+   surum yok"** dedim ve bundan "P-014 icin bir secenek kapandi" sonucunu
+   cikardim. Daha yeni **dort surum** vardi.
+3. **Aciklama.** D-021'de 3DBAG'in 377 binada eski AHN kullanmasini "Ekim
+   2023 anlik goruntusu, AHN5 hala uculuyordu" diye **acikladim**. Bu aciklama
+   yalnizca surum etiketine dayaniyordu. Geri cekildi; neden **bilinmiyor**.
+
+**Ek ihlal — ham veri:** Surum "duzeltmesini" `data/raw/3dbag/3dbag_metadata.json`
+dosyasina **elle** yazdim. AGENTS.md Bolum 8: *"data/raw/ salt okunur"*; Bolum
+12.7: *"Ham veri hicbir sekilde degistirilmez."* Dosya git'te izlenmedigi icin
+(`.gitignore: data/raw/*`) geri yuklenecek bir kopya yoktu; duzenleme tam
+tersine cevrilerek indirme scriptinin yazdigi yapiya (ayni anahtarlar, ayni
+sira) dondurulmustur (2026-09-22). Duzeltme bilgisi artik yalnizca insan
+kaydi olan `DATA_LOG.md`'dedir.
+
+**Kok neden:**
+Bir kaynagin **kendi hakkindaki beyani** (etiket, surum alani, metadata) ile
+**bagimsiz bir dogrulama** ayni sey degildir. "API'den dogrulandi" cumlesi
+yanlisti: API dogrulamadi, **beyan etti**. M-005 kurali ("olguyu kaynagindan
+dogrula") uygulandi sanildi, cunku bir kaynaga bakilmisti — ama bakilan kaynak,
+iddianin kendisiydi.
+
+**Neden yakalanabilirdi — kanit zaten elimizdeydi:** M-005'in otomasyonu
+(oznitelik listesini loglamak) calisti: 62 oznitelik 2026-09-21'de
+`DATA_LOG.md`'ye yazildi ve `b3_puntdichtheid_ahn5` o listedeydi. **Kanit
+toplandi ama surum iddiasiyla karsilastirilmadi.** Kural bilgiyi kaydetti,
+capraz kontrol etmedi.
+
+**Bolum 14.5 degerlendirmesi:** Bu, M-005 ile ayni kok nedenin (dogrulanmamis
+olgu) yeni bir ornegidir. M-001, M-002, M-005 ile birlikte bu ailenin
+**dorduncu** ornegi. Kural yetersizdi: "kaynaga bak" demek, **hangi kaynagin
+bagimsiz sayildigini** tanimlamiyordu.
+
+**Guclendirilmis kural:**
+1. **Kaynagin kendi beyani dogrulama sayilmaz.** Surum, tarih, kapsam gibi
+   bir iddia, beyan eden kaynaktan **baska** bir kanitla (birincil
+   dokuman, icerik parmak izi, ikinci kaynak) karsilastirilmadan
+   "dogrulandi" diye yazilmaz. Yalnizca beyan varsa **"beyan edilen"**
+   yazilir.
+2. **Olumsuz iddia ("yok", "mevcut degil") en zayif iddiadir.** Aranan
+   yerin kapsami ile iddianin kapsami ayni olmalidir. "API'de yok" ile
+   "yok" ayni cumle degildir.
+3. **Ham veri dosyasina elle dokunulmaz** — sidecar/metadata dahil.
+   Duzeltme her zaman insan kaydina (`DATA_LOG.md`) yazilir.
+
+**Otomatik kontrol:** `download_3dbag.py` icine surum parmak izi kontrolu
+eklendi (`_version_fingerprint()`): indirilen oznitelik kumesini surum
+notlarindaki eklenen/kaldirilan oznitelik tablosuyla karsilastirir, API
+etiketiyle celisirse **WARNING** basar ve DATA_LOG'a "BELIRSIZ" yazar.
+Ham veri kurali icin: `src/qa/check_compliance.py` (Asama 0.5) `data/raw/`
+altindaki her dosyanin son degistirilme zamaninin, o dosyayi yazan indirme
+kaydindan sonra olup olmadigini kontrol edecek.
+
+**Durum:** KAPALI
+
+---
+
+## M-008 TEKRARI · [2026-09-22] · Asama 0.3
+
+**Tekrar sayisi:** 1 (Bolum 14.5)
+
+**Ne oldu:** P-014'e 2026-09-21'den itibaren AGENTS.md Bolum 5, D-019, D-021,
+D-022 ve D-023'te atif yapildi. `reports/PENDING_DECISIONS.md`'de **P-014 hic
+acilmamisti.** 2026-09-22'de P-014 yazilirken fark edildi. Geriye donuk
+sinama: dunku son commit'te P-014 **4 dosyada atif aliyor, 0 tanimi var.**
+
+**Kok neden — 14.5-3'un cevabi: kural hic uygulanmadi.** M-008'in otomatik
+kontrolu "Asama 0.5'te `check_compliance.py`" olarak **ertelenmisti**.
+Ertelenen kontrol yazilana kadar kural yalnizca insan disiplinine kaldi ve
+ayni gun icinde ayni hata bir baska kayit turunde (D yerine P) tekrarlandi.
+Ayrica M-008'in kurali yalnizca `decision_ref -> D` icin yazilmisti; P ve M
+atiflari kapsam disindaydi.
+
+**Guclendirilmis kural:**
+1. **Her** kayit turu (D, P, M) icin: atif, hedefi var olmadan yazilmaz.
+2. Bir tekrar icin vaat edilen otomatik kontrol **ertelenmez**; kural
+   yazildigi oturumda en azindan asgari haliyle calisir hale getirilir.
+
+**Otomatik kontrol:** `src/qa/check_refs.py` **yazildi ve calisiyor**
+(2026-09-22). Tum `.md/.yml/.py` dosyalarindaki D/P/M atiflarini tanimlarla
+karsilastirir, "SONRAKI BOS ID"nin en buyuk D'den buyuk oldugunu denetler,
+cozulmeyen atif varsa cikis kodu 1 doner. Negatif kontrol: "SONRAKI BOS ID"
+satirindaki henuz-var-olmayan kimligi ilk calistirmada **yakaladi**
+(yanlis pozitif; o satir muaf tutuldu). Ikinci calistirmada da bu kaydin
+ilk taslaginda ornek olarak yazilan tanimsiz bir kimligi yakaladi.
+Bundan sonra her commit oncesi calistirilir; Asama 0.4/0.5'te
+`check_compliance.py`'ye baglanacak.
+
+**Durum:** KAPALI

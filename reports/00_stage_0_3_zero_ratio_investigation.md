@@ -160,7 +160,7 @@ malzeme **kesinlikle bitki ortusudur**, cati degil.
 
 ## 4. 3DBAG'de var mi?
 
-**Ikisi de 3DBAG v2023.10.08'de YOKTUR.**
+**Ikisi de indirdigimiz 3DBAG verisinde YOKTUR.** *(Surum: API etiketi `v2023.10.08`, icerik parmak izi 2025.09.03 — BELIRSIZ, D-023. 2025.09.03 notuna gore "BAG features without 3D model (typically due to a lack of elevation data) are missing from the output" — bu, iki okulun yoklugunu aciklayabilir.)*
 
 Dolayisiyla `b3_kwaliteitsindicator` dahil hicbir `b3_*` oznitelik
 mevcut degildir — deger dusuk degil, **kayit yok**.
@@ -194,6 +194,13 @@ kusursuz calismistir — sadece olculdugu tarihte orada bina yoktu. Sorun
 **zamansal uyusmazliktir**: BAG (2026 anlik goruntusu) ile AHN5 (Subat 2023)
 arasinda 3 yil vardir.
 
+> **DUZELTME (2026-09-22, MISTAKES.md M-010 tekrari):** Asagidaki tabloda
+> `0503100000037336` satiri ilk yayinda **"bijeenkomst, overige"** olarak
+> yazilmisti. Gercek deger `bijeenkomstfunctie,overige gebruiksfunctie,
+> woonfunctie`'dir ve binanin **264 VBO'sunun 260'i konuttur**. Metin, bu
+> tabloyu uretmek icin kullanilan gecici bir scriptte **40 karakterde
+> kesilmisti** ve `woonfunctie` kopmustu. Satir duzeltildi.
+
 ### 5.1 `bouwjaar` tek basina bir belirteç DEGILDIR
 
 A'da `bouwjaar >= 2023` olan **9** pand vardir, ama hepsi sifir oran vermiyor:
@@ -207,7 +214,7 @@ A'da `bouwjaar >= 2023` olan **9** pand vardir, ama hepsi sifir oran vermiyor:
 | `0503100000038260` | 2023 | 4,2 | **0,000** | (islev yok) |
 | `0503100000038383` | 2023 | 37,4 | 0,815 | overige |
 | `0503100000037335` | 2023 | 1.961,8 | 0,744 | **woonfunctie** |
-| `0503100000037336` | 2023 | 1.251,6 | 0,566 | bijeenkomst, overige |
+| `0503100000037336` | 2023 | 1.251,6 | 0,566 | bijeenkomst, overige, **woonfunctie** — **260/264 VBO konut** ⚠️ |
 | `0503100000038177` | **2025** | 819,9 | 0,785 | winkel, **woonfunctie** |
 
 `0503100000038177` **bouwjaar 2025** olmasina ragmen sinif 6 orani 0,785 —

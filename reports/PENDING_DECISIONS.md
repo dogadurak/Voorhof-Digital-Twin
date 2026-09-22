@@ -21,6 +21,9 @@
 | P-011 | 0.3 | C alani secimi (yukseklik esigi KAPANDI -> D-012) | C alani (Asama 4) | **0.3 sonrasi** |
 | P-012 | 1 | Asama 1 rekonstruksiyonuna hangi AHN siniflari girecek | Asama 1 tamami | **GORSEL DOGRULAMAYI BEKLIYOR** (M-011) |
 | ~~P-013~~ | 1 | AHN5'te karsiligi olmayan binalar (3 yapi) | — | **KAPANDI -> D-019** (secenek a) |
+| P-014 | 1 | Ucus sonrasi binalar icin yukseklik kaynagi (ARASTIRMA YAPILDI, karar yok) | lineage `estimated_lod1` | **Gorsel kontroller sonrasi** |
+| P-015 | 5 | EPSG:28992 -> 4326 icin bagimsiz referans noktasi (M-003 sessiz varyanti) | Asama 5 WGS84 ciktisi | **Asama 5 oncesi** |
+| P-016 | 1 | Kriter 1-B icin 3DBAG referans surumu sabitlensin mi, hangisi | Kriter 1-B | **Asama 1 baslangici** |
 
 ---
 
@@ -555,3 +558,97 @@ karardan once bagimsiz yoldan dogrulanmalidir.
 binasi **goruluyorsa**, "ucustan sonra yapildi" aciklamasi bagimsiz olarak
 dogrulanmis olur. Yani ayni orneklem hem alt grup A'nin cikarimini hem alt
 grup B'nin olcumunu sinar.
+
+
+---
+
+## [2026-09-22] [1] P-014 — Ucus sonrasi binalar icin yukseklik kaynagi
+
+**Durum:** ACIK — **ARASTIRMA YAPILDI, KARAR YOK** (kullanici talimati: "sadece
+arastirma, karar yok"). Karar gorsel kontroller bittikten sonra.
+
+> **Kayit notu (M-008 tekrari):** Bu kayit 2026-09-21'den beri AGENTS.md
+> Bolum 5, D-019, D-021, D-022 ve D-023'te **atif yapilmasina ragmen hic
+> acilmamisti.** 2026-09-22'de acildi. Bkz. MISTAKES.md M-008.
+
+**Kapsam (olculdu, D-022):** 30 ucus sonrasi aday, 5.870 m2 (B'nin %0,98'i);
+A'da 2 (ikisi de okul, 0 konut VBO), B\A'da 28 (92 konut VBO). Gorsel kontrol
+S2/S3 derse A'daki 3 konut blogu (412 konut VBO) da bu kapsama girer.
+
+**Lineage kurali (D-022, muhurlu):** `estimated_lod1` icin `height_source`,
+`height_method`, `height_uncertainty_m` ZORUNLU; biri bos ise `footprint_only`.
+
+### Arastirma sonuclari — her biri kaynagindan dogrulandi
+
+| # | Kaynak | Durum (2026-09-22) | Kanit |
+|---|---|---|---|
+| 1 | **AHN6** (olculmus nokta bulutu) | **Delft icin YOK** | Yalnizca kuzeydogu yayinda (ucus 2025, yayin 13-10-2025). Voorhof, AHN6 2025 serit dis sinirlarinin **icinde degil — en yakin serit 66 km** (`AHN6_2025_omhullen_clip.gpkg`, 855 serit, olculdu). Voorhof AHN6 edinim **blogu 1**'de (`AHN6_percelen.gpkg`), ama dosyada yil yok. AHN sayfalari "2026 en 2027" verisinden soz ediyor; Delft icin **yil yazmiyor**. Dataroom'da 2026 serit dosyasi **yok** |
+| 2 | **3DBAG** (daha yeni surum) | **Kaynak DEGIL** | Surum notlari: hicbir surum AHN6 kullanmaz; 2025.09.03 bilinen sorunu "BAG features without 3D model (typically due to a lack of elevation data) are missing from the output" (D-023) |
+| 3 | **3DBAG `b3_bouwlagen`** (kat sayisi tahmini) | **Kaynak DEGIL** | Ucus sonrasi binalar 3DBAG ciktisinda yok |
+| 4 | **BAG VBO `oppervlakte` toplami / ayakizi** -> kat sayisi -> yukseklik | **Uygulanabilir, TAHMIN** | Yeni veri kaynagi gerektirmez (BAG zaten Bolum 4'te). Varsayimlar: brut/net alan orani, kat yuksekligi. Konut disi yapilarda (okul) VBO alani kat sayisini iyi temsil etmeyebilir |
+| 5 | **Street View / Luchtfoto** gorsel kat sayimi x kat yuksekligi | **Uygulanabilir, TAHMIN, ELLE** | Kullanicinin gorsel kontrol sirasinda toplayabilecegi bir alan. Kaynak: gozlem; `height_method = "gorsel kat sayimi x kat yuksekligi"` |
+| 6 | **OSM `building:levels` / `height`** | **Arastirilmadi** | **Yeni veri kaynagi** (ODbL) — Bolum 12.11 geregi kullanici onayi olmadan sorgulanmadi |
+| 7 | **AHN6'yi beklemek** | **Zaman belirsiz** | Delft ucusu yayinlanmis bir tarihe bagli degil |
+
+**Kat yuksekligi** (secenek 4 ve 5 icin): bir norm veya olculmus referans
+gerekir. **Bu arastirmada bir deger dogrulanmadi — varsayim yazilmadi.**
+Karar verilirse kaynagi ayrica dogrulanacaktir (M-005, M-013).
+
+### Karar icin sorular (kullaniciya)
+
+1. `estimated_lod1` hic kullanilacak mi, yoksa tum ucus sonrasi binalar
+   `footprint_only` mi kalacak? (Konut etkisi A'da **sifir** — iki okul;
+   B\A'da 92 konut VBO, ama B raporlanmaz, yalnizca golge/ruzgar baglami.)
+2. Kullanilacaksa: secenek 4 (BAG'den turetilmis) mi, 5 (gorsel) mi, ikisi
+   capraz kontrol olarak mi?
+3. AHN6 Delft'e geldiginde yeniden calistirma planlansin mi?
+
+**Onerim YOK** (talimat geregi). Tek gozlem: A'da konut etkisi sifir oldugu
+icin bu karar A'nin **dogrulama** sonuclarini etkilemez; yalnizca B'deki
+golge/ruzgar **baglam** geometrisini etkiler.
+
+---
+
+## [2026-09-22] [5] P-015 — WGS84 donusumu icin bagimsiz referans noktasi
+
+**Durum:** ACIK · **Engelledigi is:** Asama 5 (CesiumJS/3D Tiles WGS84 ciktisi)
+
+M-003 tekrarinin ardindan eklenen `assert_proj_works()` oz-testi, PROJ
+veritabaninin **yuklenmedigi** durumu ve **kaba** datum hatalarini yakalar.
+**Metre mertebesindeki sessiz datum farkini YAKALAMAZ** (geri donus tutarli
+kalir, Delft kutusu genistir).
+
+**Soru:** Bu sessiz varyant icin bagimsiz bir referans noktasi (RD ve ETRS89/
+WGS84 koordinatlari resmi olarak yayinlanmis bir nokta, orn. bir RD
+kenmerk / NSGI referansi) test'e eklensin mi? Hangi kaynaktan?
+
+Su an WGS84 ciktisi yalnizca gorsel kontrol icin `lat/lon` alanlarinda
+(gezinme amacli); metre hatasi orada sonucu etkilemez.
+
+---
+
+## [2026-09-22] [1] P-016 — Kriter 1-B icin 3DBAG referans surumu
+
+**Durum:** ACIK · **Engelledigi is:** Kriter 1-B (3DBAG ile cati yuksekligi RMSE)
+
+**Baglam (D-023):** Indirdigimiz 3DBAG verisinin surumu BELIRSIZ: API etiketi
+`v2023.10.08`, icerik parmak izi yalnizca **2025.09.03** ile tutarli. API
+"experimental/beta"dir ve kendi surumunu yanlis etiketliyor olabilir. Indirme
+sayfasi belirli surumleri sunuyor (2023.10.08'den itibaren).
+
+**Secenekler:**
+- (a) Mevcut API verisini kullan, surumu "belirsiz, parmak izi 2025.09.03"
+  diye raporla
+- (b) Indirme sayfasindan **acikca adlandirilmis** bir surumu (orn.
+  2025.09.03) B bbox'i icin indir ve referansi ona sabitle — tekrarlanabilirlik
+  icin en guclusu
+- (c) Iki surumu da indir, kriter 1-B'yi ikisine karsi raporla
+
+**Neden onemli:** Kriter 1-B bir **tutarlilik kontrolu**dur; referansin kimligi
+belirsizse sonuc tekrarlanamaz (Bolum 8 "ayni girdiyle iki calistirma ayni
+sonucu vermek zorundadir"). API ayrica yarin baska bir surum sunabilir.
+
+**Onerim:** (b) — ama bu yeni bir indirme ve bir referans secimidir, Bolum
+12.11 geregi kullanici karari. Ayrica 3DBAG'in 377 binada neden AHN5'i
+yetersiz buldugu (D-021, geri cekilen aciklama) belki adlandirilmis surumun
+metadata'sindan okunabilir.

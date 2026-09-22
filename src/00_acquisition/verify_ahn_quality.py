@@ -499,7 +499,9 @@ def _report(logger, run_id, gate, counts, building_counts, cell, bminx, bminy,
         f"| `{panden[i]['properties']['identificatie']}` | {areas[i]:.1f} | "
         f"{int(building_points[i]):,} | {int(building_points_cls6[i]):,} | "
         f"**{cls6_ratio[i]:.3f}** | {cls2_ratio[i]:.3f} | "
-        f"{(panden[i]['properties'].get('gebruiksdoel') or '(islev yok)')[:34]} |"
+        # KESME YOK (M-010 tekrari 2026-09-22): kesilen gebruiksdoel metni
+        # 260 konutlu bir binayi "bijeenkomst, overige" gosterdi.
+        f"{panden[i]['properties'].get('gebruiksdoel') or '(islev yok)'} |"
         for i in lowest
     )
 

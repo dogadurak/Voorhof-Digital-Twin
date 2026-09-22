@@ -38,6 +38,41 @@ from src.common.logging_setup import setup_logging
 from src.common.meta import write_meta
 
 API = "https://api.3dbag.nl/collections/pand/items"
+
+# --- SURUM PARMAK IZI (MISTAKES.md M-013, Karar D-023) ---
+# API'nin `version.collection` etiketi bir BEYANDIR, dogrulama degil: 2026-09-22'de
+# etiket "v2023.10.08" derken icerik 2025.09.03 ile tutarliydi. Surum, oznitelik
+# kumesinden BAGIMSIZ olarak cikarilir. Kaynak (birincil, okundu 2026-09-22):
+# https://docs.3dbag.nl/en/overview/release_notes/
+# Her surum icin: bu surumde VAR olmasi gereken ve OLMAMASI gereken isaret oznitelikler.
+_ADDED_2024_12 = {"b3_mutatie_ahn4_ahn5", "b3_puntdichtheid_ahn5", "b3_nodata_fractie_ahn5",
+                  "b3_nodata_radius_ahn5", "b3_extrusie", "b3_pw_onvoldoende"}
+_RELEASE_MARKERS = {
+    "2023.10.08": {"present": {"b3_reconstructie_onvolledig"},
+                   "absent": {"b3_bouwlagen", "b3_succes"} | _ADDED_2024_12},
+    "2024.02.28": {"present": {"b3_bouwlagen", "b3_reconstructie_onvolledig"},
+                   "absent": {"b3_succes"} | _ADDED_2024_12},
+    "2024.04.20": {"present": {"b3_bouwlagen", "b3_reconstructie_onvolledig"},
+                   "absent": {"b3_succes"} | _ADDED_2024_12},
+    "2024.12.16": {"present": {"b3_bouwlagen", "b3_succes"} | _ADDED_2024_12,
+                   "absent": {"b3_reconstructie_onvolledig"}},
+    "2025.09.03": {"present": {"b3_bouwlagen"} | _ADDED_2024_12,
+                   "absent": {"b3_reconstructie_onvolledig", "b3_succes"}},
+}
+
+
+def _version_fingerprint(attribute_names: set[str]) -> list[str]:
+    """Oznitelik kumesiyle TUTARLI 3DBAG surumlerini dondurur.
+
+    Girdi : attribute_names — indirilen Building nesnelerindeki tum oznitelik adlari
+    Cikti : list[str] — tutarli surumler (bos liste = bilinen hicbir surume uymuyor)
+    Birim : yok
+
+    Not: 2024.02.28 ve 2024.04.20 (yama surumu) oznitelik duzeyinde AYIRT
+    EDILEMEZ; ikisi birden donerse bu bir belirsizliktir, hata degildir.
+    """
+    return [v for v, m in _RELEASE_MARKERS.items()
+            if m["present"] <= attribute_names and not (m["absent"] & attribute_names)]
 SAFETY_MARGIN_M = 50.0      # Karar D-010
 PAGE_LIMIT = 1000
 TIMEOUT_S = 180
@@ -129,6 +164,17 @@ def main() -> int:
     # --- M-005 otomatiklestirmesi: oznitelik listesi kayda gecer ---
     logger.info("Oznitelikler | 3dbag:pand | %d alan", len(attribute_names))
 
+    # --- M-013: API etiketi ile icerik parmak izi KARSILASTIRILIR ---
+    fp = _version_fingerprint(attribute_names)
+    label = str(collection_version)
+    if len(fp) == 1 and fp[0] in label:
+        version_record = f"{fp[0]} (API etiketi ve icerik parmak izi TUTARLI)"
+        logger.info("Surum | etiket %s | parmak izi %s | TUTARLI", label, fp)
+    else:
+        version_record = (f"BELIRSIZ - API etiketi '{label}', icerik parmak izi {fp or 'bilinen surume uymuyor'}"
+                          " (M-013: etiket bir beyandir, dogrulama degil)")
+        logger.warning("Surum | etiket %s | parmak izi %s | CELISKI veya BELIRSIZLIK", label, fp)
+
     # --- ITEM 3: AHN kaynagi dagilimi ---
     logger.info("=== 3DBAG'in kullandigi nokta bulutu kaynagi ===")
     for source, count in pw_bron.most_common():
@@ -179,7 +225,7 @@ def main() -> int:
         path=jsonl_path, run_id=run_id,
         source_url=API,
         provider="TU Delft 3D geoinformation",
-        version=f"collection {collection_version}",
+        version=version_record,
         query=f"bbox={bbox_str} (EPSG:28992) = B + {SAFETY_MARGIN_M:.0f} m; sayfalama limit={PAGE_LIMIT}",
         crs=crs_z,
         time_reference=f"b3_pw_datum dagilimi: {dict(pw_datum)}",

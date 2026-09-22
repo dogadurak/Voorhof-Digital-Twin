@@ -7,7 +7,8 @@ aşama:             0.3 — AHN5 ve 3DBAG veri edinimi + girdi kalite kapısı
 git_commit:        fbb2cd0 (+ bu rapor commit'i)
 çalıştırma (UTC):  2026-09-21
 veri dönemi:       geometri AHN5 2023-02-08/14 · öznitelik BAG 2026-09 ·
-                   3DBAG v2023.10.08 (BAG anlık görüntüsü ~2023)   (D-020)
+                   3DBAG sürümü BELİRSİZ: API etiketi v2023.10.08, içerik
+                   parmak izi 2025.09.03 ile tutarlı (D-023)        (D-020)
 ```
 
 > **Bu rapor elle yazılmıştır** (D-005: Aşama 0 raporları elle, 0.5'ten sonra
@@ -128,3 +129,42 @@ girdi kalite kapısı çalıştı.
 **Aşama 1'e geçiş için kapatılması gerekenler:** P-012 (görsel doğrulama),
 lineage tanımı, `TODO_0.3` attribution alanları. **P-013 kapandı** (D-019).
 0.3b (C aday hesabı) Aşama 1'i engellemez; Aşama 4'ü engeller.
+
+
+---
+
+## 8. GÜNCELLEME — 2026-09-22 (rapor yazıldıktan sonra yapılanlar ve bulunanlar)
+
+Bu bölüm §3'teki tabloyu **geçersiz kılar**; orijinal tablo tarihsel kayıt
+olarak bırakıldı.
+
+| İş | 2026-09-21 durumu | 2026-09-22 durumu |
+|---|---|---|
+| Uçuş sonrası tespitinin A+B'ye yayılması | BAŞLAMADI | **YAPILDI** — mühür `d4cf95b` → ölçüm `227d717` (D-022). 30 aday, 60 şüpheli, 50 olası yeniden yapım |
+| Lineage özniteliği | BAŞLAMADI | **TANIMLANDI ve mühürlendi** (D-022) |
+| A / B\A / konut kırılımı | — | **YAPILDI** — A'nın konut stokunun **%5,39'u (412 konut VBO)** belirsiz geometride; tamamı **3 binada**, hepsi "olası yeniden yapım" |
+| P-014 yükseklik kaynağı | BAŞLAMADI | **ARAŞTIRILDI, karar yok** — AHN6 Delft için yok (en yakın 2025 şeridi 66 km); 3DBAG kaynak değil |
+| Görsel kontroller | — | **HAZIR, kullanıcıda** — `docs/visual_check_zero_class6.md` (13 bina), `docs/visual_check_a_residential.md` (3 bina) |
+
+### 2026-09-22'de bulunan ve düzeltilen hatalar
+
+| Kayıt | Ne |
+|---|---|
+| **M-003 TEKRARI** | PROJ düzeltmesi import sırasına bağlıydı; `laspy` pyproj'u önce yüklediği için 0.3'ün **her LAZ scriptinde etkisizdi**. Geçmiş sonuçlar etkilenmedi (hiçbir script CRS dönüşümü yapmamıştı — tasarım değil şans). Sıradan bağımsız düzeltme + her çalıştırmada öz-test |
+| **M-010 TEKRARI** | Kesilen (`[:40]`) bir metin, **260 konutlu** bir binayı raporda konut dışı gösterdi |
+| **M-012** | Yukarıdaki PROJ uyarısını her komutta `grep -v` ile **ben sildim** |
+| **M-013** | 3DBAG sürümünü API'nin kendi etiketinden okuyup "doğrulandı" yazdım; içerik 2025.09.03 ile tutarlı. Ayrıca `data/raw` altında bir dosyayı **elle** düzenlemiştim — geri alındı |
+| **M-008 TEKRARI** | P-014'e 5 dosyada atıf yapıldı, kayıt hiç açılmamıştı. `src/qa/check_refs.py` yazıldı |
+
+### §1 sonucuna etkisi
+
+**Yok.** Kriter 0-E ve 0-F **PASS** olarak kalır: ölçümler AHN5 LAZ üzerinden,
+yerel RD koordinatlarında yapıldı; ne PROJ hatası ne 3DBAG sürüm belirsizliği
+bu ölçümlere girmiyor.
+
+### §5 sınırlamalarına ekler
+
+7. **3DBAG sürümü belirsiz** — API etiketi `v2023.10.08`, içerik 2025.09.03 (D-023, P-016)
+8. **Aynı ayakizi üzerinde yeniden yapım ve inşaat halindeki binalar** (S2/S3)
+   yalnızca görsel kontrolle ayırt edilebiliyor (D-022, `docs/visual_check_a_residential.md`)
+9. **PROJ öz-testi sessiz datum farkını yakalamaz** (P-015)
