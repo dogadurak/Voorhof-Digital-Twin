@@ -999,5 +999,9 @@ boylece amac cumlesi her calistirmada olculur. Tam otomatik bir "amac
 saglandi mi" testi yazilamaz cunku amac metindir — bu yuzden kural
 `docs/manual_steps.md` kontrol listesine de eklenir.
 
-**Durum:** ACIK — P-020 cevaplanana kadar (kural degisikligi kullanici
-karariyla yeni bir D kaydi olarak kapanacak veya muhurlu kural korunacak).
+**Durum:** KAPALI (2026-09-22). P-020 kullanici tarafindan cevaplandi ->
+**D-031**: yukseklik sinifi tabakalamasi gecerli kural oldu, desil kurali
+`SUPERSEDED_BY_P-020` olarak isaretlendi ve silinmedi. Turetilen kural
+AGENTS.md Bolum 14.6'ya ve Bolum 10 kontrol listesine, elle kontrol
+`docs/manual_steps.md` MS-1'e eklendi; yayilim olcumu scripte gomuldu
+("AMAC OLCUMU" logu).

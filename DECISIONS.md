@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-031**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-032**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1614,3 +1614,53 @@ once verilecektir.
 onaylanirsa onaylansin sayim verisi hazir olur. Iki orneklemi de sayip
 "hangisi daha iyi sonuc verdi" diye secmek YASAKTIR (Bolum 12.2) — bu yuzden
 P-020 sayimdan degil, **hesaptan** once cevaplanmalidir.
+
+---
+
+## D-031 · [2026-09-22] · P-020 kapandi: yukseklik sinifi tabakalamasi + tip bazli kirilim
+
+**Karar (kullanici):** Kalibrasyon orneklemi **yukseklik araligina gore**
+tabakalanir (h 1 m'ye yuvarlanip siniflara bolunur, her siniftan 1 bina).
+Muhurlu **desil** kurali **silinmez**, `SUPERSEDED_BY_P-020` olarak
+isaretlenir; ciktisi da
+`reports/storey_height_calibration_superseded_decile.csv` olarak korunur.
+
+**Kullanicinin gerekcesi (aynen):** kalibrasyon asil **yuksek binalar** icin
+(3 konut blogu, okullar) kullanilacak; yalnizca iki katlilardan turetilmis
+bir kat yuksekligi **tam ihtiyac duyulan yerde** yanlis olur.
+
+**Neden Bolum 12.2 ihlali degil:** **hicbir sayim yapilmadi.** Degisiklik bir
+sonuca bakilarak degil, kuralin kendi amac cumlesini saglamadigi olculerek
+yapildi (M-016) ve kullanici onayiyla kapandi. Eski kural da eski cikti da
+duruyor.
+
+**Secilen orneklem (h, m):** 3,2 · 5,8 · 5,8 · 8,0 · 8,5 · 10,6 · 14,3 ·
+25,8 · 34,7 · 36,6. Eski (superseded) orneklem: 3,2 · 5,8 · 5,8 · 5,9 · 5,9 ·
+6,0 · 8,0 · 8,5 · 8,5 · 36,8.
+
+### Tip bazli kirilim (ayni kararin ikinci yarisi)
+
+**Kullanici talimati:** "kalibrasyon sonucunda kat yuksekliginin bina tipine
+gore degisip degismedigini de raporla — alcak ve yuksek binalarda farkliysa
+tek ortalama yerine tip bazinda deger kullaniriz."
+
+Bu bir **karar kurali** oldugu icin **sayimdan once** muhurlendi
+(`storey_height_calibration.type_breakdown`):
+
+- **Gruplar:** `laag` = kat_sayisi <= 4 (sira ev / portiekflat) ·
+  `hoog` = kat_sayisi >= 5 (galerijflat / hoogbouw).
+- **Kesim noktasinin gerekcesi:** yapisal tipoloji — NL konut stokunda 5 kat
+  ve uzeri bloklar tipik olarak asansorlu galerij/hoogbouw tipine gecer.
+  **Bu bir tipoloji gerekcesidir, dogrulanmis bir yonetmelik esigi DEGILDIR**
+  ve raporda oyle yazilir.
+- **Her zaman raporlanir:** her grup icin n / mean / sd, gruplar arasi fark
+  ve havuzun tamami icin tek ortalama.
+- **Ayrim ne zaman kullanilir:** her iki grup da `n >= 3` VE
+  `|mean_hoog - mean_laag| > sd_pooled` ise tip bazli deger; aksi halde tek
+  ortalama ve fark **sinirlama** olarak raporlanir.
+- **Neden sabit esik degil:** sacilmanin buyuklugu henuz bilinmiyor; "0,2
+  m'den buyukse" gibi bir sayi bu noktada keyfi olurdu. Kriter olcekten
+  bagimsiz secildi: gruplar arasi fark, binalar arasi dogal sacilmadan
+  buyukse ayrim gercektir.
+
+**Onay:** Kullanici, 2026-09-22 (P-020).

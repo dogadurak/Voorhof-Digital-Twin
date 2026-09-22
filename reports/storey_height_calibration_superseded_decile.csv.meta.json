@@ -1,0 +1,44 @@
+{
+  "run_id": "RUN-2026-09-22-027",
+  "git_commit": "c2e28e1-dirty",
+  "created_utc": "2026-09-22T20:33:05Z",
+  "output": {
+    "path": "reports/storey_height_calibration_superseded_decile.csv",
+    "sha256": "918afff86e981aa7aa92e0d56dbc5d61b21f607c42d8f8af3098b743b0e32d02",
+    "size_bytes": 1313
+  },
+  "inputs": [],
+  "parameters": {
+    "status": "SUPERSEDED_BY_P-020",
+    "picked": [
+      "0503100000023497",
+      "0503100000018892",
+      "0503100000019104",
+      "0503100000018905",
+      "0503100000018987",
+      "0503100000019105",
+      "0503100000026852",
+      "0503100000001547",
+      "0503100000010265",
+      "0503100000019296"
+    ],
+    "h_m": [
+      3.2,
+      5.8,
+      5.8,
+      5.9,
+      5.9,
+      6.0,
+      8.0,
+      8.5,
+      8.5,
+      36.8
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": 28992,
+  "notes": "Eski desil kurali. D-031 ile gecersiz kilindi ama SILINMEDI (kullanici talimati). Hicbir hesaba girmez."
+}

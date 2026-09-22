@@ -1705,7 +1705,33 @@ storey_height_calibration:
       C7_anlamli_yukseklik:
         rule: "h_measured_m >= 3.0"
         why: "3 m altindaki bir olcum bir bina degil, bir ek yapidir; kat yuksekligi turetilemez."
+    # --- GECERLI KURAL (D-031, P-020 ile onaylandi 2026-09-22) ---
     stratification:
+      decision_ref: D-031
+      rule: >
+        Uygun binalar h_measured_m 1 m'ye YUVARLANARAK yukseklik SINIFLARINA
+        bolunur; her siniftan 1 bina secilir. N_PICK'e ulasilamazsa EN
+        KALABALIK sinifin ikinci, ucuncu ... en iyisi eklenir.
+      pick_within_class: "building_class_ratio EN YUKSEK olan bina (esitlikte bag_id kucuk olan)"
+      purpose_claim: >
+        SINANABILIR IDDIA (M-016): secilen 10 binanin yukseklik yayilimi,
+        uygun havuzun yukseklik ARALIGINI kapsar; 10 binadan en fazla 3'u
+        ayni 0,5 m bandina duser.
+      purpose_check: >
+        Script her calistirmada yayilimi olcer ve loglar ("AMAC OLCUMU").
+        Iddia tutmuyorsa kural DEGISTIRILMEZ; sonuc oldugu gibi raporlanir ve
+        alternatif ONERI olarak ayri dosyaya yazilir (M-016 kurali).
+      why_not_random: >
+        Rastgele secim burada bir sey KAZANDIRMAZ: amac temsili bir orneklem
+        degil, farkli kat sayilarinda GUVENILIR OLCULEN binalar bulmaktir.
+        Kural tamamen deterministiktir; seed yalnizca esitlik bozma ve olasi
+        yeniden calistirma icin .meta.json'a yazilir.
+
+    # --- ESKI KURAL — SUPERSEDED BY P-020, SILINMEDI (kullanici talimati) ---
+    stratification_superseded_p020:
+      status: SUPERSEDED_BY_P-020
+      superseded_at: "2026-09-22"
+      output_kept: reports/storey_height_calibration_superseded_decile.csv
       rule: >
         Uygun binalar h_measured_m'e gore siralanir ve 10 DESIL'e bolunur;
         her desilden 1 bina secilir. Boylece orneklem farkli YUKSEKLIKLERI
@@ -1713,15 +1739,64 @@ storey_height_calibration:
       pick_within_decile: "building_class_ratio EN YUKSEK olan bina (esitlikte bag_id kucuk olan)"
       top_decile_exception:
         rule: "10. desilde h_measured_m EN BUYUK olan bina secilir"
-        why: >
-          Kullanici "farkli kat sayisinda 10 bina" istedi. Yuksek ucun
-          temsil edildigini garanti eden tek kural budur; oran kuralina
-          birakilirsa en yuksek blok orneklem disinda kalabilir.
-      why_not_random: >
-        Rastgele secim burada bir sey KAZANDIRMAZ: amac temsili bir orneklem
-        degil, farkli kat sayilarinda GUVENILIR OLCULEN binalar bulmaktir.
-        Kural tamamen deterministiktir; seed yalnizca esitlik bozma ve olasi
-        yeniden calistirma icin .meta.json'a yazilir.
+      why_superseded: >
+        Kural kendi amac cumlesini saglamadi (M-016): desil NUFUSU boler,
+        ARALIGI degil. Uygun havuzun %66'si 5,7-6,0 m bandinda oldugu icin
+        secilen 10 binanin 6'si ayni yukseklikte cikti. Kullanicinin
+        gerekcesi: kalibrasyon ASIL YUKSEK binalar icin (3 konut blogu,
+        okullar) kullanilacak; yalnizca iki katlilardan turetilmis bir kat
+        yuksekligi tam ihtiyac duyulan yerde yanlis olur.
+      no_12_2_violation: >
+        Degisiklik HICBIR SAYIM YAPILMADAN once onaylandi (kullanici,
+        2026-09-22). Bir sonuca bakilarak secilmedi; bir yontem hatasi
+        gorulerek duzeltildi. Eski kural ve eski cikti SILINMEDI.
+
+    # --- TIP BAZLI KIRILIM (kullanici talimati 2026-09-22, SAYIMDAN ONCE) ---
+    type_breakdown:
+      decision_ref: D-031
+      status: SEALED_BEFORE_OBSERVATION
+      question: >
+        Kat yuksekligi bina tipine gore degisiyor mu? Degisiyorsa tek ortalama
+        yerine TIP BAZLI deger kullanilir.
+      groups:
+        laag:
+          rule: "kat_sayisi <= 4"
+          typology: "sira ev / portiekflat"
+        hoog:
+          rule: "kat_sayisi >= 5"
+          typology: "galerijflat / hoogbouw"
+      cut_rationale: >
+        Kesim noktasi SAYIMDAN ONCE secildi ve bir dagilima bakilarak
+        belirlenmedi. Gerekce yapisal tipolojidir: NL konut stokunda 5 kat ve
+        uzeri bloklar tipik olarak asansorlu galerij/hoogbouw tipine gecer;
+        dortten asagisi sira ev ve portiekflat'tir. Bu iki tipin kat
+        yuksekligi farkli insaat sistemlerinden gelir.
+        DURUSTLUK NOTU: bu bir TIPOLOJI gerekcesidir, dogrulanmis bir
+        yonetmelik esigi DEGILDIR. Kesimin kendisi bir varsayimdir ve
+        raporda oyle yazilir.
+      reported_always:
+        - "her grup icin n, mean, sd (grup bosken bile satir yazilir)"
+        - "gruplar arasi fark (mean_hoog - mean_laag), m"
+        - "havuzun tamami icin tek ortalama (karsilastirma icin)"
+      decision_rule:
+        use_per_type_if: >
+          HER IKI grup da n >= 3 VE |mean_hoog - mean_laag| > sd_pooled
+        else: >
+          Tek ortalama (storey_height_m) kullanilir ve gruplar arasi fark
+          SINIRLAMA olarak raporlanir.
+        sd_pooled: "std(tum kat_yuksekligi_i, ddof=1)"
+        why_this_criterion: >
+          Kriter olcekten bagimsizdir: gruplar arasi fark, binalar arasi
+          dogal sacilmadan BUYUK ise ayrim gercektir; kucukse ayrim
+          gurultudur. Sabit bir esik (ornegin "0,2 m'den buyukse") burada
+          keyfi olurdu cunku sacilmanin buyuklugu henuz bilinmiyor.
+        n_min_why: >
+          n >= 3 sarti olmazsa tek binalik bir "grup" kendi basina bir tip
+          degeri uretirdi; o deger bir ortalama degil tek bir olcumdur.
+      applied_to: >
+        Tip bazli deger kullanilirsa, her hedef binaya KENDI kat sayisina
+        gore ait oldugu grubun degeri uygulanir; height_uncertainty_m o
+        grubun sd'si ile hesaplanir.
 
   # --- 3) Kat yuksekligi NASIL hesaplanir (kullanicinin verdigi formul) ---
   formula:
@@ -1767,4 +1842,5 @@ storey_height_calibration:
       storey_height_m arasindaki fark, sapmanin buyuklugudur. Kullanici
       onaylamadan karar kuralina DONUSTURULEMEZ (Bolum 12.11).
   output_csv: reports/storey_height_calibration.csv
+  output_csv_superseded: reports/storey_height_calibration_superseded_decile.csv
   field_list: docs/field_check_list.md

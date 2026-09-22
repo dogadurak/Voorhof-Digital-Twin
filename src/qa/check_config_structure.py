@@ -59,7 +59,13 @@ EXPECTED_PATHS: list[tuple[str, str]] = [
     ("building_lineage.storey_height_evidence.regulation.value_m", "Bbl alt siniri"),
     ("storey_counting_rule.rules", "kat sayim kurali (D-030)"),
     ("storey_counting_rule.status", "kat sayim kurali muhur durumu"),
+    ("storey_counting_rule.blind_counting.rule", "korlemesine sayim (D-030 EK 1)"),
     ("storey_height_calibration.selection", "kalibrasyon secim kurali"),
+    ("storey_height_calibration.selection.stratification", "tabakalama (D-031)"),
+    ("storey_height_calibration.selection.stratification_superseded_p020.status",
+     "eski desil kurali — SILINMEMELI"),
+    ("storey_height_calibration.selection.type_breakdown.decision_rule",
+     "tip bazli kirilim karar kurali (D-031)"),
     ("storey_height_calibration.formula", "kat yuksekligi formulu"),
 ]
 

@@ -27,7 +27,7 @@
 | ~~P-017~~ | 1 | "karar veremedim" durumu | — | **KAPANDI -> D-028** (ihtiyatli dislama) |
 | ~~P-018~~ | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar | — | **KAPANDI -> D-029** (estimated_lod1) |
 | ~~P-019~~ | 1 | Kat yuksekligi degeri ve belirsizligi | — | **KAPANDI -> D-030** (yerel kalibrasyon + sayim kurali) |
-| P-020 | 1 | Kalibrasyon orneklemi: muhurlu DESIL mi, onerilen YUKSEKLIK SINIFI mi | Kat yuksekligi hesabi | **Hesaptan ONCE** (sayim devam edebilir) |
+| ~~P-020~~ | 1 | Kalibrasyon orneklemi | — | **KAPANDI -> D-031** (yukseklik sinifi; desil superseded) |
 
 ---
 
@@ -827,3 +827,22 @@ iki orneklemin BIRLESIMINI (15 bina) iceriyor.
 **Kritik zamanlama:** Karar, hesaptan ONCE verilmelidir. Iki orneklemi de
 hesaplayip "hangisi daha iyi durdu" diye secmek, esigi sonuca gore secmenin
 ta kendisidir (Bolum 12.2).
+
+
+---
+
+## [2026-09-22] P-020 KAPANDI -> D-031
+
+**Karar:** yukseklik sinifi tabakalamasi. Muhurlu desil kurali
+`SUPERSEDED_BY_P-020` olarak isaretlendi, **silinmedi**; ciktisi
+`reports/storey_height_calibration_superseded_decile.csv` olarak duruyor.
+
+**Ek:** kat yuksekliginin bina tipine gore degisip degismedigi de
+raporlanacak. Karar kurali (grup tanimi, n >= 3 sarti, sd_pooled kriteri)
+**sayimdan once** muhurlendi — D-031.
+
+**Not:** Kullanicinin mesajindaki secenek harfleri ajanin yazdigiyla ters
+dusuyordu (ajanda (a) = yukseklik sinifi onerisi). Gerekce metni niyeti
+tereddutsuz gosterdigi icin ("yalnizca 2 katlilardan turetilmis bir kat
+yuksekligi ... yanlis olur") yukseklik sinifi secenegi uygulandi ve bu fark
+burada kayda gecirildi.

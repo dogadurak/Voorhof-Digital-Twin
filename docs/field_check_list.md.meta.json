@@ -1,11 +1,11 @@
 {
-  "run_id": "RUN-2026-09-22-024",
-  "git_commit": "f2667c1-dirty",
-  "created_utc": "2026-09-22T20:14:16Z",
+  "run_id": "RUN-2026-09-22-028",
+  "git_commit": "c2e28e1-dirty",
+  "created_utc": "2026-09-22T20:34:01Z",
   "output": {
     "path": "docs/field_check_list.md",
-    "sha256": "6b2777722b6fe3b6dcaff3f1616c1259b959098bf0508ca33a018f2e6f87c6c2",
-    "size_bytes": 17755
+    "sha256": "2c0230c06db79ecaaf2f54a7835ecaa21b00a1f4535d4f003547441b9a3796d3",
+    "size_bytes": 17952
   },
   "inputs": [],
   "parameters": {
@@ -15,7 +15,7 @@
       "G2": 3,
       "G3": 6,
       "G4": 10,
-      "G4p": 10
+      "G4s": 10
     },
     "large_post_flight": 6,
     "sources": [

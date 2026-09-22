@@ -50,8 +50,8 @@ GROUPS = {
     "G1": "sifir sinif-6 orneklemi",
     "G2": "belirsiz konut blogu",
     "G3": "buyuk ucus sonrasi",
-    "G4": "kalibrasyon (muhurlu)",
-    "G4p": "kalibrasyon (ONERI P-020)",
+    "G4": "kalibrasyon",
+    "G4s": "kalibrasyon (ATLA - superseded)",
 }
 
 
@@ -117,16 +117,17 @@ def main() -> int:
             add(r["bag_id"], "G3", alan_ab=r["alan"])
             n_large += 1
     for r in _read(rep / "storey_height_calibration.csv"):
-        add(r["bag_id"], "G4", desil=r["desil"])
-    prop_path = rep / "storey_height_calibration_proposal_p020.csv"
-    for r in _read(prop_path):
-        add(r["bag_id"], "G4p", sinif=r["yukseklik_sinifi_m"])
+        add(r["bag_id"], "G4", sinif=r["yukseklik_sinifi_m"])
+    # D-031 ile gecersiz kilinan desil orneklemi: SILINMEZ ama ATLANIR.
+    # Listede kalir cunku kullanici bir kismini zaten saymis olabilir.
+    for r in _read(rep / "storey_height_calibration_superseded_decile.csv"):
+        add(r["bag_id"], "G4s", desil=r["desil"])
 
-    logger.info("Gruplar | G1=%d G2=%d G3=%d G4=%d G4p=%d | benzersiz bina=%d",
+    logger.info("Gruplar | G1=%d G2=%d G3=%d G4=%d G4s(atla)=%d | benzersiz bina=%d",
                 sum("G1" in r["groups"] for r in rows.values()),
                 sum("G2" in r["groups"] for r in rows.values()), n_large,
                 sum("G4" in r["groups"] for r in rows.values()),
-                sum("G4p" in r["groups"] for r in rows.values()), len(rows))
+                sum("G4s" in r["groups"] for r in rows.values()), len(rows))
     if n_large != 6:
         logger.warning("Buyuk ucus sonrasi yapi sayisi %d, D-029'da 6 yaziyor", n_large)
 
@@ -143,7 +144,7 @@ def main() -> int:
                  gebruiksdoel=pr.get("gebruiksdoel") or "—",
                  lat=lat, lon=lon, x=c.x, y=c.y)
 
-    order = {"G2": 0, "G3": 1, "G4": 2, "G4p": 2, "G1": 3}
+    order = {"G2": 0, "G3": 1, "G4": 2, "G1": 3, "G4s": 4}
     ordered = sorted(rows.values(),
                      key=lambda r: (min(order[g] for g in r["groups"]), -r["area"]))
 
@@ -158,12 +159,10 @@ def main() -> int:
     for i, r in enumerate(ordered, 1):
         grp = " + ".join(GROUPS[g].split(" (")[0] if g.startswith("G4") else GROUPS[g]
                          for g in r["groups"])
-        if "G4" in r["groups"] and "G4p" in r["groups"]:
-            grp = "kalibrasyon (ikisinde de)"
-        elif "G4" in r["groups"]:
-            grp = "kalibrasyon (muhurlu)"
-        elif "G4p" in r["groups"]:
-            grp = "kalibrasyon (ONERI)"
+        if "G4" in r["groups"]:
+            grp = "kalibrasyon"
+        elif "G4s" in r["groups"]:
+            grp = "**ATLA** (superseded)"
         need_obs = "G1" in r["groups"] or "G2" in r["groups"]
         need_2023 = need_obs or "G3" in r["groups"]
         body.append(
@@ -198,7 +197,8 @@ def main() -> int:
 |---|---|---|---|
 | **belirsiz konut blogu** | A'daki 3 buyuk konut blogu (412 konut VBO) | {sum("G2" in r["groups"] for r in rows.values())} | 2023'te bu bina mi vardi? **kat sayisi** |
 | **buyuk ucus sonrasi** | Ayakizi >= {LARGE_M2:.0f} m2, ucustan sonra yapilmis (D-029) | {n_large} | 2023'te var miydi? **kat sayisi** |
-| **kalibrasyon** | Kat yuksekligini olcmek icin (D-030) | {sum("G4" in r["groups"] or "G4p" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
+| **kalibrasyon** | Kat yuksekligini olcmek icin (D-030/D-031) | {sum("G4" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
+| **ATLA** | Gecersiz kilinan eski orneklem (D-031) — sayma | {sum("G4s" in r["groups"] and "G4" not in r["groups"] for r in rows.values())} | — |
 | **sifir sinif-6 orneklemi** | AHN5'te cati noktasi olmayan yapilar (D-019) | {sum("G1" in r["groups"] for r in rows.values())} | bu ne? 2023'te var miydi? |
 
 Toplam **{len(rows)} bina**. Ayni bina birden fazla gruptaysa **tek satir**
@@ -235,34 +235,35 @@ Yukseklikler `reports/building_heights_ahn5.csv` icinde duruyor ve sayimdan
 
 ---
 
-## ⚠️ KARAR GEREKIYOR (P-020) — saymaya baslamadan once
+## P-020 KARARA BAGLANDI (D-031) — orneklem yukseklik sinifina gore
 
-Kalibrasyon orneklemi icin muhurledigim **desil** kurali kendi amacini
-tutturamadi. Kural "farkli yukseklikleri kapsasin" diyordu ama desiller
-**nufusu** izler, **araligi** degil: uygun havuzun (514 bina) **%66'si**
-5,7-6,0 m bandinda (ayni tip sira ev). Sonuc: muhurlu 10 binanin **6'si ayni
-yukseklikte**.
+Ilk muhurledigim **desil** kurali kendi amacini tutturamadi (M-016): desiller
+**nufusu** izler, **araligi** degil. Uygun havuzun (514 bina) **%66'si**
+5,7-6,0 m bandinda oldugu icin secilen 10 binanin 6'si ayni yukseklikteydi.
 
-Havuzda aslinda zengin bir dagilim var (olculdu):
+**Kullanici karari (2026-09-22):** yukseklik araligina gore tabakalama.
+Gerekce: kalibrasyon asil **yuksek binalar** icin (3 konut blogu, okullar)
+kullanilacak; yalnizca iki katlilardan turetilmis bir kat yuksekligi tam
+ihtiyac duyulan yerde yanlis olur.
 
-| h (yuvarlanmis) | 3 m | 6 m | 8 m | 9 m | 11 m | 14 m | 26 m | 35 m | 37 m |
+Havuzun olculen dagilimi ve gecerli orneklem:
+
+| h sinifi | 3 m | 6 m | 8 m | 9 m | 11 m | 14 m | 26 m | 35 m | 37 m |
 |---|---|---|---|---|---|---|---|---|---|
-| bina | 3 | 337 | 97 | 46 | 5 | 4 | 9 | 3 | 10 |
+| havuzdaki bina | 3 | 337 | 97 | 46 | 5 | 4 | 9 | 3 | 10 |
+| orneklemde | 1 | 2 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
 
-**Kurali sonucu gordukten sonra degistirmedim** (Bolum 12.2). Muhurlu cikti
-oldugu gibi duruyor; alternatifi **ONERI** olarak ayri dosyaya yazdim
-(`reports/storey_height_calibration_proposal_p020.csv`): her yukseklik
-sinifindan 1 bina.
+Eski desil orneklemi **silinmedi**, `SUPERSEDED` olarak duruyor
+(`reports/storey_height_calibration_superseded_decile.csv`). Yalnizca eski
+orneklemde olan binalar bu listede **ATLA** etiketiyle en sonda; sayma.
 
-**Bu listede ikisinin BIRLESIMI var.** Ne yapmak istedigini soyle:
+## Ek: kat yuksekligi bina tipine gore degisiyor mu? (D-031)
 
-- **(a)** Oneriyi onayla -> kural yeni bir D kaydi ile degisir, ornekleme yukseklik
-  siniflari girer. **Onerim bu.**
-- **(b)** Muhurlu desil kurali kalsin.
-
-**Karar ORTALAMA HESAPLANMADAN once verilmelidir.** Iki orneklemi de sayip
-sonra "hangisi daha iyi sonuc verdi" diye secmek, esigi sonuca gore secmenin
-ta kendisi olur (Bolum 12.2).
+Sonuc **iki grupta ayri** raporlanacak: `laag` (kat <= 4, sira ev/portiekflat)
+ve `hoog` (kat >= 5, galerijflat/hoogbouw). Tip bazli deger ancak **her iki
+grupta da n >= 3** ve **gruplar arasi fark, binalar arasi sacilmadan buyuk**
+ise kullanilir; aksi halde tek ortalama kullanilir ve fark **sinirlama**
+olarak yazilir. Bu kural da **sayimdan once** muhurlendi.
 
 ---
 

@@ -1,14 +1,15 @@
 {
-  "run_id": "RUN-2026-09-22-026",
-  "git_commit": "fe62b93-dirty",
-  "created_utc": "2026-09-22T20:15:54Z",
+  "run_id": "RUN-2026-09-22-027",
+  "git_commit": "c2e28e1-dirty",
+  "created_utc": "2026-09-22T20:33:06Z",
   "output": {
     "path": "reports/storey_height_calibration.csv",
-    "sha256": "d693b1d00adeff5416e6a3a990d01adb87a2559810fece5d6ec73356600458ef",
-    "size_bytes": 995
+    "sha256": "9d25c2b29358bc883e77b4f69052dce83d3df1c2166e86e856309f44cf299639",
+    "size_bytes": 1065
   },
   "inputs": [],
   "parameters": {
+    "rule": "height_class (D-031)",
     "n_picked": 10,
     "pool_size": 514,
     "funnel": {
@@ -21,6 +22,17 @@
       "C5 duz cati (p90-p30 < 1.5 m)": 514,
       "C6 halkada >= 50 zemin noktasi": 514,
       "C7 h >= 3.0 m": 514
+    },
+    "classes": {
+      "3": 3,
+      "6": 337,
+      "8": 70,
+      "9": 73,
+      "11": 5,
+      "14": 4,
+      "26": 9,
+      "35": 3,
+      "37": 10
     },
     "criteria": {
       "C2": [
@@ -35,16 +47,17 @@
     },
     "picked": [
       "0503100000023497",
-      "0503100000018892",
       "0503100000019104",
-      "0503100000018905",
-      "0503100000018987",
-      "0503100000019105",
       "0503100000026852",
-      "0503100000001547",
       "0503100000010265",
-      "0503100000019296"
+      "0503100000026771",
+      "0503100000023053",
+      "0503100000019378",
+      "0503100000000022",
+      "0503100000019685",
+      "0503100000018892"
     ],
+    "purpose_claim_holds": true,
     "h_range_m": [
       3.2,
       36.8
@@ -55,5 +68,5 @@
     "platform": "Windows-11-10.0.26200-SP0"
   },
   "random_seed": 28992,
-  "notes": "Muhurlu kural: storey_height_calibration.selection (commit f2667c1, secimden ONCE). Kural deterministiktir; seed yalnizca kayit icindir. KAT_SAYISI sutunu kullanici tarafindan doldurulur."
+  "notes": "Kural: storey_height_calibration.selection.stratification (D-031, P-020 ile onaylandi). Deterministik; seed yalnizca kayit icindir. KAT_SAYISI kullanici tarafindan doldurulur."
 }

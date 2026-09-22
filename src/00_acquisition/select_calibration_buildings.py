@@ -123,126 +123,129 @@ def main() -> int:
         logger.error("Uygun bina %d < %d — tabakalama yapilamaz.", len(pool), N_PICK)
         return 1
 
-    # --- Tabakalama: h'ye gore 10 desil, her desilden 1 bina ---
     pool.sort(key=lambda b: (f(b, "h_measured_m"), b))
     hs = np.array([f(b, "h_measured_m") for b in pool])
     logger.info("Uygun havuz | h medyan %.2f m | min %.2f | max %.2f",
                 float(np.median(hs)), float(hs.min()), float(hs.max()))
 
-    edges = np.linspace(0, len(pool), N_PICK + 1).astype(int)
-    picks: list[tuple[int, str]] = []
-    for d in range(N_PICK):
-        lo, hi = edges[d], edges[d + 1]
-        bin_ids = pool[lo:hi]
-        if not bin_ids:
-            logger.error("Desil %d bos — bu kural altinda olamaz.", d + 1)
-            return 1
-        if d == N_PICK - 1:                       # muhurlu istisna: en yuksek bina
-            # esitlikte bag_id kucuk olan: once -h, sonra bag_id artan
-            chosen = sorted(bin_ids, key=lambda b: (-f(b, "h_measured_m"), b))[0]
-        else:
-            chosen = sorted(bin_ids,
-                            key=lambda b: (-float(density[b]["building_class_ratio"]), b))[0]
-        picks.append((d + 1, chosen))
-        logger.info("Desil %2d | %3d aday | h %.2f-%.2f m | SECILEN %s (h %.2f m, oran %.3f)",
-                    d + 1, len(bin_ids), f(bin_ids[0], "h_measured_m"),
-                    f(bin_ids[-1], "h_measured_m"), chosen, f(chosen, "h_measured_m"),
-                    float(density[chosen]["building_class_ratio"]))
+    def ratio(b: str) -> float:
+        return float(density[b]["building_class_ratio"])
+
+    def row(b: str, first: object, extra: list) -> list:
+        return [first, b, heights[b]["footprint_area_m2"], heights[b]["bouwjaar"],
+                heights[b]["h_measured_m"], heights[b]["roof_p70_z_nap_m"],
+                heights[b]["ground_z_nap_m"], heights[b]["roof_span_m"],
+                density[b]["building_class_ratio"], heights[b]["class6_points"],
+                heights[b]["ground_ring_points"]] + extra
+
+    HEAD = ["bag_id", "footprint_area_m2", "bouwjaar", "h_measured_m",
+            "roof_p70_z_nap_m", "ground_z_nap_m", "roof_span_m",
+            "building_class_ratio", "class6_points", "ground_ring_points"]
+
+    # ==================================================================
+    #  GECERLI KURAL (D-031, P-020): YUKSEKLIK SINIFI tabakalamasi
+    #  h 1 m'ye yuvarlanir -> sinif; her siniftan sinif6 orani en yuksek
+    #  bina. N_PICK'e ulasilmazsa en kalabalik sinifin sonraki en iyileri.
+    # ==================================================================
+    classes: dict[int, list[str]] = {}
+    for b in pool:
+        classes.setdefault(int(f(b, "h_measured_m") + 0.5), []).append(b)
+    ranked = {k: sorted(v, key=lambda b: (-ratio(b), b)) for k, v in classes.items()}
+
+    picks: list[tuple[int, str]] = [(k, ranked[k][0]) for k in sorted(ranked)]
+    biggest = max(ranked, key=lambda k: (len(ranked[k]), -k))
+    nth = 1
+    while len(picks) < N_PICK and nth < len(ranked[biggest]):
+        picks.append((biggest, ranked[biggest][nth]))
+        nth += 1
+    if len(picks) < N_PICK:
+        logger.error("Yalnizca %d bina secilebildi (%d sinif) — %d isteniyordu.",
+                     len(picks), len(classes), N_PICK)
+        return 1
+    picks = picks[:N_PICK]
+
+    logger.info("SECIM (D-031) | %d yukseklik sinifi | siniflar: %s",
+                len(classes), sorted(classes))
+    for k, b in picks:
+        logger.info("Sinif %2d m | %3d aday | SECILEN %s (h %.2f m, oran %.3f)",
+                    k, len(ranked[k]), b, f(b, "h_measured_m"), ratio(b))
 
     ids = [b for _, b in picks]
     if len(set(ids)) != len(ids):
-        logger.error("Ayni bina birden fazla desilde secildi — kural hatali.")
+        logger.error("Ayni bina iki kez secildi — kural hatali.")
         return 1
 
     # --- M-016: kuralin AMAC CUMLESI her calistirmada OLCULUR ---
-    # Amac (config): "orneklem farkli YUKSEKLIKLERI ... kapsar". Bu bir iddiadir;
-    # yayilim burada sayiya dokulur. Karar elle verilir (docs/manual_steps.md MS-1).
+    # Iddia (config purpose_claim): yayilim havuzun araligini kapsar ve
+    # 10 binadan en fazla 3'u ayni 0,5 m bandina duser.
     ph = sorted(f(b, "h_measured_m") for b in ids)
-    uniq = len({round(v, 1) for v in ph})
-    logger.info("AMAC OLCUMU (M-016) | secilen h: %s",
-                " ".join(f"{v:.1f}" for v in ph))
-    logger.info("AMAC OLCUMU (M-016) | benzersiz yukseklik (0,1 m): %d/%d | "
-                "aralik %.1f-%.1f m | en kalabalik 0,5 m bandinda %d bina",
-                uniq, len(ph), ph[0], ph[-1],
-                max(sum(1 for v in ph if abs(v - c) <= 0.25) for c in ph))
+    densest = max(sum(1 for v in ph if abs(v - c) <= 0.25) for c in ph)
+    claim_ok = densest <= 3
+    logger.info("AMAC OLCUMU (M-016) | secilen h: %s", " ".join(f"{v:.1f}" for v in ph))
+    logger.info("AMAC OLCUMU (M-016) | benzersiz h (0,1 m): %d/%d | aralik %.1f-%.1f m "
+                "(havuz %.1f-%.1f) | en kalabalik 0,5 m bandi: %d bina | IDDIA: %s",
+                len({round(v, 1) for v in ph}), len(ph), ph[0], ph[-1],
+                float(hs.min()), float(hs.max()), densest,
+                "TUTTU" if claim_ok else "TUTMADI")
+    if not claim_ok:
+        logger.warning("Amac iddiasi TUTMADI — kural DEGISTIRILMEZ; sonuc oldugu gibi "
+                       "raporlanir ve alternatif ONERI olarak ayri dosyaya yazilir "
+                       "(M-016, docs/manual_steps.md MS-1).")
 
     out = rep / "storey_height_calibration.csv"
     with out.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["sira", "desil", "bag_id", "footprint_area_m2", "bouwjaar",
-                    "h_measured_m", "roof_p70_z_nap_m", "ground_z_nap_m",
-                    "roof_span_m", "building_class_ratio", "class6_points",
-                    "ground_ring_points", "KAT_SAYISI_kullanici", "NOT_kullanici",
-                    "kat_yuksekligi_m"])
-        for i, (d, b) in enumerate(picks, 1):
-            w.writerow([i, d, b, heights[b]["footprint_area_m2"], heights[b]["bouwjaar"],
-                        heights[b]["h_measured_m"], heights[b]["roof_p70_z_nap_m"],
-                        heights[b]["ground_z_nap_m"], heights[b]["roof_span_m"],
-                        density[b]["building_class_ratio"], heights[b]["class6_points"],
-                        heights[b]["ground_ring_points"], "", "", ""])
+        w.writerow(["yukseklik_sinifi_m"] + HEAD
+                   + ["sinif_aday_sayisi", "KAT_SAYISI_kullanici", "NOT_kullanici",
+                      "kat_yuksekligi_m", "tip_grubu"])
+        for k, b in picks:
+            w.writerow(row(b, k, [len(ranked[k]), "", "", "", ""]))
 
-    # ------------------------------------------------------------------
-    #  ONERI (P-020) — MUHURLU DEGILDIR, KULLANILMAZ, ONAY BEKLER
-    #  Muhurlu desil kurali kendi AMACINI tutturamadi: desiller NUFUSU izler,
-    #  ARALIGI degil. Havuzun %66'si tek bir yukseklik bandinda (5,7-6,0 m)
-    #  oldugu icin 10 binanin 6'si ayni tip sira evden secildi. Kullanicinin
-    #  talimati "farkli kat sayisinda 10 bina" idi.
-    #  Kural SONUCTAN SONRA degistirilmez (Bolum 12.2) — bu yuzden muhurlu
-    #  cikti oldugu gibi birakilir ve alternatif AYRI bir dosyaya, ONERI
-    #  olarak yazilir. Hangisinin kullanilacagina kullanici karar verir ve
-    #  karar ORTALAMA HESAPLANMADAN once verilir.
-    #  Oneri kurali: h 1 m'ye yuvarlanarak SINIFLARA bolunur, her siniftan
-    #  sinif 6 orani en yuksek bina; 10. bina en kalabalik sinifin ikinci
-    #  en iyisi (o tip A'nin baskin konut stokudur, tekrar hak eder).
-    # ------------------------------------------------------------------
-    classes: dict[int, list[str]] = {}
-    for b in pool:
-        classes.setdefault(int(f(b, "h_measured_m") + 0.5), []).append(b)
-    ranked = {k: sorted(v, key=lambda b: (-float(density[b]["building_class_ratio"]), b))
-              for k, v in classes.items()}
-    prop = [(k, ranked[k][0]) for k in sorted(ranked)]
-    biggest = max(ranked, key=lambda k: (len(ranked[k]), -k))
-    if len(prop) < N_PICK and len(ranked[biggest]) > 1:
-        prop.append((biggest, ranked[biggest][1]))
-    logger.info("ONERI (P-020) | %d yukseklik sinifi | %d bina | siniflar: %s",
-                len(classes), len(prop), sorted(classes))
-    for k, b in prop:
-        logger.info("ONERI | sinif %2d m | %3d aday | %s (h %.2f m, oran %.3f)",
-                    k, len(ranked[k]), b, f(b, "h_measured_m"),
-                    float(density[b]["building_class_ratio"]))
-
-    prop_path = rep / "storey_height_calibration_proposal_p020.csv"
-    with prop_path.open("w", newline="", encoding="utf-8") as fh:
+    # ==================================================================
+    #  SUPERSEDED BY P-020 (D-031) — SILINMEZ, kayit icin uretilir.
+    #  Desil kurali kendi amacini saglamamisti (M-016). Cikti, kararin
+    #  neye dayandigini sonradan gorebilmek icin korunur.
+    # ==================================================================
+    edges = np.linspace(0, len(pool), N_PICK + 1).astype(int)
+    dec: list[tuple[int, str]] = []
+    for d in range(N_PICK):
+        bin_ids = pool[edges[d]:edges[d + 1]]
+        if not bin_ids:
+            continue
+        if d == N_PICK - 1:
+            dec.append((d + 1, sorted(bin_ids, key=lambda b: (-f(b, "h_measured_m"), b))[0]))
+        else:
+            dec.append((d + 1, sorted(bin_ids, key=lambda b: (-ratio(b), b))[0]))
+    sup = rep / "storey_height_calibration_superseded_decile.csv"
+    with sup.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["sira", "yukseklik_sinifi_m", "bag_id", "footprint_area_m2",
-                    "bouwjaar", "h_measured_m", "roof_span_m", "building_class_ratio",
-                    "sinif_aday_sayisi", "DURUM"])
-        for i, (k, b) in enumerate(prop, 1):
-            w.writerow([i, k, b, heights[b]["footprint_area_m2"], heights[b]["bouwjaar"],
-                        heights[b]["h_measured_m"], heights[b]["roof_span_m"],
-                        density[b]["building_class_ratio"], len(ranked[k]),
-                        "ONERI - MUHURLU DEGIL - P-020 ONAYI BEKLIYOR"])
-
-    write_meta(prop_path, run_id=run_id, random_seed=seed,
-               parameters={"status": "ONERI - MUHURLU DEGIL - P-020",
-                           "classes": {str(k): len(v) for k, v in sorted(ranked.items())},
-                           "picked": [b for _, b in prop]},
-               notes=("P-020 onerisi. Muhurlu kural DEGILDIR ve onaylanmadan "
-                      "hicbir hesaba girmez (M-016)."))
+        w.writerow(["desil"] + HEAD + ["DURUM"])
+        for d, b in dec:
+            w.writerow(row(b, d, ["SUPERSEDED BY P-020 (D-031) - KULLANILMAZ"]))
+    write_meta(sup, run_id=run_id, random_seed=seed,
+               parameters={"status": "SUPERSEDED_BY_P-020",
+                           "picked": [b for _, b in dec],
+                           "h_m": [f(b, "h_measured_m") for _, b in dec]},
+               notes=("Eski desil kurali. D-031 ile gecersiz kilindi ama SILINMEDI "
+                      "(kullanici talimati). Hicbir hesaba girmez."))
+    logger.info("SUPERSEDED kayit | %s | %d bina (kullanilmaz)", sup.name, len(dec))
+    logger.info("Iki orneklemin ortak binasi: %d",
+                len(set(ids) & {b for _, b in dec}))
 
     write_meta(out, run_id=run_id, random_seed=seed,
-               parameters={"n_picked": len(picks), "pool_size": len(pool),
-                           "funnel": dict(funnel),
+               parameters={"rule": "height_class (D-031)", "n_picked": len(picks),
+                           "pool_size": len(pool), "funnel": dict(funnel),
+                           "classes": {str(k): len(v) for k, v in sorted(ranked.items())},
                            "criteria": {"C2": [C2_MIN_YEAR, C2_MAX_YEAR],
                                         "C4_ratio": C4_MIN_RATIO, "C4_points": C4_MIN_C6,
                                         "C5_span_m": C5_MAX_SPAN,
                                         "C6_ground_points": C6_MIN_GROUND,
                                         "C7_min_h_m": C7_MIN_H},
-                           "picked": ids,
+                           "picked": ids, "purpose_claim_holds": claim_ok,
                            "h_range_m": [float(hs.min()), float(hs.max())]},
-               notes=("Muhurlu kural: storey_height_calibration.selection (commit "
-                      "f2667c1, secimden ONCE). Kural deterministiktir; seed yalnizca "
-                      "kayit icindir. KAT_SAYISI sutunu kullanici tarafindan doldurulur."))
+               notes=("Kural: storey_height_calibration.selection.stratification "
+                      "(D-031, P-020 ile onaylandi). Deterministik; seed yalnizca "
+                      "kayit icindir. KAT_SAYISI kullanici tarafindan doldurulur."))
     logger.info("TAMAM | %s | %d bina", out.name, len(picks))
     return 0
 
