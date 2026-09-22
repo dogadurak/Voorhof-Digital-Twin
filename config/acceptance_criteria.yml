@@ -1295,6 +1295,68 @@ post_flight_detection:
     etkiye gore en buyuk 5 uye tek tek yazilir (Bolum 14.6, M-010).
 
 # ============================================================================
+#  BELIRSIZ GEOMETRILI KONUT BINALARI — SENARYO SINIFLAMASI (Karar D-024)
+#  MUHURLENDI 2026-09-22, GORSEL KONTROLDEN ONCE (kullanici talimati).
+#  Kullanicinin gorsel kontrol sonucu HENUZ YOKTUR.
+# ============================================================================
+building_scenario_rule:
+  decision_ref: D-024
+  status: SEALED_BEFORE_OBSERVATION
+  sealed_at: "2026-09-22"
+  principle: "Bolge dislanmaz; bina bazinda ele alinir."
+  applies_to:
+    - "0503100000037336"   # 260 konut VBO, bouwjaar 2023
+    - "0503100000037335"   #  94 konut VBO, bouwjaar 2023
+    - "0503100000038177"   #  58 konut VBO, bouwjaar 2025
+  observation_source: docs/visual_check_a_residential.md
+  scenarios:
+    S1:
+      meaning: "Bina 2023 oncesinden beri AYNI; bouwjaar bir kayit/tadilat olayi"
+      lineage: measured_lod2
+      reconstruction_validation: INCLUDED      # 1-A / 1-B / 1-C
+      energy_comparison_stage3: INCLUDED
+    S2:
+      meaning: "Eski bina yikildi, yerine yenisi yapildi (sloop-nieuwbouw)"
+      lineage: estimated_lod1                  # baglam modelinde KALIR
+      reconstruction_validation: EXCLUDED      # 1-A / 1-B / 1-C
+      energy_comparison_stage3: PC6_EXCLUDED
+    S3:
+      meaning: "Subat 2023'te INSAAT HALINDEYDI, sonra tamamlandi"
+      lineage: estimated_lod1
+      reconstruction_validation: EXCLUDED
+      energy_comparison_stage3: PC6_EXCLUDED
+    UNDECIDED:
+      meaning: "Kullanici gorsel kontrolde karar veremedi"
+      handling: TODO_ONAY_BEKLIYOR             # P-017 — kural BU DURUMU TANIMLAMIYOR
+      note: >
+        Kullanicinin kurali S1/S2/S3'u tanimliyor. "Karar veremedim"
+        secenegi gorsel kontrol dosyasinda mevcut ama kuralda yok. Ajan bu
+        boslugu kendi karariyla DOLDURMADI (Bolum 12.11). Gorsel kontrol
+        sonucu uygulanmadan once P-017 cevaplanmalidir.
+
+  # --- PC6 dislama tanimi (hesaptan once sabitlendi) ---
+  pc6_exclusion:
+    pc6_set_of_building: >
+      Binanin TUM verblijfsobject'lerinin (her kullanim islevi) `postcode`
+      degerlerinin kumesi. Stedin PC6 agregati bir postcode'daki TUM
+      baglantilari topladigi icin konut disi VBO'lar da dahil edilir.
+    empty_postcode: >
+      Postcode'u bos VBO'lar kumeye katki yapmaz. Olculdu 2026-09-22: B+300 m
+      icindeki 573 bos-postcode VBO'nun TAMAMI `overige gebruiksfunctie`;
+      hicbiri konut degil.
+    scope: "O PC6'nin TAMAMI Asama 3 enerji karsilastirmasindan cikarilir (yalnizca bina degil)."
+    merged_pc6: >
+      Stedin verisinde postcode'lar birlestirilmis olabilir (Bolum 12.3). Dislanan
+      bir PC6 birlesik bir satirin icindeyse o birlesik satirin TAMAMI dislanir.
+    reported:
+      - excluded_pc6_count
+      - excluded_pc6_list
+      - dwellings_in_excluded_pc6          # woonfunctie VBO, exact_match (D-008)
+      - buildings_in_excluded_pc6
+      - excluded_share_of_A_dwellings_pct
+    note: "Etki hesabi bu muhurden SONRA yapilir; muhur sirasinda hesaplanmamistir."
+
+# ============================================================================
 #  KOKEN (LINEAGE) — Karar D-022
 # ============================================================================
 building_lineage:

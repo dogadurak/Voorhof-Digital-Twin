@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-024**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-025**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1289,3 +1289,33 @@ version 2023.10.08"). Referans surumu sabitlemek Bolum 12.11 geregi kullanici
 kararidir -> **P-016**.
 
 **Onay:** Duzeltme kaydi; karar gerektiren kisim P-016'da.
+
+---
+
+## D-024 · [2026-09-22] · Belirsiz geometrili 3 konut binasi: bina bazinda senaryo kurali
+
+**Karar (kullanici):** Bolge dislanmaz, bina bazinda ele alinir. A'daki 3 konut
+binasi (`...037336`, `...037335`, `...038177`; toplam 412 konut VBO) gorsel
+kontrole gore siniflanir:
+
+| Senaryo | Anlam | Lineage | 1-A/1-B/1-C | Asama 3 enerji |
+|---|---|---|---|---|
+| **S1** | ayni bina | `measured_lod2` | dahil | dahil |
+| **S2** | yikilip yeniden yapilmis | `estimated_lod1` (baglamda kalir) | **dislanir** | binanin PC6'lari **dislanir** |
+| **S3** | ucusta insaat halinde | `estimated_lod1` (baglamda kalir) | **dislanir** | binanin PC6'lari **dislanir** |
+
+Dislanan PC6 sayisi raporlanir.
+
+**Muhur sirasi:** kural `config/acceptance_criteria.yml -> building_scenario_rule`
+altinda **gorsel kontrolden ONCE** muhurlendi (`status: SEALED_BEFORE_OBSERVATION`).
+Kullanicinin gorsel kontrol sonucu bu commit'te yoktur.
+
+**PC6 tanimi (ayni anda sabitlendi):** binanin TUM VBO'larinin postcode kumesi
+(Stedin agregati tum baglantilari toplar); bos postcode katki yapmaz (olculdu:
+573 bos-postcode VBO'nun tamami `overige gebruiksfunctie`); PC6'nin tamami
+dislanir; Stedin'de birlesik satir varsa birlesik satirin tamami dislanir.
+
+**Tanimlanmayan durum -> P-017:** Gorsel kontrol dosyasinda "karar veremedim"
+secenegi var; kural bu durumu tanimlamiyor. Ajan bu boslugu doldurmadi.
+
+**Onay:** Kullanici, 2026-09-22.

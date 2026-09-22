@@ -24,6 +24,7 @@
 | P-014 | 1 | Ucus sonrasi binalar icin yukseklik kaynagi (ARASTIRMA YAPILDI, karar yok) | lineage `estimated_lod1` | **Gorsel kontroller sonrasi** |
 | P-015 | 5 | EPSG:28992 -> 4326 icin bagimsiz referans noktasi (M-003 sessiz varyanti) | Asama 5 WGS84 ciktisi | **Asama 5 oncesi** |
 | P-016 | 1 | Kriter 1-B icin 3DBAG referans surumu sabitlensin mi, hangisi | Kriter 1-B | **Asama 1 baslangici** |
+| P-017 | 1 | D-024 kurali "karar veremedim" durumunu tanimlamiyor | 3 konut binasinin siniflamasi | **Gorsel kontrol sonucu uygulanmadan ONCE** |
 
 ---
 
@@ -652,3 +653,26 @@ sonucu vermek zorundadir"). API ayrica yarin baska bir surum sunabilir.
 12.11 geregi kullanici karari. Ayrica 3DBAG'in 377 binada neden AHN5'i
 yetersiz buldugu (D-021, geri cekilen aciklama) belki adlandirilmis surumun
 metadata'sindan okunabilir.
+
+
+---
+
+## [2026-09-22] [1] P-017 — Gorsel kontrolde "karar veremedim" cikarsa ne olur?
+
+**Durum:** ACIK · **Engelledigi is:** D-024'un 3 binaya uygulanmasi
+
+D-024 S1/S2/S3'u tanimliyor. `docs/visual_check_a_residential.md`'de dorduncu
+bir secenek var: **"karar veremedim"**. Kural bu durumda ne olacagini
+soylemiyor. Ajan boslugu kendi karariyla doldurmadi (Bolum 12.11).
+
+**Secenekler:**
+- (a) **S2/S3 gibi davran** (ihtiyatli): dogrulamadan ve PC6 karsilastirmasindan
+  dislanir, `estimated_lod1`. Hata payi: gercekte S1 olan bir binayi kaybeder.
+- (b) **S1 gibi davran**: dahil edilir. Hata payi: yanlis geometri dogrulama
+  istatistigine girer — Bolum 12.10 acisindan daha tehlikeli yon.
+- (c) Bolum 12.13-4: karar "cikarima dayali" isaretlenir, **(a)** uygulanir ve
+  Bolum 5'e sinirlama olarak yazilir.
+
+**Onerim:** (c). Gerekce: belirsiz bir binayi dogrulama istatistigine sokmak,
+dogrulamanin kendisini belirsizlestirir; disarida birakmak yalnizca kapsami
+daraltir ve raporlanir.
