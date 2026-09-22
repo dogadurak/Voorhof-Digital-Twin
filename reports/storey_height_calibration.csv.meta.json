@@ -1,0 +1,59 @@
+{
+  "run_id": "RUN-2026-09-22-025",
+  "git_commit": "f2667c1-dirty",
+  "created_utc": "2026-09-22T20:15:13Z",
+  "output": {
+    "path": "reports/storey_height_calibration.csv",
+    "sha256": "d693b1d00adeff5416e6a3a990d01adb87a2559810fece5d6ec73356600458ef",
+    "size_bytes": 995
+  },
+  "inputs": [],
+  "parameters": {
+    "n_picked": 10,
+    "pool_size": 514,
+    "funnel": {
+      "A alanindaki pand": 1259,
+      "C1 gebruiksdoel tam olarak 'woonfunctie'": 652,
+      "C2 bouwjaar 1960-1975": 619,
+      "C3 ucus sonrasi / yeniden yapim listelerinde degil": 619,
+      "yuksekligi olculebilmis": 619,
+      "C4 sinif6 orani >= 0.5 ve >= 200 nokta": 618,
+      "C5 duz cati (p90-p30 < 1.5 m)": 514,
+      "C6 halkada >= 50 zemin noktasi": 514,
+      "C7 h >= 3.0 m": 514
+    },
+    "criteria": {
+      "C2": [
+        1960,
+        1975
+      ],
+      "C4_ratio": 0.5,
+      "C4_points": 200,
+      "C5_span_m": 1.5,
+      "C6_ground_points": 50,
+      "C7_min_h_m": 3.0
+    },
+    "picked": [
+      "0503100000023497",
+      "0503100000018892",
+      "0503100000019104",
+      "0503100000018905",
+      "0503100000018987",
+      "0503100000019105",
+      "0503100000026852",
+      "0503100000001547",
+      "0503100000010265",
+      "0503100000019296"
+    ],
+    "h_range_m": [
+      3.2,
+      36.8
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": 28992,
+  "notes": "Muhurlu kural: storey_height_calibration.selection (commit f2667c1, secimden ONCE). Kural deterministiktir; seed yalnizca kayit icindir. KAT_SAYISI sutunu kullanici tarafindan doldurulur."
+}

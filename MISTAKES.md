@@ -948,3 +948,56 @@ yeri degismis yol icin cikis kodu 1. Ayrica muhurlu bloklarda kalan
 Yeni bir muhurlu blok eklendiginde yolu bu listeye de eklenir.
 
 **Durum:** KAPALI (anahtarlar dogru bloga geri tasindi, kontrol otomatiklesti)
+
+---
+
+## M-016 · [2026-09-22] · Asama 0.3
+
+**Ne oldu:** Kat yuksekligi kalibrasyonu icin muhurledigim **tabakalama
+kurali**, kendi yazili amacini saglamadi. Kural soyle diyordu: "Uygun binalar
+h'ye gore 10 DESIL'e bolunur, her desilden 1 bina secilir. **Boylece orneklem
+farkli YUKSEKLIKLERI (dolayisiyla farkli kat sayilarini) kapsar.**"
+Calistirildiginda secilen 10 binanin **6'si 5,8-6,0 m** araliginda cikti —
+yani ayni tip iki katli sira ev. Kullanicinin talimati acikca "farkli kat
+sayisinda 10 bina" idi.
+
+**Kok neden:** Desil (kantil) bir **nufus** bolmesidir, **aralik** bolmesi
+degil. Uygun havuzun %66'si tek bir yukseklik bandinda oldugu icin desillerin
+cogu ayni bandin icine dustu. Amac "aralig'i kapsamak" oldugunda bolme
+DEGER ARALIGI uzerinden (esit genislikli bantlar veya acik siniflar)
+tanimlanmalidir.
+
+**Neden fark edilmedi (muhurlenirken):** Kurali yazarken havuzun yukseklik
+dagilimi **henuz olculmemisti** — yukseklikler ayni gun, muhurden sonra
+olculdu. Yani kural, uzerinde calisacagi dagilim bilinmeden yazildi ve
+dagilimin bicimine **dayanikli olup olmadigi sinanmadi**. Kuralin kendi
+gerekce cumlesi ("boylece ... kapsar") bir **iddiaydi** ve dogrulanmamisti.
+
+**Neden duzeltip gecmedim:** Kural muhurluydu. Sonucu gorup kurali
+degistirmek Bolum 12.2'nin tam olarak yasakladigi sey. Muhurlu cikti oldugu
+gibi birakildi, alternatif AYRI dosyaya ONERI olarak yazildi, karar
+kullaniciya birakildi (P-020) ve **hesaptan once** verilmesi sartina baglandi.
+
+**Turetilen kural:** Bir orneklem/tabakalama kurali muhurlenirken, kuralin
+**amac cumlesi** bir SINANABILIR IDDIA olarak yazilir ve kural
+calistirildiktan hemen sonra o iddia **olculur**. Iddia tutmuyorsa:
+kural degistirilmez, sonuc oldugu gibi raporlanir ve alternatif AYRI bir
+cikti olarak, ONERI etiketiyle uretilir; karar kullanicinindir ve
+**sonuc hesaplanmadan once** verilir.
+
+Ayrica: "aralig'i kapsa" amaci guden bir tabakalama **kantil ile
+yapilmaz** — deger araligi uzerinden bant tanimlanir. Kantil yalnizca
+"nufusu temsil et" amaci icin dogrudur.
+
+**Nerede uygulanir:** `config/acceptance_criteria.yml` icindeki her
+`stratification` / `sampling` blogu; `src/00_acquisition/
+select_calibration_buildings.py`.
+
+**Otomatik kontrol:** Kismen. Kural calistiran script, secilen orneklemin
+hedef degiskenindeki **yayilimi** (min, max, benzersiz deger sayisi) loglar;
+boylece amac cumlesi her calistirmada olculur. Tam otomatik bir "amac
+saglandi mi" testi yazilamaz cunku amac metindir — bu yuzden kural
+`docs/manual_steps.md` kontrol listesine de eklenir.
+
+**Durum:** ACIK — P-020 cevaplanana kadar (kural degisikligi kullanici
+karariyla yeni bir D kaydi olarak kapanacak veya muhurlu kural korunacak).

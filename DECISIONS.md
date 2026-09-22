@@ -1573,3 +1573,44 @@ yuksekligidir. Bu deger 2023-2026 yapimi 9 binaya uygulanacaktir — bir
 **cikarimdir** ve raporda oyle etiketlenir (Bolum 12.13).
 
 **Onay:** Kullanici, 2026-09-22 (P-019).
+
+### D-030 EK 1 · [2026-09-22] · Korlemesine sayim (saha listesinde yukseklik YOK)
+
+Muhurun ilk halinde `reporting` alani, kat sayilarinin saha listesinde olculen
+yuksekligin yaninda gosterilmesini soyluyordu (Bolum 12.13-3'u uygulamak
+icin). Liste uretilirken bunun bir **demirleme (anchoring)** tuzagi oldugu
+gorildu: listede "36,8 m" yazsa, sayim o sayiya gore yapilir ve kalibrasyon
+kendi girdisini dogrulamis olurdu (Bolum 12.10).
+
+**Degisiklik:** saha listesi olculen yuksekligi ICERMEZ. Yan yana raporlama
+**sayimdan sonra**, asama raporunda yapilir.
+
+**Neden Bolum 12.2 ihlali degil:** degisiklik hicbir sayim yapilmadan,
+hicbir sonuc gorulmeden yapildi. Bir sonucu iyilestirmiyor; bir yontem
+hatasini kapatiyor. Eski metin config'te `amendment_note` icinde
+duruyor, silinmedi.
+
+---
+
+### D-030 EK 2 · [2026-09-22] · Tabakalama kurali amacini tutturamadi -> P-020
+
+Muhurlu **desil** tabakalamasi calistirildi ve kendi yazili amacini
+("orneklem farkli YUKSEKLIKLERI kapsasin") **saglayamadi**: desiller
+NUFUSU izler, ARALIGI degil. Uygun havuzun (514 bina) %66'si 5,7-6,0 m
+bandinda oldugu icin secilen 10 binanin **6'si ayni yukseklikte** cikti.
+
+Havuzun olculen dagilimi (1 m'ye yuvarlanmis h -> bina sayisi):
+3 m: 3 · 6 m: 337 · 8 m: 97 · 9 m: 46 · 11 m: 5 · 14 m: 4 · 26 m: 9 ·
+35 m: 3 · 37 m: 10.
+
+**Kural SONUCA gore degistirilmedi** (Bolum 12.2). Muhurlu cikti
+`reports/storey_height_calibration.csv` oldugu gibi duruyor; alternatif
+AYRI bir dosyaya **ONERI** olarak yazildi
+(`reports/storey_height_calibration_proposal_p020.csv`) ve karar
+**P-020** olarak kullaniciya birakildi. Karar, ortalama hesaplanmadan
+once verilecektir.
+
+**Saha listesi ikisinin BIRLESIMINI** icerir (15 bina), boylece hangi kural
+onaylanirsa onaylansin sayim verisi hazir olur. Iki orneklemi de sayip
+"hangisi daha iyi sonuc verdi" diye secmek YASAKTIR (Bolum 12.2) — bu yuzden
+P-020 sayimdan degil, **hesaptan** once cevaplanmalidir.

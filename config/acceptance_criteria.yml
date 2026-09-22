@@ -1594,8 +1594,25 @@ storey_counting_rule:
         BAGIMSIZ okunamaz.
 
   reporting: >
-    Kat sayilari docs/field_check_list.md icinde, olculen yuksekligin YANINDA
-    raporlanir (Bolum 12.13-3: cikarim ile gozlem yan yana).
+    Kat sayilari, olculen yukseklikle YAN YANA raporlanir (Bolum 12.13-3:
+    cikarim ile gozlem yan yana) — ama SAYIM BITTIKTEN SONRA, asama raporunda.
+  blind_counting:
+    rule: >
+      Saha listesi (docs/field_check_list.md) olculen yuksekligi ICERMEZ.
+      Kullanici kat sayarken bizim olctugumuz yuksekligi GORMEZ.
+    why: >
+      Kalibrasyon kat yuksekligini "olculen yukseklik / sayilan kat" olarak
+      bulur. Listede "36,8 m" yazsaydi sayim o sayiya demirlenirdi (12 kat mi
+      olmali?) ve sayim bagimsiz bir gozlem olmaktan cikardi: olcum kendi
+      kendini dogrulamis olurdu (Bolum 12.10).
+    amended_at: "2026-09-22"
+    amendment_note: >
+      DURUSTLUK KAYDI: bu blok ilk muhurlenirken (ayni gun, commit f2667c1)
+      `reporting` alani yukseklerin saha listesinde yan yana yazilmasini
+      soyluyordu. Liste uretilirken demirleme (anchoring) riski fark edildi ve
+      kural DEGISTIRILDI. Degisiklik HICBIR SAYIM YAPILMADAN once yapilmistir
+      — yani bir sonuca bakilarak degil, bir yontem hatasi gorulerek. Eski
+      metin yukarida durmaktadir; gizlenmemistir (Bolum 12.2, D-030 eki).
 
 # ============================================================================
 #  KAT YUKSEKLIGI KALIBRASYONU — Karar D-030 (P-019 kapandi)

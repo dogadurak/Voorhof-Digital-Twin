@@ -1,0 +1,35 @@
+{
+  "run_id": "RUN-2026-09-22-024",
+  "git_commit": "f2667c1-dirty",
+  "created_utc": "2026-09-22T20:14:16Z",
+  "output": {
+    "path": "docs/field_check_list.md",
+    "sha256": "6b2777722b6fe3b6dcaff3f1616c1259b959098bf0508ca33a018f2e6f87c6c2",
+    "size_bytes": 17755
+  },
+  "inputs": [],
+  "parameters": {
+    "buildings": 35,
+    "groups": {
+      "G1": 13,
+      "G2": 3,
+      "G3": 6,
+      "G4": 10,
+      "G4p": 10
+    },
+    "large_post_flight": 6,
+    "sources": [
+      "visual_check_sample.csv",
+      "a_residential_uncertain.csv",
+      "post_flight_buildings.csv",
+      "storey_height_calibration.csv",
+      "storey_height_calibration_proposal_p020.csv"
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Olculen yukseklik BILEREK yazilmadi (sayim demirlenmesin, Bolum 12.10). Uzerine yazma korumasi: dolu hucre varsa durur."
+}

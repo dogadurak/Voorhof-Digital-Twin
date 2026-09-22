@@ -52,6 +52,28 @@ edilmez.
 
 ---
 
+## Elle yapilacak kontroller (otomatiklestirilemeyenler)
+
+### MS-1 · Orneklem kuralinin AMACI saglandi mi? (M-016)
+
+**Ne zaman:** Bir `stratification` / `sampling` kurali her calistirildiginda.
+
+**Neden elle:** Kuralin amaci bir METINDIR ("orneklem farkli yukseklikleri
+kapsasin"). Script yayilimi (min, max, benzersiz deger sayisi) loglar ama
+"amac saglandi mi" sorusuna karar veremez — o karar okumayi gerektirir.
+
+**Adim:**
+1. Scriptin logundaki yayilim satirini oku.
+2. Kuralin config'teki amac cumlesini oku.
+3. Yayilim amaci saglamiyorsa: **kurali DEGISTIRME.** Sonucu oldugu gibi
+   birak, alternatifi AYRI dosyaya ONERI olarak yaz, PENDING'e soru ac ve
+   karari hesaptan ONCE kullaniciya birak.
+
+**Ornek (2026-09-22):** desil tabakalamasi "farkli yukseklikleri kapsar"
+diyordu; 10 binanin 6'si ayni bandan cikti -> M-016, P-020.
+
+---
+
 ## Tasinan adimlar (uc kez basarisiz olanlar)
 
 *(Asama 0.1 itibariyle yok.)*

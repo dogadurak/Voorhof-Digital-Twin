@@ -395,6 +395,9 @@ Bitirdikten sonra:
 - [ ] Raporun başında **veri dönemi** notu var (Bölüm 5, D-020)
 - [ ] Çıktıdan **uyarı satırı silmedim**; kısalttıysam kaç satır filtrelendiğini de yazdırdım (M-012)
 - [ ] Rapordaki hiçbir kategorik değer **kesilmedi**; hiçbir tablo geçici bir çıktıdan **elle** aktarılmadı (M-010 tekrarı)
+- [ ] Bir örneklem/tabakalama kuralı çalıştırdıysam: kuralın **amaç cümlesini**
+      ölçtüm (seçilenlerin hedef değişkendeki yayılımı) ve tutmadıysa
+      kuralı değiştirmeden ÖNERİ olarak ayrı çıktı ürettim (14.6, M-016)
 
 ---
 
@@ -843,6 +846,7 @@ biri gerçekleşirse normal kayıt açılır.
 | **Özet istatistikle genelleme** | Medyan/ortalama çoğunluğu anlatır, etkisi büyük azınlığı gizler | Grubu hem **sayıya** hem **etkiye** (alan, VBO, tüketim) göre özetle; etkiye göre en büyük 5 üyeyi tek tek yaz; uymayan varsa alt gruba böl. "Hepsi/çoğu" ancak etki-ağırlıklı özet de aynı yönü gösteriyorsa (M-010) |
 | **Doğrulanmamış çıkarım** | Makul bir çıkarım ölçüm gibi rapora girer ve bir kararı belirler | 12.13 — "ÇIKARIM" etiketle, karardan önce bağımsız yoldan doğrula (M-011) |
 | **Uyarıyı gizleme** | Çıktı `grep -v` ile "temizlenir", tekrarlayan uyarı gürültü sayılır | Bölüm 1 kural 12 — uyarı filtrelenmez; kaynağı çözülür veya PENDING'e yazılır. Çıktı kısaltılacaksa filtrelenen satır **sayısı** da yazdırılır (M-012) |
+| **Örneklem kuralının amacı doğrulanmamış** | Kural "şunu kapsasın" der, çalıştırılınca kapsamaz (kantil aralığı değil nüfusu böler) | Kuralın amaç cümlesi **sınanabilir bir iddia** olarak yazılır ve çalıştırmadan hemen sonra **ölçülür**. Tutmuyorsa kural değiştirilmez: sonuç olduğu gibi raporlanır, alternatif AYRI çıktı olarak ÖNERİ etiketiyle üretilir, karar kullanıcınındır ve **sonuç hesaplanmadan önce** verilir (M-016) |
 
 ### 14.7 Kullanıcının rolü
 

@@ -1,0 +1,38 @@
+{
+  "run_id": "RUN-2026-09-22-017",
+  "git_commit": "f2667c1-dirty",
+  "created_utc": "2026-09-22T20:01:07Z",
+  "output": {
+    "path": "reports/building_heights_ahn5.csv",
+    "sha256": "d5bae365953784da757fb489b53e99b10024df46d050977df92b30e8cb8e9ec7",
+    "size_bytes": 406993
+  },
+  "inputs": [],
+  "parameters": {
+    "method": "p70(class6 in footprint) - median(class2 in ring)",
+    "z_bin_m": 0.1,
+    "ring_inner_m": 0.5,
+    "ring_outer_m": 5.0,
+    "buildings": 4035,
+    "buildings_in_a": 1259,
+    "measured": 3764,
+    "negative_height": 0,
+    "laz_files": [
+      "37EN1_14.LAZ",
+      "37EN1_15.LAZ",
+      "37EN1_19.LAZ",
+      "37EN1_20.LAZ",
+      "37EN1_24.LAZ",
+      "37EN1_25.LAZ",
+      "37EN2_11.LAZ",
+      "37EN2_16.LAZ",
+      "37EN2_21.LAZ"
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Muhurlu yontem: storey_height_calibration.height_measurement (commit f2667c1, olcumden ONCE). 3DBAG yukseklikleri KULLANILMADI (Bolum 12.10)."
+}

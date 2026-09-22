@@ -27,6 +27,7 @@
 | ~~P-017~~ | 1 | "karar veremedim" durumu | — | **KAPANDI -> D-028** (ihtiyatli dislama) |
 | ~~P-018~~ | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar | — | **KAPANDI -> D-029** (estimated_lod1) |
 | ~~P-019~~ | 1 | Kat yuksekligi degeri ve belirsizligi | — | **KAPANDI -> D-030** (yerel kalibrasyon + sayim kurali) |
+| P-020 | 1 | Kalibrasyon orneklemi: muhurlu DESIL mi, onerilen YUKSEKLIK SINIFI mi | Kat yuksekligi hesabi | **Hesaptan ONCE** (sayim devam edebilir) |
 
 ---
 
@@ -780,3 +781,49 @@ API'nin etiketi yanlis, icerigi 2025.09.03.
 kontrolu bekliyor; kullanici 2026-09-22'de "(b) yonunde egilimliyim ama karari
 gorsel kontrolden sonra verecegim" dedi — bu bir karar DEGILDIR, kayit olarak
 tutulur.
+
+
+---
+
+## [2026-09-22] [1] P-020 — Kalibrasyon orneklemi: desil mi, yukseklik sinifi mi
+
+**Soru:** Kat yuksekligi kalibrasyonunda hangi 10 bina kullanilacak?
+
+**Neden soruyorum:** Muhurledigim **desil** tabakalamasi kendi amacini
+saglamadi (M-016). Uygun havuzun (514 bina) %66'si 5,7-6,0 m bandinda oldugu
+icin desillerin 6'si ayni bandan bina secti. Kullanicinin talimati "farkli
+kat sayisinda 10 bina" idi.
+
+**Olculen havuz dagilimi** (h 1 m'ye yuvarlanmis -> bina sayisi):
+
+| h | 3 m | 6 m | 8 m | 9 m | 11 m | 14 m | 26 m | 35 m | 37 m |
+|---|---|---|---|---|---|---|---|---|---|
+| bina | 3 | 337 | 97 | 46 | 5 | 4 | 9 | 3 | 10 |
+
+**Secenekler:**
+
+- **(a) ONERI — yukseklik sinifi.** h 1 m'ye yuvarlanarak siniflara bolunur,
+  her siniftan sinif 6 orani en yuksek bina; 10. bina en kalabalik sinifin
+  (6 m, 337 bina) ikinci en iyisi. Cikti:
+  `reports/storey_height_calibration_proposal_p020.csv`.
+  Secilen yukseklikler: 3,2 · 5,8 · 5,8 · 8,0 · 8,5 · 10,6 · 14,3 · 25,8 ·
+  34,7 · 36,6 m. **Ajanin onerisi budur.**
+- **(b)** Muhurlu desil kurali korunur. Secilen yukseklikler: 3,2 · 5,8 ·
+  5,8 · 5,9 · 5,9 · 6,0 · 8,0 · 8,5 · 8,5 · 36,8 m.
+
+**Gerekce (a) icin:** (b)'de dogrusal uyumun tum agirligi iki noktada
+toplanir (6 m civari ve 36,8 m); aradaki 8-35 m bos kalir. Tek bir yuksek
+bina, hem ortalamayi hem de ikincil tani uyumunu tek basina belirler
+(leverage). (a) araligi dengeli kapsar.
+
+**Gerekce (b) icin:** Kural muhurluydu ve sonuc gorulmeden yazilmisti;
+korunmasi en muhafazakar davranistir. Bu durumda M-016 bir **sinirlama**
+olarak raporlanir.
+
+**Bu karar verilmeden ilerlenemeyen isler:** kat yuksekligi ortalamasinin ve
+standart sapmasinin HESAPLANMASI. **Sayim devam edebilir** — saha listesi
+iki orneklemin BIRLESIMINI (15 bina) iceriyor.
+
+**Kritik zamanlama:** Karar, hesaptan ONCE verilmelidir. Iki orneklemi de
+hesaplayip "hangisi daha iyi durdu" diye secmek, esigi sonuca gore secmenin
+ta kendisidir (Bolum 12.2).
