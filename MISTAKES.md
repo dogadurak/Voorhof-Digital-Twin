@@ -31,6 +31,7 @@ Kayit formati Bolum 14.2'de tanimlidir. "Kucuk hata" ayrimi yoktur (14.3).
 | M-011 | 2026-09-21 | 0.3 | Karar veren cikarim bagimsiz dogrulanmadan rapora yazildi | ACIK | 0 |
 | M-012 | 2026-09-22 | 0.3 | Uyari satirlari grep ile filtrelendi; M-003 tekrari tum asama boyunca gorulmedi | KAPALI | 1 (ilki kayitsizdi) |
 | M-013 | 2026-09-22 | 0.3 | Veri surumu kaynagin KENDI etiketinden okunup "dogrulandi" yazildi; ham dosya elle duzenlendi | KAPALI | 0 |
+| M-014 | 2026-09-22 | 0.3 | Dogrulama, YUVARLANMIS bir degeri tam hassasiyetli degerle karsilastirdi -> sahte FAIL | KAPALI | 0 |
 
 ---
 
@@ -851,5 +852,51 @@ satirindaki henuz-var-olmayan kimligi ilk calistirmada **yakaladi**
 ilk taslaginda ornek olarak yazilan tanimsiz bir kimligi yakaladi.
 Bundan sonra her commit oncesi calistirilir; Asama 0.4/0.5'te
 `check_compliance.py`'ye baglanacak.
+
+**Durum:** KAPALI
+
+---
+
+## M-014 · [2026-09-22] · Asama 0.3
+
+**Sinif:** Hatali kurulmus dogrulama (sahte FAIL)
+
+**Ne oldu:**
+Asama 0.3 spot kontrolu (`src/qa/spot_check_0_3.py`), ayakizi alanini bagimsiz
+bir yoldan (shoelace) hesaplayip `reports/ahn_point_density_by_building.csv`
+degeriyle karsilastirdi ve **FAIL** verdi: en buyuk bagil fark 2,1e-04, esik
+1e-06.
+
+**Kok neden:**
+CSV'deki alan **iki ondaliga yuvarlanmis** olarak yazilir (`f"{a:.2f}"`).
+Karsilastirma, **tam hassasiyetli** shoelace degerini **yuvarlanmis** CSV
+degeriyle yapti. En kucuk binada (9,667970 m2 -> CSV "9.67") fark 0,00203 m2,
+bagil 2,1e-04 — yani olculen sey **yuvarlama hatasiydi**, bir hesap farki
+degil.
+
+**Gercek fark (olculdu):** shoelace vs shapely, ikisi de tam hassasiyet ->
+en buyuk bagil fark **5,2e-07**; koordinatlar ~84.000 oldugu icin shoelace'te
+beklenen kayan nokta birikimi. Nokta sayimlari **10/10 birebir ayni**.
+
+**Neden onemli:**
+Sahte bir FAIL, gercek bir FAIL kadar zararlidir: ya esik "gevsetilir" (Bolum
+12.2 ihlali) ya da kontrol guvenilmez sayilip birakilir. Ikisi de dogrulamayi
+yok eder. Burada esik gevsetilmedi; **karsilastirmanin kendisi duzeltildi.**
+
+**Turetilen kural:**
+Bir dogrulama, karsilastirdigi iki degerin **hangi hassasiyette** oldugunu
+bilmek zorundadir. Yuvarlanmis (raporlama icin bicimlendirilmis) bir deger,
+tam hassasiyetli bir degerle karsilastirilmaz. Ikisi birden sinanacaksa
+**iki ayri kontrol** yazilir:
+  (a) hesap dogrulugu: tam hassasiyet <-> tam hassasiyet
+  (b) raporlama dogrulugu: yayinlanan deger <-> round(tam deger, n)
+
+**Nerede uygulanir:** `src/qa/spot_check_0_3.py` (ikisi de eklendi:
+`worst` ve `csv_rounding_errors`), her ikinci-yol dogrulamasi
+
+**Otomatik kontrol:** Kontrolun kendisi; ayrica CSV'ye artik alanlar 6
+ondalikla yazilir, boylece tablo gercek farki gosterir (onceki surumde her
+iki sutun da 2 ondalikla yazildigi icin fark tabloda **gorunmuyordu** —
+ikinci bir gizleme).
 
 **Durum:** KAPALI
