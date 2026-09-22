@@ -39,6 +39,31 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
+## 3DBAG LOD2 — SABITLENMIS SURUM v2025.09.03  ·  2026-09-22T18:53:09Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `data/raw/3dbag_v20250903/metadata.json` |
+| kaynak_url | https://data.3dbag.nl/v20250903/tiles/... |
+| saglayici | TU Delft 3D geoinformation |
+| surum | v2025.09.03 (URL yolunda sabit; metadata.json edition ve oznitelik parmak izi TUTARLI) |
+| veri_uretim_tarihi | TODO_DOLDURULACAK |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-22T18:53:09Z |
+| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| sorgu_parametreleri | tile_index.fgb bbox=83323.9,444466.0,85102.5,446843.6 (EPSG:28992) = B + 50 m; 30 fayans |
+| crs | EPSG:7415 |
+| zaman_referansi | metadata.json: BAG 2.0 Extract ve AHN kaynak tarihleri yayin meta verisinde |
+| lisans | CC BY 4.0 (AGENTS.md Bolum 7) - attribution ZORUNLU |
+| attribution_sarti | TODO_0.3: 3DBAG resmi attribution metni kaynagindan alinacak |
+| sha256 | `ba4ca7e323a009c98f290ea0447c9de31753c8bf1b4d1e7634891648ac76b0e7` |
+| dosya_boyutu_bytes | 6313 |
+| run_id | RUN-2026-09-22-007 |
+| uygulanan_islemler | yok (ham indirme, .city.json.gz olarak saklandi) |
+
+30 fayans, 40283 Building nesnesi, 40283 benzersiz pand. Her dosyanin SHA-256'si fayans indeksindeki `cj_sha256` ile DOGRULANDI (checksum yayincidan gelir, bizim uretmedigimiz bagimsiz bir degerdir). b3_pw_bron: {'ahn5': 38003, 'ahn4': 936, 'ahn3': 1344}. Oznitelik parmak izi: ['2025.09.03'].
+
+---
 ## 3DBAG LOD2 (CityJSONFeature)  ·  2026-09-21T14:59:55Z
 
 | Alan | Deger |

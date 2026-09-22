@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-027**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-028**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1232,6 +1232,12 @@ senaryosu).
 
 ## D-023 · [2026-09-22] · 3DBAG surum kimligi BELIRSIZ — D-013 ve D-021 duzeltildi
 
+> ✅ **KAPANDI 2026-09-22 (D-027):** Surum artik belirsiz DEGIL. Adi belli
+> `v2025.09.03` yayini indirildi ve API verisiyle karsilastirildi: ortak
+> **7,376 binanin** 8 ozniteliginde (ondalikli degerler dahil)
+> **0 fark** bulundu. API, kendini `v2023.10.08` diye etiketlerken
+> **2025.09.03 icerigi** sunuyor. Etiket yanlis, icerik belirlendi.
+
 **Karar:** Indirdigimiz 3DBAG verisinin surumu **"belirsiz"** olarak kaydedilir.
 Hicbir raporda `v2023.10.08` **kesin surum olarak** yazilmaz.
 
@@ -1398,3 +1404,47 @@ alan payi (3DBAG) ayni metrik degildir; yon ve buyukluk tutarlidir, esitlik
 iddia edilmez.
 
 **Onay:** Olcum ve kayit; karar gerektiren kisim P-012'de.
+
+---
+
+## D-027 · [2026-09-22] · P-016 kapandi: kriter 1-B referansi v2025.09.03'e SABITLENDI
+
+**Karar (kullanici):** "adi belli bir 3DBAG surumu indirilip sabitlenir" ->
+**secenek (b)** uygulandi.
+
+**Yapilan:** `https://data.3dbag.nl/v20250903/` yayinindan, fayans indeksiyle
+secilen **30 fayans** indirildi (41 MB sikistirilmis,
+40,283 Building). Surum **URL yolunda sabittir** — servisin "su an ne
+sunuyorsa"si degil, adi belli bir yayin.
+
+**Neden bu surum:** yayin notlarindaki en yeni surum ve API icerigiyle
+ayni (asagida). Boylece 0.3'te yapilan tum 3DBAG olcumleri gecerliligini
+korur; yeniden hesaplanmasi gerekmez.
+
+**Dogrulama — ucu birden:**
+1. **Yayincinin checksum'i.** Fayans indeksi her fayans icin `cj_sha256`
+   yayinliyor. Indirilen her dosyanin SHA-256'si bu degerle karsilastirildi:
+   **30/30 DOGRULANDI**. Checksum'i biz uretmedik.
+2. **Yayin meta verisi.** `metadata.json` -> `edition = v2025.09.03`;
+   script beklenen degerle karsilastirip uyusmazsa hata firlatiyor.
+3. **Oznitelik parmak izi** (M-013 otomasyonu): `['2025.09.03']` — URL
+   surumuyle tutarli.
+
+**API karsilastirmasi — D-023 KAPANDI:**
+Ortak **7,376 bina** uzerinde su oznitelikler karsilastirildi:
+`b3_pw_bron`, `b3_pw_datum`, `b3_h_dak_max`, `b3_h_maaiveld`, `b3_volume_lod22`, `b3_rmse_lod22`, `b3_kwaliteitsindicator`, `b3_nodata_fractie_ahn5`. Sonuc: **0 fark**. API'nin sundugu icerik
+**v2025.09.03 ile aynidir**; `version.collection = v2023.10.08` etiketi
+yanlistir.
+
+**Kapsama dogrulamasi (ve bir duzeltme):** Ilk denemede fayanslar B + 50 m
+bbox'i ile secildi ve **2 bina eksik kaldi** — merkezleri secilen fayanslarin
+birlesiminin ICINDE olmasina ragmen hicbir fayans dosyasinda yoklardi. Yani
+fayans indeksi poligonlari, bir binanin hangi dosyada oldugunu birebir
+vermiyor. Fayans secimi **B + 1.000 m**'ye genisletildi ve kapsama
+**API kumesine karsi dogrulandi: 0 eksik**. Bu kontrol scriptte kalicidir.
+
+**Asama 1'e etkisi:** Kriter 1-B artik adi belli, checksum'lari dogrulanmis
+bir referansa karsi calisir. `api.3dbag.nl` **referans olarak
+kullanilmayacaktir** (etiketi guvenilmez ve yarin baska bir surum sunabilir).
+
+**Onay:** Kullanici, 2026-09-22 (P-016 secenek b).

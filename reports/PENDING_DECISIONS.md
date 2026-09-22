@@ -23,7 +23,7 @@
 | ~~P-013~~ | 1 | AHN5'te karsiligi olmayan binalar (3 yapi) | — | **KAPANDI -> D-019** (secenek a) |
 | ~~P-014~~ | 1 | Ucus sonrasi binalar icin yukseklik kaynagi | — | **KAPANDI -> D-025** (kalan sorular P-018, P-019) |
 | P-015 | 5 | EPSG:28992 -> 4326 icin bagimsiz referans noktasi (M-003 sessiz varyanti) | Asama 5 WGS84 ciktisi | **Asama 5 oncesi** |
-| P-016 | 1 | Kriter 1-B icin 3DBAG referans surumu sabitlensin mi, hangisi | Kriter 1-B | **Asama 1 baslangici** |
+| ~~P-016~~ | 1 | Kriter 1-B icin 3DBAG referans surumu | — | **KAPANDI -> D-027** (v2025.09.03 sabitlendi) |
 | P-017 | 1 | D-024 kurali "karar veremedim" durumunu tanimlamiyor | 3 konut binasinin siniflamasi | **Gorsel kontrol sonucu uygulanmadan ONCE** |
 | P-018 | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar: footprint_only mi, Street View yontemi mi | B golge geometrisi | **Asama 1 baslangici** |
 | P-019 | 1 | Kat yuksekligi degeri ve belirsizligi (Bbl yalnizca alt sinir veriyor) | estimated_lod1 yuksekligi | **Kat sayimindan ONCE** |
@@ -754,3 +754,13 @@ yanlistir.
 
 **Alternatif:** tek bir literatur degeri — ama dogrulanmis bir kaynak
 bulunmadan yazilmaz (M-005, M-013).
+
+
+---
+
+## [2026-09-22] P-016 KAPANDI -> D-027
+
+`v2025.09.03` indirildi (30 fayans, 41 MB), yayincinin sha256
+degerleriyle dogrulandi, kapsama API kumesine karsi sinandi (0 eksik).
+API karsilastirmasi: 7,376 ortak binada **0 fark** —
+API'nin etiketi yanlis, icerigi 2025.09.03.
