@@ -223,6 +223,13 @@ def main() -> int:
                         density[b]["building_class_ratio"], len(ranked[k]),
                         "ONERI - MUHURLU DEGIL - P-020 ONAYI BEKLIYOR"])
 
+    write_meta(prop_path, run_id=run_id, random_seed=seed,
+               parameters={"status": "ONERI - MUHURLU DEGIL - P-020",
+                           "classes": {str(k): len(v) for k, v in sorted(ranked.items())},
+                           "picked": [b for _, b in prop]},
+               notes=("P-020 onerisi. Muhurlu kural DEGILDIR ve onaylanmadan "
+                      "hicbir hesaba girmez (M-016)."))
+
     write_meta(out, run_id=run_id, random_seed=seed,
                parameters={"n_picked": len(picks), "pool_size": len(pool),
                            "funnel": dict(funnel),

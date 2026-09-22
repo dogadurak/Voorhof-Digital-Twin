@@ -1,0 +1,43 @@
+{
+  "run_id": "RUN-2026-09-22-026",
+  "git_commit": "fe62b93-dirty",
+  "created_utc": "2026-09-22T20:15:54Z",
+  "output": {
+    "path": "reports/storey_height_calibration_proposal_p020.csv",
+    "sha256": "ac04fdd7e91ca0c2bebe1a8176f6cbc17574ab54c2eac95ab00cb5ee0e9adaf7",
+    "size_bytes": 1141
+  },
+  "inputs": [],
+  "parameters": {
+    "status": "ONERI - MUHURLU DEGIL - P-020",
+    "classes": {
+      "3": 3,
+      "6": 337,
+      "8": 70,
+      "9": 73,
+      "11": 5,
+      "14": 4,
+      "26": 9,
+      "35": 3,
+      "37": 10
+    },
+    "picked": [
+      "0503100000023497",
+      "0503100000019104",
+      "0503100000026852",
+      "0503100000010265",
+      "0503100000026771",
+      "0503100000023053",
+      "0503100000019378",
+      "0503100000000022",
+      "0503100000019685",
+      "0503100000018892"
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": 28992,
+  "notes": "P-020 onerisi. Muhurlu kural DEGILDIR ve onaylanmadan hicbir hesaba girmez (M-016)."
+}
