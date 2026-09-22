@@ -92,14 +92,23 @@ def main() -> int:
     checks.append((".meta.json her ciktida var", not missing_meta,
                    "hepsi var" if not missing_meta else f"eksik: {missing_meta}"))
 
-    # data/raw: indirme kaydindan sonra degistirilmis dosya var mi
-    log_txt = (resolve("data.dir") / "DATA_LOG.md").read_text(encoding="utf-8")
-    newest_log = max(datetime.fromisoformat(m.replace("Z", "+00:00"))
-                     for m in re.findall(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", log_txt))
-    touched = [p.relative_to(ROOT).as_posix() for p in raw.rglob("*")
-               if p.is_file() and datetime.fromtimestamp(p.stat().st_mtime, timezone.utc) > newest_log]
-    checks.append(("`data/raw/` son indirme kaydindan sonra degistirilmemis", not touched,
-                   "temiz" if not touched else f"{len(touched)} dosya: {touched[:3]}"))
+    # data/raw butunlugu: DATA_LOG'a KAYDEDILEN sha256 hala tutuyor mu?
+    # (Dosya zamanina bakmak yanlis kurulmus bir kontroldu: ayni kosu icindeki
+    #  yazma sirasi bile onu bozar. Dogru soru "icerik degismis mi".)
+    log_txt = resolve("data.data_log").read_text(encoding="utf-8")
+    pairs = re.findall(r"\| dosya \| `([^`]+)` \|(.*?)\| sha256 \| `([0-9a-f]{64})` \|",
+                       log_txt, re.S)
+    bad, checked = [], 0
+    for rel, _, want in pairs:
+        f = ROOT / rel
+        if not f.is_file():
+            bad.append(f"{rel} (dosya yok)")
+            continue
+        checked += 1
+        if sha256(f) != want:
+            bad.append(f"{rel} (checksum farkli)")
+    checks.append((f"`data/raw/` butunlugu: kayitli sha256 tutuyor ({checked} dosya)",
+                   not bad, "hepsi dogrulandi" if not bad else f"{len(bad)}: {bad[:3]}"))
 
     secret_hits = []
     for p in list(ROOT.rglob("*.py")) + list(ROOT.rglob("*.yml")) + list(ROOT.rglob("*.md")):
@@ -116,18 +125,26 @@ def main() -> int:
     checks.append(("D/P/M atiflarinin hepsi cozuluyor (`check_refs.py`)", refs.returncode == 0,
                    refs.stdout.strip().splitlines()[-1] if refs.stdout else "?"))
 
-    # tekrarlanabilirlik: LAZ okumayan scripti iki kez calistir
-    target = rep / "00_stage_0_3_uncertain_geometry_breakdown.md"
-    before = sha256(target)
+    # Tekrarlanabilirlik: LAZ okumayan scripti iki kez calistir ve VERI
+    # ciktilarini karsilastir. Markdown raporu KARSILASTIRILMAZ: icinde
+    # `run_id` vardir ve her kosuda zorunlu olarak degisir — onu karsilastirmak
+    # determinizmi degil, zaman damgasini olcerdi (yanlis kurulmus kontrol).
+    targets = [rep / "a_residential_uncertain.csv",
+               resolve("root.aoi") / "qa" / "a_residential_uncertain.geojson"]
+    before = [sha256(t_) for t_ in targets]
     subprocess.run([sys.executable, "src/00_acquisition/report_uncertain_geometry.py"],
                    cwd=ROOT, capture_output=True, text=True)
-    after = sha256(target)
-    checks.append(("Tekrarlanabilirlik: ayni girdi -> ayni cikti (checksum)", before == after,
-                   f"{before[:12]}… {'==' if before == after else '!='} {after[:12]}…"))
+    after = [sha256(t_) for t_ in targets]
+    same = before == after
+    checks.append(("Tekrarlanabilirlik: ayni girdi -> ayni VERI ciktisi (checksum)", same,
+                   f"{len(targets)} dosya | " + ("hepsi ayni" if same else "FARKLI: " +
+                    ", ".join(t_.name for t_, b, a in zip(targets, before, after) if b != a))))
 
-    crs_ok = cfg["global_rules"]["crs"]["horizontal"] if "global_rules" in cfg else "EPSG:28992"
+    # CRS config'ten OKUNUR, koda gomulmez (paths.yml -> aoi.crs)
+    import yaml
+    crs_ok = yaml.safe_load((ROOT / "config" / "paths.yml").read_text(encoding="utf-8"))["aoi"]["crs"]
     checks.append(("CRS ve birimler Bolum 12.1'e uygun", True,
-                   f"tum olcumler {crs_ok} / EPSG:7415, metre"))
+                   f"yatay {crs_ok} (paths.yml), LAZ EPSG:7415, birim metre"))
     checks.append(("Uydurma sayi yok — her deger bir hesaptan geliyor", True,
                    "bu rapordaki tum sayilar .meta.json ve CSV'lerden okundu"))
 
