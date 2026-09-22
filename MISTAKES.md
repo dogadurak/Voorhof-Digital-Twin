@@ -900,3 +900,51 @@ iki sutun da 2 ondalikla yazildigi icin fark tabloda **gorunmuyordu** —
 ikinci bir gizleme).
 
 **Durum:** KAPALI
+
+---
+
+## M-015 · [2026-09-22] · Asama 0.3
+
+**Ne oldu:** `config/acceptance_criteria.yml` icinde
+`input_gate_ahn.per_building_density` blogunun son uc anahtari
+(`csv_scope_note`, `purpose`, `why_no_threshold`) **baska bir blogun icine
+dusmustu.** Bugun ayristirildiginda bu anahtarlar
+`building_lineage.storey_height_evidence` altinda gorunuyordu — yani bina
+bazli yogunluk CSV'sini anlatan metinler, kat yuksekligi kanitinin icinde
+duruyordu.
+
+**Kok neden:** YAML'da 4 bosluk girintili bir anahtar, kendinden once gelen
+**2 bosluk girintili anahtarin degerine** sessizce baglanir. Bu uc anahtar
+dosyanin en sonunda duruyordu; sonradan eklenen her yeni muhurlu blok
+(D-022, D-024, D-025) onlardan ONCE yerlestirildigi icin, her eklemede
+anahtarlar bir sonraki blogun icine kaydi. Hicbir asamada YAML **gecersiz**
+olmadi.
+
+**Neden fark edilmedi:** Uc isaret birden sessiz kaldi:
+1. `yaml.safe_load` hata vermez — yapi gecerlidir, yanlis olan **anlamdir**.
+2. `git diff` yalnizca "eklendi" der; bir anahtarin **ebeveyninin**
+   degistigini gostermez.
+3. Bu anahtarlari hicbir kod okumuyordu (grep ile dogrulandi), bu yuzden
+   hicbir test kirmizi yanmadi.
+
+**Etkisi:** Hicbir ESIK degeri degismedi, hicbir hesap etkilenmedi — bu
+anahtarlar yalnizca belgelemedir. **Ama tehlike gercekti:** ayni mekanizma
+bir sonraki eklemede `hard_gate.threshold` veya `K1` gibi bir esigi baska
+blogun icine tasiyabilirdi ve o zaman script esigi **bulamaz** ya da yanlis
+blokta **bulurdu**.
+
+**Turetilen kural:** Muhurlu bir config blogunun yapisi, iceriginden ayri
+olarak **dogrulanir**. Her muhurlu blok icin beklenen anahtar YOLU
+(`blok.altblok.anahtar`) bir listede tutulur ve her calistirmada yolun hala
+cozuldugu sinanir. YAML'in gecerli olmasi, yapinin dogru olmasi demek
+DEGILDIR.
+
+**Nerede uygulanir:** `src/qa/check_config_structure.py` (yeni), 25 beklenen
+yol + 5 muhurlu blogun `status` degeri.
+
+**Otomatik kontrol:** `python src/qa/check_config_structure.py` — eksik veya
+yeri degismis yol icin cikis kodu 1. Ayrica muhurlu bloklarda kalan
+`TODO_*` degerlerini listeler (hata degil; sessizce unutulmasin diye).
+Yeni bir muhurlu blok eklendiginde yolu bu listeye de eklenir.
+
+**Durum:** KAPALI (anahtarlar dogru bloga geri tasindi, kontrol otomatiklesti)

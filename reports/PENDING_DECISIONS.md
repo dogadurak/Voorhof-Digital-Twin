@@ -24,9 +24,9 @@
 | ~~P-014~~ | 1 | Ucus sonrasi binalar icin yukseklik kaynagi | — | **KAPANDI -> D-025** (kalan sorular P-018, P-019) |
 | P-015 | 5 | EPSG:28992 -> 4326 icin bagimsiz referans noktasi (M-003 sessiz varyanti) | Asama 5 WGS84 ciktisi | **Asama 5 oncesi** |
 | ~~P-016~~ | 1 | Kriter 1-B icin 3DBAG referans surumu | — | **KAPANDI -> D-027** (v2025.09.03 sabitlendi) |
-| P-017 | 1 | D-024 kurali "karar veremedim" durumunu tanimlamiyor | 3 konut binasinin siniflamasi | **Gorsel kontrol sonucu uygulanmadan ONCE** |
-| P-018 | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar: footprint_only mi, Street View yontemi mi | B golge geometrisi | **Asama 1 baslangici** |
-| P-019 | 1 | Kat yuksekligi degeri ve belirsizligi (Bbl yalnizca alt sinir veriyor) | estimated_lod1 yuksekligi | **Kat sayimindan ONCE** |
+| ~~P-017~~ | 1 | "karar veremedim" durumu | — | **KAPANDI -> D-028** (ihtiyatli dislama) |
+| ~~P-018~~ | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar | — | **KAPANDI -> D-029** (estimated_lod1) |
+| ~~P-019~~ | 1 | Kat yuksekligi degeri ve belirsizligi | — | **KAPANDI -> D-030** (yerel kalibrasyon + sayim kurali) |
 
 ---
 
@@ -764,3 +764,19 @@ bulunmadan yazilmaz (M-005, M-013).
 degerleriyle dogrulandi, kapsama API kumesine karsi sinandi (0 eksik).
 API karsilastirmasi: 7,376 ortak binada **0 fark** —
 API'nin etiketi yanlis, icerigi 2025.09.03.
+
+
+---
+
+## [2026-09-22] P-017, P-018, P-019 KAPANDI
+
+| P | Karar | Nereye yazildi |
+|---|---|---|
+| P-017 | "Karar veremedim" = ihtiyatli dislama, S2/S3 gibi islenir, AYRI raporlanir | D-028 · `building_scenario_rule.scenarios.UNDECIDED` |
+| P-018 | 6 buyuk ucus sonrasi yapi `estimated_lod1` (kat sayimi yapilir); 24 kucuk yapi `footprint_only` | D-029 · `building_lineage.assignment` |
+| P-019 | Kat yuksekligi YEREL KALIBRASYON ile; 11 maddelik kat sayim kurali sayimdan ONCE muhurlendi | D-030 · `storey_counting_rule`, `storey_height_calibration` |
+
+**Bunlarla birlikte acilan yeni sey yok.** P-012 halinde acik ve gorsel
+kontrolu bekliyor; kullanici 2026-09-22'de "(b) yonunde egilimliyim ama karari
+gorsel kontrolden sonra verecegim" dedi — bu bir karar DEGILDIR, kayit olarak
+tutulur.

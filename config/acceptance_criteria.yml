@@ -1101,6 +1101,31 @@ input_gate_ahn:
       # --- EK (2026-09-21, kullanici talimati; ESIK DEGIL, raporlanir) ---
       - building_class_points  # ayakizi icinde YALNIZCA sinif 6 (bina) noktalari
       - building_class_ratio   # building_class_points / point_count
+    # M-015: asagidaki uc anahtar 2026-09-22'de bu blogun ICINE GERI
+    # TASINDI. Dosya sonuna yapilan eklemeler bunlari once
+    # building_scenario_rule'un, sonra storey_height_evidence'in icine
+    # dusurmustu (YAML'da 4 bosluklu anahtar, kendinden onceki 2
+    # bosluklu anahtarin degerine baglanir). Hicbir ESIK degeri
+    # degismedi; bu anahtarlar yalnizca belgelemedir ve hicbir kod
+    # tarafindan okunmuyordu (grep ile dogrulandi).
+    csv_scope_note: >
+      CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
+      "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
+      karsilastirmasi icin daha kullanislidir (basarisiz rekonstruksiyonlar esik
+      ustundeki binalarda da cikabilir — o durumda neden girdi DEGILDIR ve bu da
+      bir bulgudur). `below_10` sutunu istenen alt kumeyi verir.
+    purpose: >
+      AGENTS.md Bolum 12.12'nin somut uygulamasi. Asama 1'de basarisiz
+      rekonstruksiyon listesi (reports/failed_buildings.csv) bu CSV ile
+      KARSILASTIRILACAK:
+        - basarisiz VE dusuk yogunluklu  -> neden muhtemelen GIRDI
+        - basarisiz AMA yeterli yogunluklu -> neden muhtemelen YONTEM
+      Bu ayrim sonradan yapilamaz; girdi kalitesi o zamana kadar olculmemis olur.
+    why_no_threshold: >
+      Esik konulmadi cunku dusuk catı yogunlugu tek basina bir HATA DEGILDIR —
+      kucuk veya egimli catili binalarda dogal olarak az nokta duser. Deger,
+      Asama 1 sonuclariyla BIRLIKTE yorumlandiginda anlam kazanir.
+
 
   # --- SINIF 6 ORANI (2026-09-21 eklendi; ESIK DEGIL, raporlanir) ---
   # Bu blok, olcum ZATEN yapildiktan SONRA eklenmistir. Eklenmesi Bolum 12.2'yi
@@ -1326,13 +1351,28 @@ building_scenario_rule:
       reconstruction_validation: EXCLUDED
       energy_comparison_stage3: PC6_EXCLUDED
     UNDECIDED:
+      # P-017 KAPANDI 2026-09-22 (kullanici onayi) -> D-028. Ihtiyatli dislama.
       meaning: "Kullanici gorsel kontrolde karar veremedi"
-      handling: TODO_ONAY_BEKLIYOR             # P-017 — kural BU DURUMU TANIMLAMIYOR
-      note: >
-        Kullanicinin kurali S1/S2/S3'u tanimliyor. "Karar veremedim"
-        secenegi gorsel kontrol dosyasinda mevcut ama kuralda yok. Ajan bu
-        boslugu kendi karariyla DOLDURMADI (Bolum 12.11). Gorsel kontrol
-        sonucu uygulanmadan once P-017 cevaplanmalidir.
+      decision_ref: D-028
+      handling: TREAT_AS_S2_S3
+      lineage: estimated_lod1
+      reconstruction_validation: EXCLUDED
+      energy_comparison_stage3: PC6_EXCLUDED
+      reported_separately: true
+      limitation_text_required: >
+        Rapor bu binalari S2/S3 ile AYNI KEFEDE sayamaz. "Gorsel kontrolde
+        karar verilemedi" ayri bir satir olarak yazilir ve Bolum 5
+        sinirlamalarina girer: bu binalar bir OLCUME degil, bir KARARSIZLIGA
+        dayanarak dislanmistir.
+      rationale: >
+        Yanlis dahil etmenin maliyeti, yanlis dislamanin maliyetinden buyuktur.
+        Yanlis dahil edilen bir S2 binasinda eski geometri yeni binaya
+        giydirilir ve hata SESSIZDIR — dogrulama istatistigine karisir. Yanlis
+        dislanan bir S1 binasi ise yalnizca orneklemi kucultur ve raporda
+        GORUNUR kalir (Bolum 12.8: sessizce dusurulmez).
+      not_a_measurement: >
+        Bu dislama bir olcume dayanmaz. Bolum 12.13-4 geregi karar
+        "cikarima/kararsizliga dayali" olarak isaretlenir.
 
   # --- PC6 dislama tanimi (hesaptan once sabitlendi) ---
   pc6_exclusion:
@@ -1393,22 +1433,42 @@ building_lineage:
       lineage: estimated_lod1
       height_source: "Street View gorsel kat sayimi (kullanici)"
       height_method: "kat_sayisi * kat_yuksekligi_m"
-      storey_height_m: TODO_ONAY_BEKLIYOR               # P-019
-      height_uncertainty_m: TODO_ONAY_BEKLIYOR          # P-019 ile birlikte tanimlanacak
+      storey_height_m: TODO_HESAPLANACAK       # P-019 onaylandi -> storey_height_calibration
+      height_uncertainty_m: TODO_HESAPLANACAK  # kat_sayisi * storey_height_sd_m
+      counting_rule_ref: storey_counting_rule  # D-030 — sayimdan ONCE muhurlendi
     post_flight_small:
       rule: "ucus sonrasi aday VE ayakizi < 100 m2"
       lineage: footprint_only
       count_measured: 24                         # post_flight_buildings.csv, 2026-09-22
+      decision_ref: D-029
+      rationale: >
+        Bu yapilarin coğu berging/kulube olcegindedir (6-70 m2). Golge ve
+        ruzgar geometrisine katkisi ihmal edilebilir; kat sayimi da anlamsizdir
+        (tek katli, cati bicimi belirleyici).
     post_flight_large:
+      # P-018 KAPANDI 2026-09-22 (kullanici onayi) -> D-029.
       rule: "ucus sonrasi aday VE ayakizi >= 100 m2"
-      lineage: footprint_only                           # GECICI - P-018
+      lineage: estimated_lod1
+      decision_ref: D-029
       count_measured: 6
-      note: >
+      height_source: "Street View gorsel kat sayimi (kullanici)"
+      height_method: "kat_sayisi * kat_yuksekligi_m"
+      storey_height_m: TODO_HESAPLANACAK                # storey_height_calibration ciktisi
+      height_uncertainty_m: TODO_HESAPLANACAK           # ayni yerden
+      fallback: >
+        Kat sayilamayan bina (Street View yok / gorus kapali) footprint_only'ye
+        DUSER — building_lineage.values.estimated_lod1.fallback ile ayni kural.
+      why_changed: >
         Kullanici talimati "diger ucus sonrasi KUCUK yapilar footprint_only"
-        idi. Olculdu: 30 adayin 6'si >= 100 m2 (4.580 m2,
-        74 konut VBO). Onerme bu 6 bina icin tutmuyor. Lineage
-        kuralinin varsayilani (height_source yoksa footprint_only) GECICI olarak
-        uygulanir; karar P-018.
+        idi ve bu onerme OLCUMLE TUTMADI: 30 adayin 6'si >= 100 m2
+        (toplam 4.580 m2, 74 konut VBO). Bu yapilar B alaninin golge
+        geometrisine girer; yuksekligi bilinmeyen bir blok komsularini
+        golgelemez ve gunes potansiyeli SISTEMATIK OLARAK YUKSEK cikar
+        (AGENTS.md Bolum 3: "tampon atlanamaz"). Kullanici 2026-09-22'de
+        bunlarin da kat sayimina dahil edilmesini onayladi.
+      note: >
+        Bu 6 bina rekonstruksiyon dogrulamasina (1-A/1-B/1-C) GIRMEZ;
+        estimated_lod1 zaten enters_validation_statistics: false'dir.
     osm: "KULLANILMAZ (kullanici karari 2026-09-22)"
 
   # --- Kat yuksekligi: DOGRULANAN kaynak ve SINIRI (P-019) ---
@@ -1434,20 +1494,260 @@ building_lineage:
         3DBAG kat sayisi bir makine ogrenmesi tahminidir (Roy 2022); en guclu
         girdisi bina yuksekliginin kendisidir -> yukseklik tahmininde kullanmak
         kismen donguseldir. Ayrica ucus sonrasi binalar 3DBAG'de yoktur.
-    csv_scope_note: >
-      CSV TUM A binalarini icerir, yalnizca esik altindakileri degil. Kullanici
-      "esik altinda kalanlar" istemisti; tam liste bunun ust kumesidir ve Asama 1
-      karsilastirmasi icin daha kullanislidir (basarisiz rekonstruksiyonlar esik
-      ustundeki binalarda da cikabilir — o durumda neden girdi DEGILDIR ve bu da
-      bir bulgudur). `below_10` sutunu istenen alt kumeyi verir.
-    purpose: >
-      AGENTS.md Bolum 12.12'nin somut uygulamasi. Asama 1'de basarisiz
-      rekonstruksiyon listesi (reports/failed_buildings.csv) bu CSV ile
-      KARSILASTIRILACAK:
-        - basarisiz VE dusuk yogunluklu  -> neden muhtemelen GIRDI
-        - basarisiz AMA yeterli yogunluklu -> neden muhtemelen YONTEM
-      Bu ayrim sonradan yapilamaz; girdi kalitesi o zamana kadar olculmemis olur.
-    why_no_threshold: >
-      Esik konulmadi cunku dusuk catı yogunlugu tek basina bir HATA DEGILDIR —
-      kucuk veya egimli catili binalarda dogal olarak az nokta duser. Deger,
-      Asama 1 sonuclariyla BIRLIKTE yorumlandiginda anlam kazanir.
+
+# ============================================================================
+#  KAT SAYIM KURALI — Karar D-030
+#  MUHURLENDI 2026-09-22, KULLANICI SAYIMA BASLAMADAN ONCE (kullanici talimati).
+#  Hicbir bina icin kat sayisi HENUZ BILINMIYOR. Bu blok bir gozleme
+#  bakilarak yazilmamistir.
+#
+#  Neden kural gerekiyor: "kat sayisi" tek bir sey degildir. Bodrumun,
+#  cati katinin, pilotis zeminin ve egimli arazideki cephe farkinin nasil
+#  sayildigi 9 katli bir blokta yuksekligi +-3 m degistirir; kat yuksekligi
+#  kalibrasyonunda ayni belirsizlik dogrudan SONUCA gider. Kural sayimdan
+#  sonra yazilirsa, sayim sonucuna gore secilmis olur (Bolum 12.2).
+# ============================================================================
+storey_counting_rule:
+  decision_ref: D-030
+  status: SEALED_BEFORE_OBSERVATION
+  sealed_at: "2026-09-22"
+  counted_by: "kullanici (Google Street View + hava fotografi)"
+  applies_to:
+    - "building_scenario_rule.applies_to"                       # 3 konut blogu (S2/S3/UNDECIDED ise)
+    - "building_lineage.assignment.post_flight_large"           # 6 buyuk ucus sonrasi yapi
+    - "storey_height_calibration.selection"                     # 10 kalibrasyon binasi
+  unit: "kat (tam sayi) — yarim kat YAZILMAZ"
+
+  rules:
+    R1_zemin_kat:
+      text: "Zemin kat DAHILDIR ve 1. kat sayilir."
+      detail: >
+        Sokak kotundaki ana giris kati 1'dir (NL: begane grond). "Uc katli
+        bina" = zemin + 2 ust kat. Bu, NL gunluk dilindeki kullanimla
+        ("drie bouwlagen") aynidir ama Ingilizcedeki "three floors above
+        ground floor" ile AYNI DEGILDIR — karisiklik olmasin diye yazildi.
+    R2_bodrum:
+      text: "Bodrum (kelder) SAYILMAZ."
+      test: >
+        Kat, cephede penceresinin UST kenari sokak kotunun ALTINDA kaliyorsa
+        veya katina yalnizca asagi inen merdivenle giriliyorsa bodrumdur.
+      why: >
+        Olculen yukseklik (LiDAR) maaiveld USTUNU olcer; bodrum sayilirsa
+        payda buyur ve kat yuksekligi YAPAY OLARAK DUSER.
+    R3_souterrain:
+      text: >
+        Yariya yakini zemin ustunde kalan kat (souterrain): pencere ALT kenari
+        sokak kotunun USTUNDEYSE SAYILIR, degilse sayilmaz.
+      note_required: "Sayildiysa NOT sutununa 'souterrain sayildi' yazilir."
+    R4_cati_kati:
+      text: >
+        Egik cati altindaki hacim, cephede KENDI TAM BOY PENCERESI olan ve
+        yanindaki katlarla ayni yukseklikte gorunen bir kat ise SAYILIR.
+        Yalnizca dormer (dakkapel) veya cati penceresi varsa SAYILMAZ.
+      note_required: "Her iki durumda da NOT sutununa 'cati kati: var/dormer/yok' yazilir."
+      why: "Yarim kat yazmak yasak — 0,5 degeri formulu belirsizlestirir."
+    R5_cati_ustu_teknik_hacim:
+      text: >
+        Asansor makine dairesi, merdiven kulesi, havalandirma, dakopbouw
+        KAT SAYILMAZ.
+      pairing: >
+        Olcum tarafinda bunun karsiligi p70 kullanilmasidir (p100/max DEGIL):
+        cati ustu tekil hacimler yukseklige karismasin diye. Sayim ve olcum
+        AYNI SEYI kastetmek zorundadir.
+    R6_pilotis:
+      text: "Kolonlar uzerinde bos birakilmis acik zemin kat 1 kat SAYILIR."
+      why: "Hacmi ve yuksekligi vardir; golgeleme ve yukseklik acisindan kattir."
+      note_required: "NOT sutununa 'pilotis' yazilir."
+    R7_cekme_kat:
+      text: >
+        Ust kat daha kucuk taban alanina sahipse (terugliggende bouwlaag /
+        setback) yine 1 kat SAYILIR.
+      note_required: "NOT sutununa 'cekme kat' yazilir."
+    R8_egimli_arazi:
+      text: >
+        Kat sayisi ANA GIRISIN bulundugu cepheden sayilir. Baska bir cephede
+        kat sayisi FARKLI gorunuyorsa fark NOT'a yazilir ve bina kalibrasyon
+        orneklemINDEN CIKARILIR.
+      why: >
+        Voorhof duz arazidir; bu kural yine de yazildi cunku souterrain ve
+        gomulu garaj ayni etkiyi uretir. Kalibrasyonda belirsiz bir bina,
+        ortalamayi sessizce kaydirir.
+    R9_ayni_pandda_farkli_yukseklik:
+      text: >
+        Bir BAG pand'i farkli yukseklikte bolumler iceriyorsa (L blok, alcak
+        ek yapi) EN YUKSEK bolumun kat sayisi yazilir.
+      note_required: "NOT'a 'N katli ek var' yazilir."
+      calibration_effect: "Boyle bir bina kalibrasyon orneklemINDEN CIKARILIR."
+    R10_sayilamadi:
+      text: >
+        Sayim yapilamiyorsa (Street View yok, agac/duvar kapatiyor, goruntu
+        cok eski) kat sayisi BOS birakilir ve NOT'a "sayilamadi" yazilir.
+      why: "Bolum 13.3: olculemeyen deger tahmin edilmez, bos birakilir."
+      consequence: "Bina footprint_only'ye duser (building_lineage fallback)."
+    R11_goruntu_tarihi:
+      text: >
+        Street View goruntusunun TARIHI (ekranin kosesinde yazar) NOT sutununa
+        yazilir.
+      why: >
+        Ucus sonrasi yapilarda kritik: 2023 oncesi bir goruntude bina henuz
+        yoktur. Ayrica "2023'te var miydi" sorusunun cevabi goruntu tarihinden
+        BAGIMSIZ okunamaz.
+
+  reporting: >
+    Kat sayilari docs/field_check_list.md icinde, olculen yuksekligin YANINDA
+    raporlanir (Bolum 12.13-3: cikarim ile gozlem yan yana).
+
+# ============================================================================
+#  KAT YUKSEKLIGI KALIBRASYONU — Karar D-030 (P-019 kapandi)
+#  MUHURLENDI 2026-09-22. Kalibrasyon binalari HENUZ SECILMEDI, hicbir
+#  kat sayisi bilinmiyor, hicbir kat yuksekligi hesaplanmadi.
+#
+#  Neden: Bbl 2,6 m yalnizca ALT SINIRDIR (building_lineage.
+#  storey_height_evidence). Tek basina kat yuksekligi olarak kullanilamaz.
+#  Kullanici 2026-09-22'de YEREL KALIBRASYONU onayladi.
+# ============================================================================
+storey_height_calibration:
+  decision_ref: D-030
+  status: SEALED_BEFORE_OBSERVATION
+  sealed_at: "2026-09-22"
+  n_buildings: 10
+  seed: 28992                     # input_gate_ahn.visual_check.seed ile AYNI sabit
+
+  # --- 1) Yukseklik NASIL olculur (AHN5'ten, dogrudan) ---
+  height_measurement:
+    source: "AHN5 nokta bulutu (data/raw/ahn/AHN5_T/*.LAZ) — kendi olcumumuz"
+    not_source: >
+      3DBAG b3_h_dak_* KULLANILMAZ: 3DBAG de AHN'den turetilir ve bir
+      tutarlilik referansidir (Bolum 5). Kalibrasyonu ona baglamak, Asama 1'de
+      ona karsi yapilacak karsilastirmayi kismen dongusellestirir.
+    roof_z:
+      definition: "Ayakizi POLIGONU icine dusen sinif 6 noktalarinin z degerleri"
+      statistic: p70
+      why_p70: >
+        p100/max cati ustu teknik hacimleri (R5) yakalar; medyan ise genis
+        cati ustu tesisati olan bloklarda asagi kayar. p70, 3DBAG'in ana cati
+        yuksekligi icin kullandigi istatistiklerden biridir ve R5 ile
+        tutarlidir: sayimda saymadigimizi olcumde de saymayiz.
+    ground_z:
+      definition: >
+        Ayakizinin DISINDAKI halkada (footprint.buffer(5,0 m) eksi
+        footprint.buffer(0,5 m)) sinif 2 (zemin) noktalarinin MEDYANI.
+      why_ring: >
+        Ayakizi ICINDEKI sinif 2 noktalari normal bir binada zaten cok azdir
+        (cati zemini kapatir); oradan maaiveld okumak gurultuludur. Halka,
+        binanin oturdugu yerel kotu olcer.
+      buffer_inner_m: 0.5
+      buffer_outer_m: 5.0
+    formula: "h_measured_m = p70(z_sinif6_ayakizi_ici) - medyan(z_sinif2_halka)"
+    z_bin_m: 0.10
+    z_bin_note: >
+      Yukseklikler bina x z histogramindan okunur (LAZ tek kez okunsun diye).
+      0,10 m bin, +-0,05 m nicemleme hatasi demektir; 9 katli bir binada kat
+      yuksekligine etkisi ~0,006 m'dir — ihmal edilebilir ama RAPORLANIR.
+
+  # --- 2) Hangi binalar aday (SECIMDEN ONCE sabitlendi) ---
+  selection:
+    pool: "A alanindaki panden (stage_0_2.status_filter + centroid kurali)"
+    criteria:
+      C1_konut:
+        rule: "gebruiksdoel exact_match 'woonfunctie' (D-008)"
+        why: "Kat yuksekligi kullanim islevine gore degisir; hedef binalar konuttur."
+      C2_kohort:
+        rule: "1960 <= bouwjaar <= 1975"
+        why: >
+          AGENTS.md Bolum 2: Voorhof tek yapim-yili kohortudur (1960-1975).
+          Kullanici talimati: "mumkunse ayni donem ve tip".
+      C3_ucus_sonrasi_degil:
+        rule: >
+          post_flight_buildings.csv, post_flight_suspects.csv ve
+          rebuild_suspects.csv'de OLMAYACAK; building_scenario_rule.applies_to
+          icindeki 3 binada OLMAYACAK.
+        why: "Ucus sirasinda bugunku bina orada degilse olculen yukseklik yanlis binaya aittir."
+      C4_cati_fiilen_gorulmus:
+        rule: "building_class_ratio >= 0.50 VE sinif 6 nokta sayisi >= 200"
+        why: >
+          Dusuk sinif 6 orani = cati agacla kapali veya siniflandirma eksik
+          (per_building_class_ratio). Boyle bir binada p70 catiyi degil agaci
+          olcer.
+        disclosure: >
+          DURUSTLUK NOTU: sinif 6 orani dagilimi 0.3'te ZATEN olculmustu, yani
+          bu esik dagilim bilinerek secildi. Bir KABUL esigi DEGILDIR ve hicbir
+          PASS/FAIL kararina girmez; yalnizca orneklem secer. Yine de
+          Bolum 12.2'nin ruhu geregi burada acikca yazilmistir.
+      C5_duz_cati:
+        rule: "p90(z_sinif6) - p30(z_sinif6) < 1.5 m"
+        why: >
+          Egik catida h/kat_sayisi cati hacmini kat yuksekligine dagitir ve
+          sonucu SISTEMATIK olarak buyutur. 1,5 m sinirinin gerekcesi: ~9 m
+          derinliginde bir sira evde 40 derecelik bir cati ~3 m yukselir; duz
+          cati ise parapet + egim nedeniyle 0,3-0,8 m araligindadir. 1,5 m
+          ikisinin ARASINDA, hicbir olculen dagilima bakilmadan secildi.
+      C6_maaiveld_olculebilir:
+        rule: "halkada sinif 2 nokta sayisi >= 50"
+        why: "Az noktali medyan gurultuludur; taban kotu yanlis olursa yukseklik de yanlis olur."
+      C7_anlamli_yukseklik:
+        rule: "h_measured_m >= 3.0"
+        why: "3 m altindaki bir olcum bir bina degil, bir ek yapidir; kat yuksekligi turetilemez."
+    stratification:
+      rule: >
+        Uygun binalar h_measured_m'e gore siralanir ve 10 DESIL'e bolunur;
+        her desilden 1 bina secilir. Boylece orneklem farkli YUKSEKLIKLERI
+        (dolayisiyla farkli kat sayilarini) kapsar.
+      pick_within_decile: "building_class_ratio EN YUKSEK olan bina (esitlikte bag_id kucuk olan)"
+      top_decile_exception:
+        rule: "10. desilde h_measured_m EN BUYUK olan bina secilir"
+        why: >
+          Kullanici "farkli kat sayisinda 10 bina" istedi. Yuksek ucun
+          temsil edildigini garanti eden tek kural budur; oran kuralina
+          birakilirsa en yuksek blok orneklem disinda kalabilir.
+      why_not_random: >
+        Rastgele secim burada bir sey KAZANDIRMAZ: amac temsili bir orneklem
+        degil, farkli kat sayilarinda GUVENILIR OLCULEN binalar bulmaktir.
+        Kural tamamen deterministiktir; seed yalnizca esitlik bozma ve olasi
+        yeniden calistirma icin .meta.json'a yazilir.
+
+  # --- 3) Kat yuksekligi NASIL hesaplanir (kullanicinin verdigi formul) ---
+  formula:
+    per_building: "kat_yuksekligi_i = h_measured_m_i / kat_sayisi_i"
+    storey_height_m: "mean(kat_yuksekligi_i)"
+    storey_height_sd_m: "std(kat_yuksekligi_i, ddof=1)"
+    height_uncertainty_m: "kat_sayisi * storey_height_sd_m"
+    height_uncertainty_note: >
+      height_uncertainty_m bina BASINA hesaplanir: kat sayisi ne kadar
+      buyukse mutlak belirsizlik o kadar buyur (kat yuksekligi hatasi her
+      katta tekrarlanir). Kullanicinin "standart sapma height_uncertainty_m
+      olur" talimatinin dogrudan uygulanmasidir.
+    min_usable: 6
+    on_too_few: >
+      Kullanilabilir bina sayisi 6'nin altina duserse (sayilamadi + R8/R9
+      dislamalari) ORTALAMA HESAPLANMAZ. FAIL verilir, Bolum 12.6 isletilir ve
+      kullaniciya donulur. 3-4 binadan turetilmis bir ortalama, belirsizligi
+      oldugundan kucuk gosterir.
+    outlier_rule:
+      rule: "Hicbir deger atilmaz."
+      why: >
+        Aykiri deger atmak, esigi sonuca gore secmenin baska bir bicimidir
+        (Bolum 12.2). Aykiri gorunen bina RAPORLANIR ve nedeni (cati kati?
+        souterrain?) NOT sutunundan okunur.
+
+  # --- 4) Formulun BILINEN sapmasi (sonuctan ONCE yazildi) ---
+  known_bias:
+    text: >
+      h_measured / kat_sayisi bir kat yuksekligi DEGIL, bir kat BASINA DUSEN
+      yukseklik ortalamasidir. Icine sunlar da girer: zemin kat doseme kotunun
+      maaiveld'den yuksekte olmasi (plint) ve cati parapeti/egimi. Ikisi de
+      kat sayisina BOLUNMEZ, yani sonuc gercek kat-kat yuksekliginden
+      SISTEMATIK OLARAK BUYUK cikar ve bu sapma AZ KATLI binalarda daha
+      buyuktur.
+    reported: "Bu sapma raporda yazilir; gizlenmez (Bolum 1 kural 5)."
+  secondary_diagnostic:
+    model: "h_measured = a + b * kat_sayisi  (en kucuk kareler)"
+    interpretation: "b = kat-kat yukseklik tahmini; a = plint + cati sabiti"
+    decision: NONE
+    rule: >
+      YALNIZCA RAPORLANIR. Hicbir yuksekligi belirlemez, hicbir binayi
+      dislamaz. Amaci known_bias'i SAYIYLA gostermektir: b ile
+      storey_height_m arasindaki fark, sapmanin buyuklugudur. Kullanici
+      onaylamadan karar kuralina DONUSTURULEMEZ (Bolum 12.11).
+  output_csv: reports/storey_height_calibration.csv
+  field_list: docs/field_check_list.md

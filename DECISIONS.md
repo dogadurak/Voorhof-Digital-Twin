@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-028**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-031**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1448,3 +1448,128 @@ bir referansa karsi calisir. `api.3dbag.nl` **referans olarak
 kullanilmayacaktir** (etiketi guvenilmez ve yarin baska bir surum sunabilir).
 
 **Onay:** Kullanici, 2026-09-22 (P-016 secenek b).
+
+---
+
+## D-028 · [2026-09-22] · P-017 kapandi: "karar veremedim" = IHTIYATLI DISLAMA
+
+**Karar (kullanici):** D-024'un tanimlamadigi dorduncu durum — gorsel kontrolde
+karar verilememesi — **S2/S3 gibi islenir**: `estimated_lod1`, rekonstruksiyon
+dogrulamasindan (1-A/1-B/1-C) cikarilir, PC6'lari Asama 3 enerji
+karsilastirmasindan dislanir. **Ayri raporlanir** ve Bolum 5 sinirlamalarina
+girer.
+
+**Neden asimetrik:** Yanlis DAHIL etmenin maliyeti, yanlis DISLAMANIN
+maliyetinden buyuktur. Yanlis dahil edilen bir S2 binasinda eski cati yeni
+binaya giydirilir ve hata **sessizdir** — dogrulama istatistigine karisir ve
+sonradan ayristirilamaz. Yanlis dislanan bir S1 binasi ise yalnizca orneklemi
+kucultur ve raporda **gorunur** kalir (Bolum 12.8).
+
+**Durustluk kaydi:** Bu dislama bir OLCUME dayanmaz, bir KARARSIZLIGA dayanir.
+Bolum 12.13-4 geregi karar "cikarima dayali" olarak isaretlenir ve S2/S3 ile
+ayni satirda sayilmaz.
+
+**Nerede:** `config/acceptance_criteria.yml` ->
+`building_scenario_rule.scenarios.UNDECIDED`.
+
+**Onay:** Kullanici, 2026-09-22 (P-017, ajanin onerisi onaylandi).
+
+---
+
+## D-029 · [2026-09-22] · P-018 kapandi: 6 buyuk ucus sonrasi yapi estimated_lod1
+
+**Karar (kullanici):** Ayakizi >= 100 m2 olan **6** ucus sonrasi yapi
+`footprint_only` KALMAZ; bunlar icin de kat sayimi yapilir ve
+`estimated_lod1` olurlar. **Kucuk yapilar (24 adet) footprint_only kalir.**
+
+**Neden bu karar gerekti:** Kullanicinin P-014 talimatindaki "diger ucus sonrasi
+**kucuk** yapilar footprint_only" onermesi **olcumle tutmadi**: 30 adayin 6'si
+>= 100 m2 (toplam **4.580 m2**, **74 konut VBO**; iki okul + B'de dort blok).
+Ajan bu uyumsuzlugu sessizce kendi varsayimiyla kapatmadi (Bolum 12.11),
+gecici varsayilani uygulayip P-018'i acti.
+
+**Fiziksel gerekce:** Bu yapilar **B alaninin golge geometrisine** girer.
+Yuksekligi bilinmeyen bir blok komsularini golgelemez; sonuc gunes
+potansiyelinin **sistematik olarak yuksek** cikmasidir — AGENTS.md Bolum 3'un
+"tampon atlanamaz" kuralinin tam olarak uyardigi hata.
+
+**Dogrulama kapsamina etkisi: YOK.** `estimated_lod1` zaten
+`enters_validation_statistics: false`'tur; bu 6 bina 1-A/1-B/1-C'ye girmez.
+
+**Geri dusme:** Kat sayilamayan bina footprint_only'ye duser (kaynaksiz
+yukseklik yazilmaz).
+
+**Onay:** Kullanici, 2026-09-22 (P-018).
+
+---
+
+## D-030 · [2026-09-22] · P-019 kapandi: kat sayim kurali ve kat yuksekligi kalibrasyonu
+
+**Karar (kullanici):** Kat yuksekligi **yerel olarak kalibre edilir**.
+LiDAR'dan yuksekligi olculmus, farkli kat sayisinda **10 bina** secilir
+(mumkunse ayni donem ve tip); kullanici kat sayar;
+`kat_yuksekligi = olculen_yukseklik / kat_sayisi`; **ortalama** deger olarak,
+**standart sapma** belirsizlik olarak kullanilir.
+
+**Neden gerekti:** P-014'te dogrulanan tek kaynak (Bbl Art. 4.164 lid 4 +
+Tabel 4.162, **2,6 m**) bir **alt sinirdir** — doseme ustu serbest yukseklik,
+kat-kat yukseklik degil. Tipik deger de degildir. `b3_bouwlagen` ise kismen
+dongusel oldugu icin reddedilmisti. Yani elde **kullanilabilir bir sayi yoktu**.
+
+### Iki ayri muhur, ikisi de gozlemden ONCE
+
+**1. Kat sayim kurali (`storey_counting_rule`, 11 madde).** Kullanicinin
+talimati: "Kat sayimi kuralini simdi yaz, benim saymamdan ONCE muhurle."
+Kapsam: zemin kat dahil (R1), bodrum sayilmaz (R2), souterrain testi (R3),
+cati kati (R4), cati ustu teknik hacim sayilmaz (R5), pilotis sayilir (R6),
+cekme kat sayilir (R7), egimli arazi/ana giris cephesi (R8), ayni pandda
+farkli yukseklik (R9), sayilamadi (R10), goruntu tarihi (R11).
+
+**Neden bu kadar ayrintili:** "Kat sayisi" tek bir sey degildir. 9 katli bir
+blokta bodrumun veya cati katinin sayilip sayilmamasi yuksekligi **+-3 m**
+degistirir; kalibrasyonda ayni belirsizlik dogrudan sonuca gider. Kural
+sayimdan SONRA yazilsaydi, sayim sonucuna gore secilmis olurdu (Bolum 12.2).
+
+**R5 <-> olcum eslesmesi:** Sayimda cati ustu teknik hacim sayilmadigi icin
+olcumde de **p70** kullanilir (p100/max degil). Sayim ve olcum ayni seyi
+kastetmek zorundadir.
+
+**2. Kalibrasyon protokolu (`storey_height_calibration`).**
+- **Yukseklik:** `h = p70(sinif 6 z, ayakizi ici) - medyan(sinif 2 z, halka)`.
+  Halka = `buffer(5,0 m) - buffer(0,5 m)`; ayakizi ICINDEKI zemin noktalari
+  normal binada zaten azdir. **3DBAG `b3_h_dak_*` KULLANILMAZ** — 3DBAG de
+  AHN'den turetilir ve Asama 1'de ona karsi karsilastirma yapilacaktir
+  (donguselligi onleme).
+- **Secim (7 kriter):** konut (D-008 exact_match), bouwjaar 1960-1975, ucus
+  sonrasi/yeniden yapim listelerinde olmayan, sinif 6 orani >= 0,50 ve >= 200
+  sinif 6 noktasi, duz cati (p90-p30 < 1,5 m), halkada >= 50 zemin noktasi,
+  h >= 3,0 m.
+- **Tabakalama:** uygun binalar h'ye gore 10 desile bolunur, her desilden 1
+  bina — farkli kat sayilari boylece garanti altina alinir. 10. desilde en
+  yuksek bina secilir.
+- **Yetersiz orneklem:** kullanilabilir bina < 6 ise **ortalama hesaplanmaz**,
+  FAIL verilir (Bolum 12.6). 3-4 binalik bir ortalama belirsizligi oldugundan
+  kucuk gosterir.
+- **Aykiri deger atilmaz.** Aykiri deger atmak, esigi sonuca gore secmenin
+  baska bir bicimidir.
+
+### Formulun BILINEN sapmasi (sonucu gormeden yazildi)
+
+`h / kat_sayisi` bir kat yuksekligi **degildir**; kat basina dusen yukseklik
+ortalamasidir. Icine **plint** (zemin doseme kotunun maaiveld'den yuksekte
+olmasi) ve **cati parapeti** de girer. Bunlar kat sayisina bolunmez, yani
+sonuc gercek kat-kat yuksekliginden **sistematik olarak buyuk** cikar ve sapma
+**az katli** binalarda daha buyuktur.
+
+Bunu sayiyla gostermek icin ikincil bir tani konur: `h = a + b * kat_sayisi`
+dogrusal uyumu. `b` kat-kat yukseklik tahminidir, `a` plint+cati sabitidir.
+**KARAR VERMEZ** (`decision: NONE`) — yalnizca raporlanir; karar kuralina
+donusturulmesi kullanici onayina baglidir (Bolum 12.11).
+
+**Iki ceyrek acik kalan:** Bbl'nin **rejim caveat**'i (2023'te tamamlanan
+binalar muhtemelen Bouwbesluit 2012'ye tabidir) kalibrasyonla **cozulmez**;
+kalibrasyon 1960-1975 kohortundan yapilir ve sonuc **o kohortun** kat
+yuksekligidir. Bu deger 2023-2026 yapimi 9 binaya uygulanacaktir — bir
+**cikarimdir** ve raporda oyle etiketlenir (Bolum 12.13).
+
+**Onay:** Kullanici, 2026-09-22 (P-019).
