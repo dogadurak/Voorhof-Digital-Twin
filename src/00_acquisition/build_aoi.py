@@ -30,6 +30,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+# M-003 / M-012: PROJ dizini, pyproj'u yukleyen laspy/shapely/pyproj'dan ONCE
+# sabitlenmeli. Aksi halde pyproj PostgreSQL'in PROJ dizinine kilitlenir ve her
+# calistirmada "unable to set PROJ database path" uyarisi basar.
+import src.common  # noqa: E402,F401
+
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 

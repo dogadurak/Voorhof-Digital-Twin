@@ -140,18 +140,29 @@ def log_crs(logger: logging.Logger, source: str, found_crs: str, expected: str) 
         )
 
 
-def log_rowcount(logger: logging.Logger, label: str, before: int, after: int) -> None:
+def log_rowcount(logger: logging.Logger, label: str, before: int, after: int,
+                 reason: str | None = None) -> None:
     """Bir join/filtre isleminin oncesi ve sonrasi satir sayisini loglar.
 
     Girdi : label  — islemin adi
             before — islem oncesi satir sayisi
             after  — islem sonrasi satir sayisi
+            reason — dusen satirlarin OLCULMUS nedeni (ayristirilmis sayilarla).
+                     Verilmezse dusus WARNING olarak kalir.
     Cikti : None
 
     Bolum 14.6 "Sessiz veri kaybi" onleyici davranisi:
     "Her join oncesi/sonrasi satir sayisini logla."
+
+    AGENTS.md Bolum 1 kural 12 (M-012): uyari BASTIRILMAZ. `reason` bir
+    susturma anahtari degildir — nedeni cagiran kod OLCMUS olmalidir ve neden
+    loga sayilariyla birlikte yazilir. Nedeni bilinmeyen dusus her zaman
+    WARNING'dir.
     """
     delta = after - before
     logger.info("Satir sayimi | %s | oncesi=%d sonrasi=%d fark=%+d", label, before, after, delta)
     if delta < 0:
-        logger.warning("%s isleminde %d kayit DUSTU — nedeni aciklanmali.", label, -delta)
+        if reason:
+            logger.info("%s isleminde %d kayit dustu — ACIKLANDI: %s", label, -delta, reason)
+        else:
+            logger.warning("%s isleminde %d kayit DUSTU — nedeni aciklanmali.", label, -delta)

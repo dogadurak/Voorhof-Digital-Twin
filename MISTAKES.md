@@ -709,7 +709,9 @@ altinda rapor ureten satirlarda `)[:N]` / `][:N]` metin kesmesi arayacak.
 
 ## M-012 · [2026-09-22] · Asama 0.3
 
-**Sinif:** Sinyal kaybi — ciktiyi okuyana ulasmadan filtrelemek
+**Sinif:** **DAVRANIS hatasi** (teknik degil — kullanici tespiti 2026-09-22). Sinyal kaybi: ciktiyi okuyana ulasmadan filtrelemek.
+
+**Kalici kural:** AGENTS.md Bolum 1 kural 12 — "Uyari mesajlari hicbir zaman filtrelenmez veya gizlenmez. Tekrarlayan bir uyari gurultu degil, cozulmemis bir sorundur; bastirilmak yerine kaynagi cozulur veya PENDING'e yazilir."
 
 **Ne oldu:**
 Asama 0.3 boyunca calistirdigim neredeyse her komutta

@@ -1,6 +1,6 @@
 # Belirsiz geometri — A / B\\A ve konut kirilimi
 
-**Karar D-022** · run_id `RUN-2026-09-22-003` · LAZ okunmadi, tespit ciktisi kullanildi
+**Karar D-022** · run_id `RUN-2026-09-22-005` · LAZ okunmadi, tespit ciktisi kullanildi
 
 > **VERI DONEMI (D-020).** Geometri AHN5 **2023-02-08 / 02-14**; BAG
 > oznitelikleri **2026-09**.

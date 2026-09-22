@@ -57,6 +57,11 @@ Cevap hayırsa, o çıktı üretilmez veya açıkça "doğrulanmamış" etiketiy
     başlarsın, her hatadan kural türetirsin.
 11. **Girdi kalite kapısından geçmeyen veriyle modelleme yapma.** Bölüm 12.12:
     her girdi, işlenmeden önce ölçülür ve kaydedilir.
+12. **Uyarı mesajları hiçbir zaman filtrelenmez veya gizlenmez.** Tekrarlayan
+    bir uyarı gürültü değil, çözülmemiş bir sorundur; bastırılmak yerine
+    kaynağı çözülür veya `PENDING_DECISIONS.md`'ye yazılır. (M-012 — bu bir
+    **davranış** kuralıdır, teknik değil: 0.3 boyunca PROJ düzeltmesinin
+    çalışmadığını söyleyen tek uyarı her komutta `grep -v` ile silindi.)
 
 ---
 
@@ -837,6 +842,7 @@ biri gerçekleşirse normal kayıt açılır.
 | **Sessiz atlama** | Hatalı kayıtlar loglanmadan düşürülür | 12.8 — her atlanan kayıt CSV'ye |
 | **Özet istatistikle genelleme** | Medyan/ortalama çoğunluğu anlatır, etkisi büyük azınlığı gizler | Grubu hem **sayıya** hem **etkiye** (alan, VBO, tüketim) göre özetle; etkiye göre en büyük 5 üyeyi tek tek yaz; uymayan varsa alt gruba böl. "Hepsi/çoğu" ancak etki-ağırlıklı özet de aynı yönü gösteriyorsa (M-010) |
 | **Doğrulanmamış çıkarım** | Makul bir çıkarım ölçüm gibi rapora girer ve bir kararı belirler | 12.13 — "ÇIKARIM" etiketle, karardan önce bağımsız yoldan doğrula (M-011) |
+| **Uyarıyı gizleme** | Çıktı `grep -v` ile "temizlenir", tekrarlayan uyarı gürültü sayılır | Bölüm 1 kural 12 — uyarı filtrelenmez; kaynağı çözülür veya PENDING'e yazılır. Çıktı kısaltılacaksa filtrelenen satır **sayısı** da yazdırılır (M-012) |
 
 ### 14.7 Kullanıcının rolü
 

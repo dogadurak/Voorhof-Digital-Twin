@@ -29,6 +29,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+# M-003 / M-012: PROJ dizini, pyproj'u yukleyen laspy/shapely/pyproj'dan ONCE
+# sabitlenmeli. Aksi halde pyproj PostgreSQL'in PROJ dizinine kilitlenir ve her
+# calistirmada "unable to set PROJ database path" uyarisi basar.
+import src.common  # noqa: E402,F401
+
 import numpy as np
 from pyproj import Transformer
 from shapely.geometry import shape
@@ -62,7 +67,6 @@ def main() -> int:
     panden = [f for f in raw
               if f["properties"].get("status") in sf["pand_include"]
               and area_b.contains(shape(f["geometry"]).centroid)]
-    log_rowcount(logger, "bag_pand -> B icinde + status filtreli", len(raw), len(panden))
 
     # Bolum 14.6: dusen satirlarin NEDENI ayristirilir, yalnizca sayilmaz.
     drop = Counter()
@@ -72,8 +76,9 @@ def main() -> int:
         if not (ok_s and ok_b):
             drop[("status disi" if not ok_s else "status uygun") + " / " +
                  ("B disi" if not ok_b else "B ici")] += 1
-    for k, v in sorted(drop.items()):
-        logger.info("  dusen pand | %-28s %5d", k, v)
+    log_rowcount(logger, "bag_pand -> B icinde + status filtreli", len(raw), len(panden),
+                 reason="; ".join(f"{k}: {v}" for k, v in sorted(drop.items()))
+                 + " (B disi = indirme B+300 m dikdortgeni, B bir poligon; D-006)")
 
     geoms = {f["properties"]["identificatie"]: shape(f["geometry"]) for f in panden}
     props = {f["properties"]["identificatie"]: f["properties"] for f in panden}
@@ -99,17 +104,30 @@ def main() -> int:
             vbo_all[one] += 1
             if (p.get("gebruiksdoel") or "").strip() == "woonfunctie":
                 woon[one] += 1
-    log_rowcount(logger, "VBO -> status filtreli", len(vbo_raw), kept)
     vbo_drop = Counter(f["properties"].get("status") for f in vbo_raw
                        if f["properties"].get("status") not in sf["vbo_include"])
-    for k, v in vbo_drop.items():
-        logger.info("  dusen VBO | %-28s %5d (D-008 geregi dislanir)", k, v)
+    log_rowcount(logger, "VBO -> status filtreli", len(vbo_raw), kept,
+                 reason="; ".join(f"{k}: {v}" for k, v in vbo_drop.items())
+                 + " (D-008 status filtresi)")
     # Bolum 14.6 sessiz veri kaybi: pand indirmesinde karsiligi olmayan VBO'lar
     all_pand_ids = {f["properties"]["identificatie"] for f in raw}
     orphan = sorted(k for k in vbo_all if k not in all_pand_ids)
-    if orphan:
-        logger.warning("Pand indirmesinde karsiligi OLMAYAN VBO pand_id: %d adet -> %s",
-                       len(orphan), ", ".join(orphan[:5]))
+    # Yetim VBO: pand'i indirmede olmayan VBO. B ICINDEYSE analizi etkiler ->
+    # WARNING. B disindaysa analizi etkilemez -> uzakligiyla INFO. (Olculdu
+    # 2026-09-22: tek yetim 0503100000001130 — VBO noktasi kendi pand'inin
+    # 14,6 m DISINDA, pand indirme dikdortgeninin batisinda; BAG kaynak
+    # tutarsizligi, bkz. DATA_LOG.md.)
+    from shapely.geometry import Point as _Pt
+    for f in vbo_raw:
+        pid = str(f["properties"].get("pandidentificatie"))
+        if pid in orphan:
+            pt = shape(f["geometry"])
+            if area_b.contains(pt):
+                logger.warning("Yetim VBO B ICINDE: pand %s (VBO %s) — analizi etkiler",
+                               pid, f["properties"].get("identificatie"))
+            else:
+                logger.info("Yetim VBO B disinda (%.1f m): pand %s — analizi etkilemez",
+                            area_b.exterior.distance(pt), pid)
     logger.info("Konut VBO (exact_match) tasiyan pand: %d | toplam konut VBO: %d",
                 sum(1 for v in woon.values() if v > 0), sum(woon.values()))
 

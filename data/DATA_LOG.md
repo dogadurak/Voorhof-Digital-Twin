@@ -209,7 +209,9 @@ Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degis
 | run_id | RUN-2026-09-21-004 |
 | uygulanan_islemler | yok (ham indirme, degistirilmedi) |
 
-Ozellik sayisi: 7704. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi. OZNITELIKLER (8): aantal_verblijfsobjecten, bouwjaar, gebruiksdoel, identificatie, oppervlakte_max, oppervlakte_min, rdf_seealso, status. STATUS DAGILIMI: Pand in gebruik: 7576 · Verbouwing pand: 77 · Bouwvergunning verleend: 31 · Bouw gestart: 15 · Pand in gebruik (niet ingemeten): 4 · Sloopvergunning verleend: 1. Status filtresi config/acceptance_criteria.yml -> stage_0_2.status_filter altinda tanimlidir (Karar D-008); degerler bu dagilimdan dogrulanmistir (M-005).
+Ozellik sayisi: 7704. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degistirilmedi.
+
+**KAYNAK VERI TUTARSIZLIGI (olculdu 2026-09-22):** VBO `0503010000032819` (kantoorfunctie) `pandidentificatie = 0503100000001130` der, ama bu pand indirmede yok. Sunucu `hits = 7704`, indirilen 7704 — **indirme eksiksiz**. Pand tek-kayit FES sorgusuyla PDOK'tan cekildi: status `Pand in gebruik`, bouwjaar 1972; geometrisi indirme dikdortgeninin tamamen **batisinda** (en dogu x = 83.371,0 < dikdortgen baslangici 83.373,7). VBO noktasi **kendi pand'inin 14,6 m disinda** — BAG'in kendi icinde bir tutarsizlik. Konum B'nin 121,2 m disinda; A/B analizini **etkilemez**. `report_uncertain_geometry.py` artik yetim VBO'yu B icindeyse WARNING, disindaysa uzakligiyla INFO olarak loglar. OZNITELIKLER (8): aantal_verblijfsobjecten, bouwjaar, gebruiksdoel, identificatie, oppervlakte_max, oppervlakte_min, rdf_seealso, status. STATUS DAGILIMI: Pand in gebruik: 7576 · Verbouwing pand: 77 · Bouwvergunning verleend: 31 · Bouw gestart: 15 · Pand in gebruik (niet ingemeten): 4 · Sloopvergunning verleend: 1. Status filtresi config/acceptance_criteria.yml -> stage_0_2.status_filter altinda tanimlidir (Karar D-008); degerler bu dagilimdan dogrulanmistir (M-005).
 
 ---
 ## CBS Wijken en Buurten 2025 — wijkenbuurten:buurten  ·  2026-09-21T08:58:27Z

@@ -1,10 +1,10 @@
 {
-  "run_id": "RUN-2026-09-22-003",
-  "git_commit": "227d717-dirty",
-  "created_utc": "2026-09-22T13:27:44Z",
+  "run_id": "RUN-2026-09-22-005",
+  "git_commit": "4093217-dirty",
+  "created_utc": "2026-09-22T15:22:46Z",
   "output": {
     "path": "reports/00_stage_0_3_uncertain_geometry_breakdown.md",
-    "sha256": "4b8b9d2f539a67d71f158ae2254fffe31cf6ac4d5dbbaab0cb91588dc5e4dd93",
+    "sha256": "35b87028363eeb00c6873727da8b6d36666465b2bbdf8d62ed5c2a14611fee1b",
     "size_bytes": 4531
   },
   "inputs": [],
