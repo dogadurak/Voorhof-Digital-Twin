@@ -1992,6 +1992,20 @@ facade_class_measurement:
     threshold_status: >
       0,20 / 0,50 / 0,60 / 0,80 ajanin on-kayitli okuma esikleridir; bir
       belgeden alinmamistir. Kabul kriteri degildir; hicbir binayi dislamaz.
+    # Yukaridaki metnin makine-okunur kopyasi (Bolum 13.2: esik koddan degil
+    # config'ten okunur). 2026-09-27, OLCUMDEN ONCE eklendi; degerler AYNI.
+    values:
+      wp1_max_class6_share: 0.20
+      ahn4_min_class6_share: 0.50
+      wp1_min_class1_wall_concentration: 0.60
+      control_min_class6_share: 0.80
+      wall_band_m: 0.2
+      band_half_width_m: 0.5
+      zone_bottom_above_ground_m: 1.5
+      zone_top_below_roof_p30_m: 1.0
+      min_h_measured_m: 6.0
+      min_zone_height_m: 2.0
+      control_inset_m: 1.0
   decision_effect: >
     Sonuc D-017 ve P-012'deki "sinif 6 cepheleri de icerir" ifadelerini AHN5
     icin gunceller. P-012 sinif secimini KENDISI belirlemez (kullanici karari).
