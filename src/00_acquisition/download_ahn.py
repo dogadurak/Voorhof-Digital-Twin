@@ -21,8 +21,13 @@ once .txt metadata'sindan okur ve B+50 ile kesisimini dogrular**. Formul
 yanlissa indirme yapilmaz (MISTAKES.md M-005: sema/duzen iddiasi kaynagindan
 dogrulanir).
 
+AHN4 (D-034, 2026-09-27): kriter 1-C-c (zamansal bagimsiz kontrol) icin ayni
+alt-fayanslarin AHN4 surumu `--version AHN4` ile indirilir. AHN4 AGENTS Bolum 4'te
+yedek olarak listelidir; yeni kaynak degildir. AHN5 davranisi DEGISMEDI.
+
 Calistirma:
-    python src/00_acquisition/download_ahn.py
+    python src/00_acquisition/download_ahn.py                 # AHN5 (varsayilan)
+    python src/00_acquisition/download_ahn.py --version AHN4  # 1-C-c icin
 """
 
 from __future__ import annotations
@@ -48,8 +53,30 @@ from src.common.data_log import append_entry
 from src.common.logging_setup import setup_logging
 from src.common.meta import sha256, write_meta
 
-BASE = "https://geotiles.citg.tudelft.nl/AHN5_T"
+GEOTILES = "https://geotiles.citg.tudelft.nl"
+BASE = f"{GEOTILES}/AHN5_T"      # main() --version ile yeniden baglar
 SAFETY_MARGIN_M = 50.0          # Karar D-010
+
+# Surume ozgu DATA_LOG metinleri. AHN5 metinleri 0.3'teki ile AYNI birakildi.
+VERSION_TEXT = {
+    "AHN5": {
+        "version": "AHN5, kampanya etiketi '2023_C' (dosya adindan)",
+        "time_reference": (
+            "CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi "
+            "'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; "
+            "sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu)."),
+        "production": "2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi)",
+        "license": "TODO: AHN lisans kosulu ahn.nl'den dogrulanacak",
+    },
+    "AHN4": {
+        "version": "AHN4 (GeoTiles AHN4_T)",
+        "time_reference": (
+            "TODO_OLCULECEK: ucus tarihi LAZ gps_time'dan girdi kapisinda olculecek "
+            "(3DBAG b3_pw_datum bu bolgede '2020' diyor — karsilastirma icin, kanit degil)."),
+        "production": "TODO_OLCULECEK (gps_time)",
+        "license": "TODO: AHN4 lisansi Nationaal Georegister kaydindan dogrulanacak",
+    },
+}
 TILE_W_M, TILE_H_M = 5000.0, 6250.0
 COLS, ROWS = 5, 5
 TIMEOUT_S = 300
@@ -118,7 +145,16 @@ def read_metadata(name: str, logger) -> dict | None:
 
 
 def main() -> int:
+    import argparse
+    global BASE
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", choices=sorted(VERSION_TEXT), default="AHN5")
+    ver = ap.parse_args().version
+    BASE = f"{GEOTILES}/{ver}_T"
+    vt = VERSION_TEXT[ver]
+
     logger, run_id, _ = setup_logging("download_ahn")
+    logger.info("Surum: %s | kaynak: %s", ver, BASE)
     target_crs_xy = expected_crs("planimetric")
     target_crs_z = expected_crs("with_height")
 
@@ -184,7 +220,7 @@ def main() -> int:
         logger.error("Indirme bos diskin yarisindan buyuk. Durduruldu.")
         return 1
 
-    out_dir = resolve("data.raw") / "ahn" / "AHN5_T"
+    out_dir = resolve("data.raw") / "ahn" / f"{ver}_T"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     downloaded: list[str] = []
@@ -235,30 +271,26 @@ def main() -> int:
         notes="Her alt-fayansin sinirlari indirmeden once metadata'dan dogrulandi.",
     )
     append_entry(
-        dataset="AHN5 LAZ nokta bulutu (GeoTiles alt-fayanslari)",
+        dataset=f"{ver} LAZ nokta bulutu (GeoTiles alt-fayanslari)",
         path=out_dir / f"{downloaded[0]}.LAZ",
         run_id=run_id,
         source_url=BASE,
         provider="AHN (Rijkswaterstaat/provincies/waterschappen) - fayanslama: TU Delft GeoTiles",
-        version="AHN5, kampanya etiketi '2023_C' (dosya adindan)",
+        version=vt["version"],
         query=(f"B bbox + {SAFETY_MARGIN_M:.0f} m (D-010); "
                f"secilen alt-fayanslar: {', '.join(downloaded)}"),
         crs=target_crs_z,
-        time_reference=(
-            "CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi "
-            "'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; "
-            "sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu)."
-        ),
-        license_="TODO: AHN lisans kosulu ahn.nl'den dogrulanacak",
+        time_reference=vt["time_reference"],
+        license_=vt["license"],
         attribution="TODO",
-        data_production_date="2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi)",
+        data_production_date=vt["production"],
         processing="yok (ham indirme). Alt-fayanslar 20 m ortusme tasir (GeoTiles tasarimi).",
         notes=(
             f"{len(downloaded)} alt-fayans, toplam {total_points} nokta, "
             f"{total/2**30:.2f} GB. Kapsama B+{SAFETY_MARGIN_M:.0f} m icin DOGRULANDI. "
             f"Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. "
             f"CRS dosya ici WKT'den okundu: EPSG:7415 (RD New + NAP). "
-            f"KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; AHN5 LAZ icin "
+            f"KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; {ver} LAZ icin "
             f"GeoTiles kullanildi."
         ),
     )
