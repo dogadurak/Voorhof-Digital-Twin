@@ -28,6 +28,13 @@
 | ~~P-018~~ | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar | — | **KAPANDI -> D-029** (estimated_lod1) |
 | ~~P-019~~ | 1 | Kat yuksekligi degeri ve belirsizligi | — | **KAPANDI -> D-030** (yerel kalibrasyon + sayim kurali) |
 | ~~P-020~~ | 1 | Kalibrasyon orneklemi | — | **KAPANDI -> D-031** (yukseklik sinifi; desil superseded) |
+| P-021 | 0.3 | PDOK Luchtfoto (acik hava fotografi) gorsel kontrol icin yeni veri kaynagi olsun mu | Gorsel kontrolun ajan tarafindan on-gecisi | **Simdi** (kullanicinin isini azaltir) |
+| P-022 | 3 | Stedin SJV "normallestirilmis yil" — model hangi hava yiliyla, gaz m3->kWh hangi kaynakla | Asama 3 enerji karsilastirmasi | **Asama 3 oncesi** |
+| P-023 | 3 | PC6 uygunluk kurallari: gunes paneli salderen + toplu isitma (baglanti/konut orani) | Asama 3 | **Stedin verisine BAKMADAN once** |
+| P-024 | 3 | Hangi Stedin yili (peildatum 2024-01-01 = 2023 tuketimi mi, en guncel mi) | Asama 3 veri edinimi | **Stedin indirilmeden once** |
+| P-025 | 3 | Kalibrasyon ile dogrulama ayrimi (kalibrasyon yok mu / egitim-test ayrimi mi) | Asama 3 | **Asama 3 oncesi** |
+| P-026 | 3 | Gunes analizine agac golgesi (CDSM/TDSM, AHN sinif 1) girsin mi | Asama 3 gunes | **Asama 3 oncesi** |
+| P-027 | 5 | Raporda "dijital ikiz" teriminin duzeyi (model / golge / ikiz) | Nihai rapor basligi | Asama 5 oncesi |
 
 ---
 
@@ -846,3 +853,86 @@ dusuyordu (ajanda (a) = yukseklik sinifi onerisi). Gerekce metni niyeti
 tereddutsuz gosterdigi icin ("yalnizca 2 katlilardan turetilmis bir kat
 yuksekligi ... yanlis olur") yukseklik sinifi secenegi uygulandi ve bu fark
 burada kayda gecirildi.
+
+
+---
+
+## [2026-09-26] P-021 … P-027 — arastirmadan cikan bosluklar
+
+Kaynak: `docs/dijital_ikiz_rehberi.md` (kullanici talimati: "bu projelerin
+nasil yapildigini arastir, ben bilmedigim icin soylemeyi unutabilirim, sen
+atlama"). Her maddede OLGU (kaynaktan dogrulandi) ile CIKARIM ayri yazildi;
+ayrintilar rehberin 5. ve 6. bolumunde.
+
+### P-021 · PDOK Luchtfoto gorsel kontrol icin kullanilsin mi
+
+**Olgu:** PDOK luchtfotorgb WMS'inde 2022/2023/2024/2025/2026 ortofoto
+katmanlari var; `Fees: None`, `AccessConstraints: None` (GetCapabilities,
+2026-09-26). AGENTS Bolum 4'te **yok** -> kural 3 geregi onay gerekir.
+**Ne cozer:** 22 yapi icin "ne?" ve "2022/2023'te var miydi?" sorulari.
+**Ne cozmez:** kat sayimi (hava fotografi yukaridan bakar).
+**Secenekler:** (a) Onay: ajan ilk gecisi yapar, kullanici sabit seed'li bir
+alt kumeyi kontrol eder. (b) Red: kullanici hepsini Street View ile yapar.
+**Ajanin onerisi:** (a), iki kosulla: ajan kor bir gozlemci degildir (cikarimi
+kendisi yapti) -> kullanici kontrolu ZORUNLU; ve ortofotolarin cekim tarihi
+katman meta verisinden dogrulanmadan "Subat 2023 oncesi/sonrasi" denmez.
+
+### P-022 · Stedin SJV'si ile NEYI karsilastiriyoruz
+
+**Olgu (Stedin veri aciklamasi):** SJV "standartlastirilmis kosullarda ve
+normallestirilmis bir yila gore beklenen yillik tuketim"dir, onceki yilin
+tuketimine dayanir; gaz m3, elektrik kWh.
+**Cikarim:** model gercek bir yilin havasiyla degil, normallestirilmis bir yil
+icin calistirilmali; gaz ciktisi isitma + sicak su (+ pisirme) olmali;
+m3->kWh icin kaynakli isil deger gerekir. "Normallestirilmis yil"in tam
+tanimi Stedin sayfasinda YOK -> kaynagi bulunmali.
+**Oneri:** Asama 3 oncesi NEDU/EDSN profil belgelerinden tanim dogrulanir,
+`docs/validation_protocol.md`'ye 12.4 kapsaminda yazilir, sonra karar.
+
+### P-023 · PC6 uygunluk kurallari (VERIYE BAKMADAN muhurlenmeli)
+
+**Olgu:** (1) Eski sayaclarda elektrik SJV'si PV ile salderen edilmis olabilir;
+`LEVERINGSRICHTING_PERC` net tuketimi olan baglantilarin oranini verir.
+(2) Kleinverbruik gaz baglantisi en fazla G25; blokverwarming'de tek baglanti
+butun bloga hizmet eder.
+**Cikarim (DOGRULANMADI):** Voorhof'un yuksek bloklarinda blok isitmasi G25'i
+asiyorsa bu bloklarin isitma gazi PC6 verisinde YOKTUR.
+**Dogrulama yolu (ajan oneriyor):** PC6 basina Stedin gaz BAGLANTI sayisi /
+BAG konut VBO sayisi. Oran esigi ve PV payi esigi Stedin degerlerine
+bakilmadan once config'e yazilir (Bolum 12.2).
+
+### P-024 · Hangi Stedin yili
+
+**Olgu:** Dosyalar 1 Ocak referansli; en gunceli 2026.
+**Oneri:** peildatum 2024-01-01 (2023 tuketimine dayanir -> geometriyle ayni
+donem). Guncel dosya ikincil olarak raporlanabilir.
+
+### P-025 · Kalibrasyon ile dogrulama ayri olmali
+
+**Olgu:** Amsterdam calismasi 6 yil kalibrasyon + ayri 2 yil dogrulama
+kullaniyor (Wang 2020).
+**Secenekler:** (a) Kalibrasyon yok: saf fizik tabanli arsetip, sonuc oldugu
+gibi raporlanir. (b) PC6'lar veya yillar ONCEDEN egitim/test olarak ayrilir.
+**Ajanin onerisi:** (a) ilk tur icin — en temiz dogrulama budur; kalibrasyon
+istenirse (b) ikinci tur olarak ve ayrim sonuc gorulmeden muhurlenir.
+**On-kayit notu (karar degil):** Hollanda'da kotu etiketli konutlar teorik
+tuketimlerinden cok daha az tuketiyor (Majcen 2013). Voorhof 1960-75 stoku
+icin fizik tabanli modelin OLCUMDEN YUKSEK cikmasi beklenir. Bu yon sonuctan
+once burada yazilidir.
+
+### P-026 · Gunes analizine agac golgesi
+
+**Olgu:** SOLWEIG bitki ortusunu CDSM + TDSM ile alir; UMEP'in LiDAR'dan
+uretim egitimi var. Austin calismasinda baglam dahil edilmeyince cati isinimi
+ortalama %9,3 yuksek cikti (Waqas 2023).
+**Oneri:** AHN5 sinif 1 (bitki) noktalarindan CDSM uretilir. Bu, P-012
+(hangi siniflar Asama 1'e girer) ile BAGLANTILI ama ayri bir karardir:
+P-012 bina rekonstruksiyonu icin, P-026 golge geometrisi icin.
+
+### P-027 · "Dijital ikiz" terimi
+
+**Olgu:** Dar tanimda ikiz, fiziksel nesneyle gercek zamanli veri alisverisi
+yapar (Singh 2021). Bizim urunumuz tek seferlik bir anlik goruntudur ->
+literatur diliyle "dijital model".
+**Oneri:** Baslik degismesin ama raporun ozetinde duzey acikca yazilsin:
+"statik, dogrulanmis bir kentsel dijital model; canli veri akisi yok".
