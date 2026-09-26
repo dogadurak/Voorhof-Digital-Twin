@@ -62,9 +62,13 @@ SEARCH_EVIDENCE = re.compile(r"(?i)aranan|arand[ıi]|bulunamad[ıi]|okunamad[ıi
 SKIP_FILES = {"MISTAKES.md"}           # hata defteri eski iddialari ALINTILAR
 
 
-def check_thresholds() -> list[str]:
-    """Dis belgeye atif yapip dogrulama tarihi tasimayan config bloklarini dondurur."""
-    cfg = yaml.safe_load(resolve("config.acceptance_criteria").read_text(encoding="utf-8"))
+def check_thresholds(cfg: dict | None = None) -> list[str]:
+    """Dis belgeye atif yapip dogrulama tarihi tasimayan config bloklarini dondurur.
+
+    Girdi : cfg — verilmezse config/acceptance_criteria.yml okunur (oz-sinama icin)
+    """
+    if cfg is None:
+        cfg = yaml.safe_load(resolve("config.acceptance_criteria").read_text(encoding="utf-8"))
     bad: list[str] = []
 
     def has_verified(node) -> bool:
@@ -104,20 +108,66 @@ def check_negative_claims() -> list[str]:
     for f in sorted(files):
         text = f.read_text(encoding="utf-8", errors="ignore")
         for para in re.split(r"\n\s*\n", text):
-            if SEARCH_EVIDENCE.search(para):
-                continue
-            for pat in NEGATIVE_PATTERNS:
-                m = re.search(pat, para, re.I)
-                if m:
-                    line_no = text[:text.find(para)].count("\n") + 1
-                    snippet = re.sub(r"\s+", " ", para[max(0, m.start() - 60):m.end() + 60])
-                    hits.append(f"{f.relative_to(REPO_ROOT)}:{line_no}: …{snippet}…")
-                    break
+            m = negative_hit(para)
+            if m:
+                line_no = text[:text.find(para)].count("\n") + 1
+                snippet = re.sub(r"\s+", " ", para[max(0, m.start() - 60):m.end() + 60])
+                hits.append(f"{f.relative_to(REPO_ROOT)}:{line_no}: …{snippet}…")
     return hits
+
+
+def negative_hit(para: str) -> re.Match | None:
+    """Bir paragrafta arama kaniti OLMAYAN negatif varlik iddiasi varsa eslesmeyi dondurur."""
+    if SEARCH_EVIDENCE.search(para):
+        return None
+    for pat in NEGATIVE_PATTERNS:
+        m = re.search(pat, para, re.I)
+        if m:
+            return m
+    return None
+
+
+# Oz-sinama fiksturleri. Arac sonuca bakilarak gevsetilirse (2026-09-27'de bir kez
+# oldu: "olculdu" kanit listesine eklenince gercek pozitif kayboldu) bunlar kirmizi
+# yanar. Fikstur SILMEK veya beklenen degeri cevirmek kontrolu gevsetmekle aynidir
+# -> docs/reviewer_checklist.md J-1.
+SELF_TEST_NEGATIVE = [
+    # (paragraf, yakalanmali_mi)
+    ("AHN5 icin resmi spesifikasyon yoktur.", True),
+    ("OLCULDU 2026-09-21: kwaliteitsbeschrijving AHN5 icin hicbir spesifikasyon vermiyor.", True),
+    ("Hicbir AHN yayini AHN5 siniflandirmasini belgelemiyor.", True),
+    ("Aranan kaynaklar: ahn.nl, AHN4 bestek — bulunamadi; spesifikasyon yok.", False),
+]
+SELF_TEST_CONFIG = [
+    ({"x": {"threshold": 5, "note": "bestek boyle diyor"}}, 1),
+    ({"x": {"note": "bestek boyle diyor", "source_verified_at": "2026-09-27"}}, 0),
+    ({"x": {"note": "bestek boyle diyor", "source_status": "DOGRULANMADI"}}, 0),
+]
+
+
+def self_test() -> list[str]:
+    """Kontrollerin bilinen gercek hatalari HALA yakaladigini sinar. Bos liste = gecti."""
+    fails = []
+    for para, expect in SELF_TEST_NEGATIVE:
+        if bool(negative_hit(para)) != expect:
+            fails.append(f"negatif iddia: {'KACIRDI' if expect else 'YANLIS ALARM'} -> {para!r}")
+    for cfg, expect in SELF_TEST_CONFIG:
+        got = len(check_thresholds(cfg))
+        if got != expect:
+            fails.append(f"config: beklenen {expect} bulgu, cikan {got} -> {cfg!r}")
+    return fails
 
 
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")   # T-1: Windows konsol kodlamasi
+    st = self_test()
+    print(f"[OZ-SINAMA] {len(SELF_TEST_NEGATIVE) + len(SELF_TEST_CONFIG)} fikstur, "
+          f"{len(st)} basarisiz")
+    for s in st:
+        print("   ARAC HATASI:", s)
+    if st:
+        print("SONUC: FAIL (olcum araci bilinen hatalari yakalamiyor — sonuclarina guvenilmez)")
+        return 2
     bad = check_thresholds()
     neg = check_negative_claims()
     print(f"[SERT] dogrulama tarihi olmayan dis-belge atfi: {len(bad)}")

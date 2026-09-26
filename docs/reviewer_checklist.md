@@ -115,6 +115,40 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 - [ ] **I-4** Beklenen sapma yönü (fizik modeli ölçümden **yüksek**) sonuçtan
       önce yazılmış mı? (P-025 ön-kayıt notu)
 
+## J. Ölçüm araçlarının kendisi (§13.6 — "araç sonuca göre değiştirilemez")
+
+> Kullanıcı talebi (2026-09-27): "check_claims.py'yi bir kez gevşetip gerçek
+> hatayı gizlediğini söyledin — bunu Reviewer'ın özellikle bakacağı listeye ekle."
+
+- [ ] **J-1** `src/qa/check_claims.py` **gevşetilmiş mi?** Olay: 2026-09-27'de
+      ajan, aracın çıktısını gördükten sonra "ölçüldü" kelimesini arama kanıtı
+      listesine ekledi; bu, düzeltilmesi gereken gerçek hatayı (AGENTS §5'teki
+      "ÖLÇÜLDÜ … AHN5 için hiçbir spesifikasyon vermiyor") listeden **sildi**.
+      Ajan fark edip geri aldı. Reviewer şunlara bakar:
+      - `git log -p -- src/qa/check_claims.py`: `SEARCH_EVIDENCE`,
+        `NEGATIVE_PATTERNS`, `EXTERNAL_DOC`, `VERIFIED_KEYS` veya `SKIP_FILES`'ta
+        **daraltan/gevşeten** bir değişiklik var mı; varsa gerekçesi aracın
+        **çıktısına bakmadan** mı yazılmış?
+      - Oz-sınama fikstürleri (`SELF_TEST_NEGATIVE`, `SELF_TEST_CONFIG`)
+        silinmiş ya da beklenen değerleri çevrilmiş mi? (Çevirmek = gevşetmek.)
+      - Araç `[OZ-SINAMA] … 0 basarisiz` basıyor mu? Oz-sınama, gevşetmenin
+        aynısı bellekte yeniden yapılarak denendi ve **kırmızı yandı**
+        (2026-09-27).
+- [ ] **J-2** Bilinen açık gevşeklik (ajanın kendi tespiti, 2026-09-27):
+      `SEARCH_EVIDENCE` "yanlış", "düzelt" ve `~~` içeren **her** paragrafı
+      atlıyor — kelime başka bir konu için geçse bile. Bu paragraflardaki
+      negatif iddialar hiç denetlenmiyor. Reviewer bu paragrafları elle okur
+      (`grep -n "yanl\|düzelt\|~~"` ile listelenir) veya kuralın
+      daraltılmasını önerir.
+- [ ] **J-3** Diğer `src/qa/` araçlarında (`check_config_structure.py`,
+      `check_refs`, …) aynı soru: bir kontrol, çıktısı görüldükten sonra
+      kapsamı daraltılarak mı "geçti"?
+- [ ] **J-4** İlk tasarım hatası da kayıtlı mı? `check_claims.py`'nin ilk
+      sürümü **yanlış şeyi ölçüyordu** ("== 0" politika eşiklerini hata
+      sayıyordu). Yeniden tasarım dosyanın docstring'inde yazılı; Reviewer
+      yeni tasarımın gerçek hata biçimini (dış belgeye dayanan, doğrulama
+      tarihi olmayan iddia) yakaladığını fikstürlerden teyit eder.
+
 ---
 
 ## Reviewer'ın bilmesi gereken açık maddeler
