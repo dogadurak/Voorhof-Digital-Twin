@@ -1926,3 +1926,74 @@ storey_height_calibration:
   output_csv: reports/storey_height_calibration.csv
   output_csv_superseded: reports/storey_height_calibration_superseded_decile.csv
   field_list: docs/field_check_list.md
+
+# ============================================================================
+# CEPHE NOKTASI SINIF OLCUMU (Asama 1 hazirlik; P-012 ve D-017 girdisi)
+# Muhurlendi: 2026-09-27, OLCUMDEN ONCE, ayri commit. Kullanici onayi: "Cephe
+# noktasi sinif olcumu: onay, siradaki is bu" (2026-09-27). Asagidaki yorum
+# esikleri AJANIN on-kaydidir (kabul kriteri DEGIL, tanisal olcum); sonuc
+# gorulduktan sonra DEGISTIRILMEZ. Ham sayilar da her durumda raporlanir.
+# ============================================================================
+facade_class_measurement:
+  status: SEALED_BEFORE_OBSERVATION
+  sealed_at: "2026-09-27"
+  question: >
+    AHN5 verimizde bina cephelerine dusen noktalar hangi sinifta? AHN4
+    tanimina gore 6 (bebouwing), AHN5 calisma raporuna (WP1 2024) gore 1
+    (overig) olmali.
+  hypothesis_source:
+    text: >
+      "Alle LiDAR-punten die een dak van een gebouw raken worden als gebouw
+      beschouwd, de rest van het gebouw (gevels, ect.) zijn overig."
+    source: "WP1: Inventarisatie van puntenwolken in Nederland, v1.0, 2024-08-20 (AHN CDN)"
+    source_verified_at: "2026-09-27"
+  scope:
+    buildings: >
+      B alanindaki panden (reports/building_heights_ahn5.csv satirlari) icinden
+      h_measured_m >= 6,0 m OLAN ve cephe bolgesi yuksekligi >= 2,0 m olanlar.
+    reason: "Alcak binalarda cephe bolgesi cati kenari/zemin gurultusunden ayrilamaz."
+  facade_zone:
+    horizontal: >
+      footprint.buffer(+0,5 m) eksi footprint.buffer(-0,5 m) — duvar cizgisini
+      ortalayan 1,0 m'lik bant — EKSI diger TUM panden ayakizlerinin birlesimi.
+    why_minus_neighbours: >
+      Sira evlerde komsu binanin alcak catisi bu binanin bandina ve z
+      araligina dusebilir; cikarilmazsa sinif 6 payini yapay olarak artirir.
+    vertical: "ground_z_nap_m + 1,5 m  <=  z  <=  roof_p30_z_nap_m - 1,0 m"
+    why_vertical: >
+      Alt sinir zemin/cit/arac noktalarini, ust sinir cati kenari ve saçak
+      noktalarini disarida birakir. roof_p30 (p70 degil): cok seviyeli
+      catilarda alt seviyeyi de ust sinir olarak alir.
+    classes_counted: "TUM siniflar (secim yok)"
+    signed_distance: >
+      d = ayakizi sinirina yatay uzaklik; ayakizi ICINDE negatif, DISINDA
+      pozitif. Ic yari (d<0) ile dis yari (d>0) AYRI raporlanir: ic yarida
+      cok seviyeli catinin alt seviyesi sizabilir, dis yarida sizamaz.
+  control_zone:
+    definition: "footprint.buffer(-1,0 m) icinde, z >= roof_p30_z_nap_m (cati bolgesi)"
+    purpose: "Sinif eslemesinin akil kontrolu — cati noktalari sinif 6 olmali."
+  statistics:
+    primary: "Havuzlanmis (nokta agirlikli) sinif payi, cephe bolgesi, ic ve dis yari ayri"
+    per_building: "Bina basina sinif 6 payi: medyan, p10, p90 (M-010: sayi VE etki)"
+    top5_by_points: "Cephe bolgesinde en cok noktasi olan 5 bina tek tek listelenir (14.6)"
+    wall_concentration: >
+      Sinif 1 ve sinif 6 icin ayri: cephe bolgesindeki noktalarin |d| <= 0,2 m
+      olanlarinin payi. Duzgun dagilimda beklenen ~0,40 (bant 1,0 m).
+      Cephe imzasi = duvar cizgisinde yogunlasma.
+  interpretation_rule:
+    WP1_AHN5_DEFINITION_HOLDS: >
+      Cephe bolgesinde havuzlanmis sinif 6 payi ic VE dis yarida < 0,20 VE
+      sinif 1 noktalarinin wall_concentration degeri > 0,60.
+    AHN4_DEFINITION_HOLDS: "Havuzlanmis sinif 6 payi ic VE dis yarida > 0,50."
+    MIXED: "Diger her durum — sonuc olduğu gibi raporlanir, yorum kullaniciya birakilir."
+    control_required: >
+      Kontrol bolgesinde sinif 6 payi < 0,80 ise yorum YAPILMAZ
+      (UNINTERPRETABLE): sinif eslemesi beklenenden farkli demektir.
+    threshold_status: >
+      0,20 / 0,50 / 0,60 / 0,80 ajanin on-kayitli okuma esikleridir; bir
+      belgeden alinmamistir. Kabul kriteri degildir; hicbir binayi dislamaz.
+  decision_effect: >
+    Sonuc D-017 ve P-012'deki "sinif 6 cepheleri de icerir" ifadelerini AHN5
+    icin gunceller. P-012 sinif secimini KENDISI belirlemez (kullanici karari).
+  output_csv: reports/facade_class_measurement_ahn5.csv
+  output_report: reports/01_prep_facade_class_measurement.md

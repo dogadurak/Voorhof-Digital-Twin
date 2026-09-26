@@ -69,6 +69,10 @@ EXPECTED_PATHS: list[tuple[str, str]] = [
     ("storey_height_calibration.selection.type_breakdown.decision_rule",
      "tip bazli kirilim karar kurali (D-031)"),
     ("storey_height_calibration.formula", "kat yuksekligi formulu"),
+    ("facade_class_measurement.facade_zone.horizontal", "cephe bandi tanimi"),
+    ("facade_class_measurement.interpretation_rule.WP1_AHN5_DEFINITION_HOLDS",
+     "cephe olcumu okuma kurali"),
+    ("facade_class_measurement.interpretation_rule.control_required", "kontrol bolgesi sarti"),
 ]
 
 EXPECTED_STATUS: dict[str, str] = {
@@ -77,6 +81,7 @@ EXPECTED_STATUS: dict[str, str] = {
     "building_lineage": "SEALED",
     "storey_counting_rule": "SEALED_BEFORE_OBSERVATION",
     "storey_height_calibration": "SEALED_BEFORE_OBSERVATION",
+    "facade_class_measurement": "SEALED_BEFORE_OBSERVATION",
 }
 
 
