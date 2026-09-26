@@ -1,5 +1,7 @@
 # Bağımsız Reviewer kontrol listesi
 
+**Son güncelleme:** 2026-09-27 (H ve I bölümleri eklendi)
+
 **Amaç:** AGENTS.md §12.10 — bir ajan kendi ürettiği çıktıyı yalnızca kendi
 hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 çalışan Reviewer'ın ne arayacağını tanımlar.
@@ -77,14 +79,48 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 - [ ] **G-4** Sınırlamalar yazılmış mı, gizlenmiş mi?
 - [ ] **G-5** Başarısız kayıtlar CSV'ye düşmüş mü? (§12.8)
 
+## H. Mühür, örneklem ve körlük (D-024 … D-032, M-015, M-016)
+
+- [ ] **H-1** Her mühürlü blok, **kendi commit'inde** ve gözlemden/ölçümden
+      **önce** mi? Kontrol edilecek sıra (git'e bak, iddiaya değil):
+      D-024 `4093217` → görsel kontrol (henüz yok) ·
+      D-030 `f2667c1` → yükseklik ölçümü + seçim `fe62b93` ·
+      D-032 `20ab104` → yedek seçimi `b92cb5d`.
+- [ ] **H-2** Mühürlü bir kural sonradan değiştirildiyse, eski metin
+      **silinmeden** duruyor mu ve değişiklik **gözlemden önce** mi yapılmış?
+      (D-030 EK 1 `blind_counting`; D-031 `stratification_superseded_p020`)
+- [ ] **H-3** `python src/qa/check_config_structure.py` PASS mı? Mühürlü bir
+      anahtar başka bir bloğun içine düşmüş mü? (M-015 — YAML girinti yutması)
+- [ ] **H-4** Örneklem kuralının **amaç cümlesi** ölçülmüş mü? Logda
+      `AMAC OLCUMU (M-016) ... IDDIA: TUTTU` satırı var mı? (M-016)
+- [ ] **H-5** Saha listesinde (`docs/field_check_list.md`) **ölçülen yükseklik
+      YOK** mu? (Olmamalı — kat sayımı demirlenmesin, D-030 EK 1)
+- [ ] **H-6** Yedek binalar (D-032) yalnızca asılın **kullanılamaması** ile
+      mi tetikleniyor, değeriyle değil mi?
+- [ ] **H-7** "Karar veremedim" (D-028) S2/S3 ile **aynı satırda** sayılmış
+      mı? (Sayılmamalı — ölçüme değil kararsızlığa dayanır, ayrı raporlanır.)
+
+## I. Aşama 3 öncesi (araştırmadan çıkan boşluklar, 2026-09-26)
+
+- [ ] **I-1** Stedin verisi "ölçülmüş tüketim" diye mi anılıyor? (Değil:
+      SJV = normalleştirilmiş yılda **beklenen** tüketim. P-022)
+- [ ] **I-2** PC6 dışlama kuralları (PV salderen, blok ısıtması) Stedin
+      değerlerine **bakılmadan önce** mi mühürlendi? (P-023)
+- [ ] **I-3** Kalibrasyon ve doğrulama **aynı veriyle** mi yapıldı? (P-025)
+- [ ] **I-4** Beklenen sapma yönü (fizik modeli ölçümden **yüksek**) sonuçtan
+      önce yazılmış mı? (P-025 ön-kayıt notu)
+
 ---
 
 ## Reviewer'ın bilmesi gereken açık maddeler
 
 | Kayıt | Konu | Durum |
 |---|---|---|
-| M-011 | Sıfır grubu "depo" çıkarımı | **AÇIK** — görsel doğrulama bekleniyor |
+| M-011 | Sıfır grubu "depo" çıkarımı | **AÇIK** — görsel doğrulama bekleniyor (kullanıcı yapacak, P-021 kapandı) |
 | P-012 | Aşama 1'e hangi AHN sınıfları girecek | **AÇIK** — M-011'i bekler |
+| — | Kat sayımı (22 bina + 3 yedek) | **BEKLİYOR** — kullanıcı, `docs/field_check_list.md` |
+| P-022 … P-026 | Aşama 3 boşlukları (Stedin SJV, PC6 kuralları, yıl, kalibrasyon, ağaç gölgesi) | AÇIK — Aşama 3 öncesi |
+| P-027 | "Dijital ikiz" teriminin düzeyi | AÇIK — Aşama 5 öncesi |
 | P-001 | B/D alan boyutları | AÇIK — Aşama 3 sonu |
 | P-002 | ENVI-met lisansı | AÇIK |
 | P-004 | 1-C için AHN z-fark eşiği | AÇIK |
