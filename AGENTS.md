@@ -285,7 +285,7 @@ notu ve modellenmemiş bina katmanı mevcut.
 
 **Rhino gerektirdiği için Ladybug/Honeybee kullanılmaz** — yerine QGIS UMEP.
 
-**Veri lisansı notu:** 3DBAG CC BY 4.0 — attribution zorunlu. Her veri ve yazılımın
+**Veri lisansı notu:** 3DBAG CC BY 4.0 — attribution zorunlu. **AHN5 (GeoTiles alt-fayansları) da CC BY 4.0 — attribution zorunlu** (GeoTiles lisans beyanı; AHN5'in kendi lisansı için kaynaklar çelişiyor, daha katı olan uygulanır — ATTRIBUTION.md, 2026-09-27). BAG ve CBS Wijken en Buurten CC0. Her veri ve yazılımın
 kesin lisansı ve yeniden dağıtım kısıtı `ATTRIBUTION.md`'ye yazılır. Bir bileşenin lisansı
 web arayüzünün yayınını engelliyorsa **yayın aşamasına geçilmez**, durum raporlanır.
 

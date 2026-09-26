@@ -55,7 +55,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | crs | EPSG:7415 |
 | zaman_referansi | metadata.json: BAG 2.0 Extract ve AHN kaynak tarihleri yayin meta verisinde |
 | lisans | CC BY 4.0 (AGENTS.md Bolum 7) - attribution ZORUNLU |
-| attribution_sarti | TODO_0.3: 3DBAG resmi attribution metni kaynagindan alinacak |
+| attribution_sarti | ZORUNLU, verbatim: "Naamensvermelding verplicht, 3DBAG door de 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI" [sic] — kaynak: data/raw/3dbag_v20250903/metadata.json -> identificationInfo.resourceConstraints[0].otherConstraints[0] (doldurma 2026-09-27) |
 | sha256 | `ba4ca7e323a009c98f290ea0447c9de31753c8bf1b4d1e7634891648ac76b0e7` |
 | dosya_boyutu_bytes | 6313 |
 | run_id | RUN-2026-09-22-007 |
@@ -104,7 +104,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | sorgu_parametreleri | B bbox + 50 m (D-010); secilen alt-fayanslar: 37EN1_14, 37EN1_19, 37EN1_24, 37EN1_15, 37EN1_20, 37EN1_25, 37EN2_11, 37EN2_16, 37EN2_21 |
 | crs | EPSG:7415 |
 | zaman_referansi | CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi 'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu). |
-| lisans | TODO: AHN lisans kosulu ahn.nl'den dogrulanacak |
+| lisans | CC BY 4.0 (GeoTiles alt-fayanslari icin, https://geotiles.citg.tudelft.nl/ (Small print, copyright & disclaimer)). AHN5'in kendi lisansi CELISKILI: PDOK AHN WCS CC0, 3DBAG lineage CC BY 4.0, ahn.nl okunamadi — bkz. ATTRIBUTION.md AHN notu (doldurma 2026-09-27) |
 | attribution_sarti | TODO |
 | sha256 | `184a4c766f35642c1561681cac5ae63dc16c21420a1277d5c2047e2f7861594e` |
 | dosya_boyutu_bytes | 307816585 |
@@ -152,8 +152,8 @@ kural 3). Disk doluysa indirme yarida kesilir ve bozuk dosya olusur.
 | sorgu_parametreleri | A.buffer(300) |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (idari sinir, CBS 2025) |
-| lisans | TODO_0.3: CBS kaynak lisansindan turer |
-| attribution_sarti | TODO_0.3 |
+| lisans | turetilmis urun; kaynak CBS Wijken en Buurten 2025 = CC0 1.0 (https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0 GetCapabilities -> AccessConstraints) (doldurma 2026-09-27) |
+| attribution_sarti | kaynak icin zorunlu degil (CC0); onerilen: "Kaynak: CBS Wijken en Buurten 2025, via PDOK" |
 | sha256 | `23a13eca32f47a8542a8d063780ecc213e141a83fd9fb3cf8a7227ce14c624a0` |
 | dosya_boyutu_bytes | 8620 |
 | run_id | RUN-2026-09-21-011 |
@@ -177,8 +177,8 @@ A + 300 m tampon, programatik uretildi. Sanayi buurt'larinin 17.14 ha'i (100%) B
 | sorgu_parametreleri | buurtcode in ['BU05032400', 'BU05032401', 'BU05032403', 'BU05032404', 'BU05032405', 'BU05032406', 'BU05032407'] |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (idari sinir, CBS 2025) |
-| lisans | TODO_0.3: CBS kaynak lisansindan turer |
-| attribution_sarti | TODO_0.3 |
+| lisans | turetilmis urun; kaynak CBS Wijken en Buurten 2025 = CC0 1.0 (https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0 GetCapabilities -> AccessConstraints) (doldurma 2026-09-27) |
+| attribution_sarti | kaynak icin zorunlu degil (CC0); onerilen: "Kaynak: CBS Wijken en Buurten 2025, via PDOK" |
 | sha256 | `f501b26fa4632784e35a5820c3a05e6f8da8bf4786360a3feff76dd1e774599b` |
 | dosya_boyutu_bytes | 6330 |
 | run_id | RUN-2026-09-21-011 |
@@ -202,8 +202,8 @@ A + 300 m tampon, programatik uretildi. Sanayi buurt'larinin 17.14 ha'i (100%) B
 | sorgu_parametreleri | bbox=83373.7,444516.0,85086.3,446943.9 (EPSG:28992) = Voorhof bbox + 300 m tampon; sayfalama count=1000 |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (BAG durum verisi; indirme anindaki gecerli kayit) |
-| lisans | TODO_0.3: PDOK/Kadaster lisans kosulu kaynagindan dogrulanacak |
-| attribution_sarti | TODO_0.3 |
+| lisans | CC0 1.0 — kaynak: https://service.pdok.nl/lv/bag/wfs/v2_0 GetCapabilities -> AccessConstraints (doldurma 2026-09-27) |
+| attribution_sarti | zorunlu degil (CC0); onerilen: "BAG — Kadaster, via PDOK" |
 | sha256 | `a9987407b49d74d027a4aaa84ada52d507928cef58802c9e485d13ceb19a4182` |
 | dosya_boyutu_bytes | 13185218 |
 | run_id | RUN-2026-09-21-004 |
@@ -227,8 +227,8 @@ Ozellik sayisi: 19346. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degis
 | sorgu_parametreleri | bbox=83373.7,444516.0,85086.3,446943.9 (EPSG:28992) = Voorhof bbox + 300 m tampon; sayfalama count=1000 |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (BAG durum verisi; indirme anindaki gecerli kayit) |
-| lisans | TODO_0.3: PDOK/Kadaster lisans kosulu kaynagindan dogrulanacak |
-| attribution_sarti | TODO_0.3 |
+| lisans | CC0 1.0 — kaynak: https://service.pdok.nl/lv/bag/wfs/v2_0 GetCapabilities -> AccessConstraints (doldurma 2026-09-27) |
+| attribution_sarti | zorunlu degil (CC0); onerilen: "BAG — Kadaster, via PDOK" |
 | sha256 | `c934461cd06459d3a6b9a34359cf9445fbcc413d323a6332c364b3252ef079c1` |
 | dosya_boyutu_bytes | 5151041 |
 | run_id | RUN-2026-09-21-004 |
@@ -254,8 +254,8 @@ Ozellik sayisi: 7704. bbox ciktidan dogrulandi (M-004 kural 2). Ham dosya degist
 | sorgu_parametreleri | bbox + buurtcode on eki BU050324 |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (yillik idari sinir) |
-| lisans | TODO_0.3: PDOK lisans kosulu kaynagindan dogrulanacak |
-| attribution_sarti | TODO_0.3 |
+| lisans | CC0 1.0 — kaynak: https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0 GetCapabilities -> AccessConstraints (doldurma 2026-09-27) |
+| attribution_sarti | zorunlu degil (CC0); onerilen: "Wijk- en buurtkaart 2025 — CBS, via PDOK" |
 | sha256 | `972383b7da84c6e7699c49c2731da9a7cf4522e4836c03749b678d458449fb97` |
 | dosya_boyutu_bytes | 31765 |
 | run_id | RUN-2026-09-21-002 |
@@ -279,8 +279,8 @@ Resmi ad 'Wijk 24 Voorhof' — 'Voorhof' ile tam esleme sorgusu 0 dondurur (M-00
 | sorgu_parametreleri | filter: wijkcode=WK050324 |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (yillik idari sinir) |
-| lisans | TODO_0.3: PDOK lisans kosulu kaynagindan dogrulanacak |
-| attribution_sarti | TODO_0.3 |
+| lisans | CC0 1.0 — kaynak: https://service.pdok.nl/cbs/wijkenbuurten/2025/wfs/v1_0 GetCapabilities -> AccessConstraints (doldurma 2026-09-27) |
+| attribution_sarti | zorunlu degil (CC0); onerilen: "Wijk- en buurtkaart 2025 — CBS, via PDOK" |
 | sha256 | `9adbda8872bf60cadecb96d8bdc6bc47d66b71b1d148abb9361bac8089c720d5` |
 | dosya_boyutu_bytes | 6863 |
 | run_id | RUN-2026-09-21-002 |

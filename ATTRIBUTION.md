@@ -6,8 +6,10 @@
 >
 > Bolum 6, Asama 5: bu dosya otomatik uretilir ve web arayuzunde gosterilir.
 
-**Durum: ISKELET (Asama 0.1).** Asagidaki tablolarda `TODO_0.3` isaretli her alan,
-veri fiilen indirilirken kaynagindan dogrulanip doldurulacaktir. AGENTS.md Bolum 1
+**Durum (2026-09-27):** Asama 0.3'te **indirilen** verilerin (AHN5, BAG, CBS, 3DBAG)
+lisans ve atif alanlari kaynagindan dogrulanip dolduruldu. Henuz **indirilmemis**
+veriler `TODO_EDINIMDE` olarak isaretli: surumu secilmemis bir verinin lisansi
+dogrulanamaz; bu alanlar veri fiilen indirilirken doldurulur. AGENTS.md Bolum 1
 kural 1 geregi **dogrulanmamis lisans adi yazilmaz** — tahmin edilen bir lisans,
 yanlis attribution ve yayin hakki ihlali demektir.
 
@@ -17,21 +19,42 @@ yanlis attribution ve yayin hakki ihlali demektir.
 
 | # | Veri | Saglayici | Lisans | Attribution metni | Surum / tarih |
 |---|---|---|---|---|---|
-| 1 | AHN5 (AHN4 yedek) | Rijkswaterstaat / AHN | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 2 | BAG | Kadaster / PDOK | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 3 | 3DBAG | TU Delft 3D geoinformation | **CC BY 4.0** | `TODO_0.3` (zorunlu) | `TODO_0.3` |
-| 4 | BGT | PDOK | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 5 | KNMI saatlik | KNMI | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 6 | EPW (TMYx Rotterdam) | climate.onebuilding.org | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 7 | Stedin acik veri (PC6) | Stedin | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 8 | EP-Online | RVO | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 9 | Sentinel-2 | ESA / Copernicus | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 10 | Landsat 8/9 | USGS / NASA | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 11 | PVGIS | EC JRC | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
-| 12 | NWB | Rijkswaterstaat / PDOK | `TODO_0.3` | `TODO_0.3` | `TODO_0.3` |
+| 1 | AHN5 nokta bulutu, **GeoTiles alt-fayanslari** (`AHN5_T`) | AHN; dagitim: GeoTiles (TU Delft, Optical and Laser Remote Sensing) | **CC BY 4.0** (bizim dosyalarimiz icin; bkz. AHN notu) | "AHN5 puntenwolk — Actueel Hoogtebestand Nederland; sub-tiles: GeoTiles (TU Delft), CC BY 4.0" | AHN5, ucus 2023-02-08/14; 9 alt-fayans, sha256 DATA_LOG'da |
+| 2 | BAG (`bag:pand`, `bag:verblijfsobject`, PDOK WFS v2_0) | Kadaster / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "BAG — Kadaster, via PDOK" | anlik goruntu 2026-09 |
+| 3 | 3DBAG | 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI | **CC BY 4.0** | **ZORUNLU, verbatim:** "Naamensvermelding verplicht, 3DBAG door de 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI" [sic] | **v2025.09.03** (D-027) |
+| 3a | CBS Wijken en Buurten 2025 (AOI A ve B'nin kaynagi, PDOK WFS) | CBS / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "Wijk- en buurtkaart 2025 — CBS, via PDOK" | 2025 |
+| 4 | BGT | PDOK | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 5 | KNMI saatlik | KNMI | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 6 | EPW (TMYx Rotterdam) | climate.onebuilding.org | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 7 | Stedin acik veri (PC6) | Stedin | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 8 | EP-Online | RVO | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 9 | Sentinel-2 | ESA / Copernicus | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 10 | Landsat 8/9 | USGS / NASA | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 11 | PVGIS | EC JRC | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
+| 12 | NWB | Rijkswaterstaat / PDOK | `TODO_EDINIMDE` | `TODO_EDINIMDE` | `TODO_EDINIMDE` |
 
-**3DBAG notu:** AGENTS.md Bolum 7 bu lisansi acikca veriyor — CC BY 4.0, attribution
-**zorunlu**. Arayuzde gorunur attribution olmadan yayin yapilamaz.
+**3DBAG notu:** CC BY 4.0, atif **zorunlu**. Atif metni sabitlenen surumun kendi
+meta verisinden **verbatim** alindi (data/raw/3dbag_v20250903/metadata.json -> identificationInfo.resourceConstraints[0].otherConstraints[0]). Kaynaktaki "Naamensvermelding"
+yazimi aynen korundu [sic]. Arayuzde gorunur atif olmadan yayin yapilamaz.
+
+**AHN notu — LISANS KAYNAKLARI CELISIYOR (2026-09-27):**
+
+| Kaynak | Ne diyor |
+|---|---|
+| GeoTiles sayfasi (https://geotiles.citg.tudelft.nl/ (Small print, copyright & disclaimer)) | "This index and derived products (spatial index, colored point clouds, **sub-tiles**, etc.) are copyright GeoTiles and are distributed under the **CC BY 4.0** license." Ayni sayfa: "Please confirm the applicable license with the source before integrating the data." |
+| PDOK AHN WCS (https://service.pdok.nl/rws/ahn/wcs/v1_0 GetCapabilities -> AccessConstraints) | "otherRestrictions; Geen beperkingen; http://creativecommons.org/publicdomain/zero/1.0/deed.nl" (**CC0**) — AHN **raster servisi** icin |
+| 3DBAG v2025.09.03 meta verisi, lineage | AHN3 ve AHN4 puntenwolk: **CC0**; **AHN5 puntenwolk: CC BY 4.0** (ikincil kaynak) |
+| ahn.nl | **okunamadi** — sayfa JavaScript ile yukleniyor, sunucu 841 karakterlik iskelet dondu |
+
+**Uygulanan kural:** Bizim dosyalarimiz GeoTiles **alt-fayanslaridir** ve GeoTiles
+bunlari acikca CC BY 4.0 ile dagitiyor. Bu yuzden **daha kati olan CC BY 4.0
+uygulanir** ve hem AHN'ye hem GeoTiles'a atif yapilir. Bu, AHN5'in kendi
+lisansi CC0 cikarsa da dogru kalan tek secenektir (fazla atif lisans ihlali
+degildir; eksik atif ihlaldir). ahn.nl birincil metni okunana kadar
+AHN5'in **kendi** lisansi "CELISKILI" olarak kalir.
+
+**Asama 5 etkisi:** Arayuzde artik **iki** zorunlu atif var: 3DBAG ve
+AHN5/GeoTiles.
 
 ---
 
