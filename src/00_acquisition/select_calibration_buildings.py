@@ -202,6 +202,41 @@ def main() -> int:
             w.writerow(row(b, k, [len(ranked[k]), "", "", "", ""]))
 
     # ==================================================================
+    #  YEDEKLER (D-032) — muhur commit 20ab104'ten SONRA hesaplanir.
+    #  Her yuksek siniftan, asil kuralla AYNI siralamada IKINCI bina.
+    #  Tetik yalnizca asil binanin KULLANILAMAMASI (R8/R9/R10), deger degil.
+    # ==================================================================
+    rcfg = load_acceptance_criteria()["storey_height_calibration"]["selection"]["reserve"]
+    reserves: list[tuple[int, str, str]] = []
+    for k in rcfg["classes"]:
+        k = int(k)
+        if k not in ranked or len(ranked[k]) < 2:
+            logger.warning("Yedek | sinif %d m icin ikinci aday YOK — yedek secilemedi", k)
+            continue
+        primary = next((b for kk, b in picks if kk == k), None)
+        cand = next((b for b in ranked[k] if b not in ids), None)
+        if cand is None:
+            logger.warning("Yedek | sinif %d m: asil orneklem disinda aday kalmadi", k)
+            continue
+        reserves.append((k, cand, primary or ""))
+        logger.info("YEDEK (D-032) | sinif %2d m | %s (h %.2f m, oran %.3f) | asil: %s",
+                    k, cand, f(cand, "h_measured_m"), ratio(cand), primary)
+    res_path = rep / "storey_height_calibration_reserve.csv"
+    with res_path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["yukseklik_sinifi_m"] + HEAD
+                   + ["yerine_gectigi_asil_bag_id", "DURUM", "KAT_SAYISI_kullanici",
+                      "NOT_kullanici"])
+        for k, b, prim in reserves:
+            w.writerow(row(b, k, [prim, "YEDEK - yalnizca asil KULLANILAMAZSA (D-032)",
+                                  "", ""]))
+    write_meta(res_path, run_id=run_id, random_seed=seed,
+               parameters={"rule": "reserve (D-032)", "classes": rcfg["classes"],
+                           "picked": [b for _, b, _ in reserves]},
+               notes=("Yedek binalar. Muhur commit 20ab104 (sayimdan once). Devreye "
+                      "girmeyen yedek sayilmis olsa bile ortalamaya GIRMEZ."))
+
+    # ==================================================================
     #  SUPERSEDED BY P-020 (D-031) — SILINMEZ, kayit icin uretilir.
     #  Desil kurali kendi amacini saglamamisti (M-016). Cikti, kararin
     #  neye dayandigini sonradan gorebilmek icin korunur.

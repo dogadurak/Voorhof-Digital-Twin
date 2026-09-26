@@ -51,6 +51,7 @@ GROUPS = {
     "G2": "belirsiz konut blogu",
     "G3": "buyuk ucus sonrasi",
     "G4": "kalibrasyon",
+    "G4r": "YEDEK",
     "G4s": "kalibrasyon (ATLA - superseded)",
 }
 
@@ -118,6 +119,9 @@ def main() -> int:
             n_large += 1
     for r in _read(rep / "storey_height_calibration.csv"):
         add(r["bag_id"], "G4", sinif=r["yukseklik_sinifi_m"])
+    # D-032 yedekleri: YALNIZCA ayni siniftaki asil bina kullanilamazsa sayilir.
+    for r in _read(rep / "storey_height_calibration_reserve.csv"):
+        add(r["bag_id"], "G4r", yedek_asil=r["yerine_gectigi_asil_bag_id"])
     # D-031 ile gecersiz kilinan desil orneklemi: SILINMEZ ama ATLANIR.
     # Listede kalir cunku kullanici bir kismini zaten saymis olabilir.
     for r in _read(rep / "storey_height_calibration_superseded_decile.csv"):
@@ -144,7 +148,7 @@ def main() -> int:
                  gebruiksdoel=pr.get("gebruiksdoel") or "—",
                  lat=lat, lon=lon, x=c.x, y=c.y)
 
-    order = {"G2": 0, "G3": 1, "G4": 2, "G1": 3, "G4s": 4}
+    order = {"G2": 0, "G3": 1, "G4": 2, "G4r": 2.5, "G1": 3, "G4s": 4}
     ordered = sorted(rows.values(),
                      key=lambda r: (min(order[g] for g in r["groups"]), -r["area"]))
 
@@ -161,6 +165,10 @@ def main() -> int:
                          for g in r["groups"])
         if "G4" in r["groups"]:
             grp = "kalibrasyon"
+        elif "G4r" in r["groups"]:
+            asil = next(i for i, x in enumerate(ordered, 1) if x["bag_id"] == r["yedek_asil"])
+            grp = (f"**YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur "
+                   f"(#{asil} yerine)")
         elif "G4s" in r["groups"]:
             grp = "**ATLA** (superseded)"
         need_obs = "G1" in r["groups"] or "G2" in r["groups"]
@@ -198,6 +206,7 @@ def main() -> int:
 | **belirsiz konut blogu** | A'daki 3 buyuk konut blogu (412 konut VBO) | {sum("G2" in r["groups"] for r in rows.values())} | 2023'te bu bina mi vardi? **kat sayisi** |
 | **buyuk ucus sonrasi** | Ayakizi >= {LARGE_M2:.0f} m2, ucustan sonra yapilmis (D-029) | {n_large} | 2023'te var miydi? **kat sayisi** |
 | **kalibrasyon** | Kat yuksekligini olcmek icin (D-030/D-031) | {sum("G4" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
+| **YEDEK** | Yuksek siniflarda (26/35/37 m) asil bina sayilamazsa yerine gecer (D-032) | {sum("G4r" in r["groups"] for r in rows.values())} | kat sayisi — **yalnizca** asili sayilamazsa |
 | **ATLA** | Gecersiz kilinan eski orneklem (D-031) — sayma | {sum("G4s" in r["groups"] and "G4" not in r["groups"] for r in rows.values())} | — |
 | **sifir sinif-6 orneklemi** | AHN5'te cati noktasi olmayan yapilar (D-019) | {sum("G1" in r["groups"] for r in rows.values())} | bu ne? 2023'te var miydi? |
 
@@ -256,6 +265,19 @@ Havuzun olculen dagilimi ve gecerli orneklem:
 Eski desil orneklemi **silinmedi**, `SUPERSEDED` olarak duruyor
 (`reports/storey_height_calibration_superseded_decile.csv`). Yalnizca eski
 orneklemde olan binalar bu listede **ATLA** etiketiyle en sonda; sayma.
+
+## YEDEK binalar (D-032) — ne zaman sayilir?
+
+Yuksek siniflarin (26, 35, 37 m) her birinde asil orneklemde **tek** bina
+var; biri sayilamazsa `hoog` grubu n >= 3 sartinin altina duser. Bu yuzden
+her siniftan bir **yedek** sayimdan ONCE muhurlendi.
+
+- Yedegi **yalnizca** "yerine" yazan asil bina **kullanilamazsa** say:
+  KAT bos (`sayilamadi`, R10) veya R8/R9 nedeniyle cikarildiysa.
+- Asil binanin sayisi sana **tuhaf gelse bile** yedege gecme. Tetik
+  "sayilamadi"dir, "begenmedim" degil.
+- Yedegi yine de saydiysan sorun yok: devreye girmeyen yedek ortalamaya
+  **girmez**, raporda ayri yazilir.
 
 ## Ek: kat yuksekligi bina tipine gore degisiyor mu? (D-031)
 

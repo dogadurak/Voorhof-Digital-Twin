@@ -1,0 +1,30 @@
+{
+  "run_id": "RUN-2026-09-26-001",
+  "git_commit": "20ab104-dirty",
+  "created_utc": "2026-09-26T20:51:24Z",
+  "output": {
+    "path": "reports/storey_height_calibration_reserve.csv",
+    "sha256": "ac950e56703847c3c29755dcd63d7201da8b9257b98ebdeae3369586e127a5a0",
+    "size_bytes": 659
+  },
+  "inputs": [],
+  "parameters": {
+    "rule": "reserve (D-032)",
+    "classes": [
+      26,
+      35,
+      37
+    ],
+    "picked": [
+      "0503100000019379",
+      "0503100000029407",
+      "0503100000019684"
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": 28992,
+  "notes": "Yedek binalar. Muhur commit 20ab104 (sayimdan once). Devreye girmeyen yedek sayilmis olsa bile ortalamaya GIRMEZ."
+}

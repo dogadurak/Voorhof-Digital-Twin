@@ -1,0 +1,4 @@
+yukseklik_sinifi_m,bag_id,footprint_area_m2,bouwjaar,h_measured_m,roof_p70_z_nap_m,ground_z_nap_m,roof_span_m,building_class_ratio,class6_points,ground_ring_points,yerine_gectigi_asil_bag_id,DURUM,KAT_SAYISI_kullanici,NOT_kullanici
+26,0503100000019379,209.29,1968,25.800,23.950,-1.850,0.600,0.9300,11453,5933,0503100000019378,YEDEK - yalnizca asil KULLANILAMAZSA (D-032),,
+35,0503100000029407,808.56,1962,35.000,34.750,-0.250,0.000,0.6629,45631,21651,0503100000000022,YEDEK - yalnizca asil KULLANILAMAZSA (D-032),,
+37,0503100000019684,354.90,1971,36.800,35.350,-1.450,0.100,0.7919,8945,5766,0503100000019685,YEDEK - yalnizca asil KULLANILAMAZSA (D-032),,

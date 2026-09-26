@@ -1,7 +1,7 @@
 {
-  "run_id": "RUN-2026-09-22-027",
-  "git_commit": "c2e28e1-dirty",
-  "created_utc": "2026-09-22T20:33:06Z",
+  "run_id": "RUN-2026-09-26-001",
+  "git_commit": "20ab104-dirty",
+  "created_utc": "2026-09-26T20:51:25Z",
   "output": {
     "path": "reports/storey_height_calibration.csv",
     "sha256": "9d25c2b29358bc883e77b4f69052dce83d3df1c2166e86e856309f44cf299639",
