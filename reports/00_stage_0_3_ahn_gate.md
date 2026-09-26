@@ -1,5 +1,20 @@
 # Asama 0.3 — AHN girdi kalite kapisi
 
+> ⚠️ **DUZELTME 2026-09-27 (M-005 tekrari) — bu raporun asagidaki ifadeleri eskidi.**
+> Kaynak: *WP1: Inventarisatie van puntenwolken in Nederland*, v1.0, 2024-08-20 — AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf.
+> 1. "AHN5 icin sinif/siniflandirma spesifikasyonu yok" — **YANLIS.** WP1 §3.1.1
+>    kodlari sayiyor: Maaiveld 2, Bebouwing 6, Kunstwerken 26, Water 9,
+>    **Hoogspanning 14**, Overige 1; AHN5 bolumu tanimlari veriyor.
+> 2. "Kod 14 belgede yok, CIKARIM" — **artik BELGELI** (WP1 §3.1.1). Cikarimimiz
+>    (hoogspanning) **dogruydu**.
+> 3. "Sinif 6 cepheleri de icerir" — **AHN4 icin dogru, AHN5 icin YANLIS.**
+>    AHN5: "Alle LiDAR-punten die een dak van een gebouw raken worden als gebouw
+>    beschouwd, de rest van het gebouw (gevels, ect.) zijn overig."
+> 4. AHN5 bestek: yukseklik stokastik <=3 cm, sistematik <=5 cm (Tabel 5).
+>
+> Bu rapordaki **olcumler** (yogunluk, sinif dagilimi, orani) etkilenmez;
+> yalnizca **yorum cumleleri** eskidi. Rapor govdesi kayit icin degistirilmedi.
+
 **Karar D-015** · AGENTS.md Bolum 12.12 · run_id `RUN-2026-09-21-024`
 
 > **VERI DONEMI (D-020).** Bu projede **geometri** AHN5 ucus donemini

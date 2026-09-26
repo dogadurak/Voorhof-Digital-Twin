@@ -152,10 +152,32 @@ stage_1:
       decision_ref: D-003
       blocking_for: "Asama 1 baslangici"
       proposal_note: >
-        Bolum 4: resmi AHN kalite belgesi duseyde sistematik <=5 cm ve stokastik
-        sigma <=5 cm veriyor; AHN5 ihale belgesi sigma <=3 cm diyor. Bu CELISKI
-        raporda acikca not dusulecek, sessizce tek deger secilmeyecek. Esik bu
-        celiski kullaniciyla cozulmeden sayisallastirilmaz.
+        [ESKI METIN — M-005 tekrari, 2026-09-27] "resmi AHN kalite belgesi <=5 cm,
+        AHN5 ihale belgesi sigma <=3 cm diyor; bu CELISKI ..." — 3 cm iddiasi o
+        tarihte kaynagi gorulmeden yazilmisti.
+      source_facts:
+        ahn5_spec:
+          height_stochastic_m: 0.03
+          height_systematic_m: 0.05
+          planimetric_stochastic_m: 0.05
+          planimetric_systematic_m: 0.08
+          source: >
+            "WP1: Inventarisatie van puntenwolken in Nederland", versie 1.0, 20-08-2024 (D. van der Heide RWS/TUD, A. van Natijne HwH ve ark.), AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf — Tabel 5 "Minimale specificaties"; metin: "de stochastische
+            hoogtefout in AHN5 is aangescherpt en op 3 cm ligt i.p.v. 5 cm."
+          source_verified_at: "2026-09-27"
+          caveat: "Calisma raporudur; bestek'in kendisi okunmadi."
+        ahn4_achieved:
+          text: >
+            Kontrol raporlarinda stokastik hata cogunlukla ~2 cm (maks. 4 cm),
+            sistematik cogunlukla < 5 cm; orneklemeyle olculdu, homojen
+            varsayilamaz (ayni belge).
+        conflict_status: >
+          CELISKI YOKTU: 5 cm AHN2-AHN4, 3 cm AHN5 degeridir.
+      threshold_note: >
+        Bu sayilar NOKTA gurultusudur, esik DEGILDIR. 1-C modelin noktalara
+        uyum artigini olcer: RMSE = kok(nokta gurultusu^2 + model
+        genellestirme hatasi^2). Esik ve 1-C'nin TANIMI (bagimsizlik etiketi
+        dahil) P-004'te kullanici karari bekler.
     - id: "1-D"
       description: "Basarisiz rekonstruksiyon orani"
       metric: failed_reconstruction_pct
@@ -241,6 +263,7 @@ stage_3:
       status: TODO_ONAY_BEKLIYOR
       decision_ref: D-003
       blocking_for: "Asama 3 baslangici"
+      source_status: DOGRULANMADI      # ASHRAE G14 metni henuz okunmadi (M-005 tekrari kurali)
       proposal_note: >
         Bolum 9 referans olarak ASHRAE Guideline 14'u gosteriyor fakat sayisal esik
         VERMIYOR. Kullanici Asama 3 baslamadan once kaynak gostererek onaylar;
@@ -301,6 +324,11 @@ stage_4:
       note: "Bolum 12.9 — solver yakinsamasi TEK BASINA kabul gerekcesi DEGILDIR."
 
   validation_labels:
+    source_status: DOGRULANMADI        # NEN 8100 kriterleri okunmadi
+    source_caveat: >
+      NEN 8100 UCRETLI bir standarttir (2026-09-27 notu; fiyat/erisim
+      dogrulanmadi). Kriterleri acik bir kaynaktan alinamazsa AGENTS kural 4
+      (kapali kaynak kullanma) ile catisabilir -> Asama 4 oncesi karar.
     flood_module: screening
     flood_forbidden_phrases:
       - "dogrulanmis hidrolik sel modeli"
@@ -1002,6 +1030,12 @@ input_gate_ahn:
       Medyan bu hucrelere karsi dayaniklidir.
     cells_counted: "merkezi B icinde kalan 10x10 m hucreler"
     points_counted: "TUM siniflar (resmi spesifikasyon degerleri de tum donusler uzerindendir)"
+    points_counted_source_status: >
+      DOGRULANMADI (2026-09-27): parantez icindeki "resmi spesifikasyon tum
+      donusler uzerindendir" iddiasinin kaynagi yazilmamis. WP1 (2024)
+      yogunlugu "punten per vierkante meter" olarak veriyor, donus turunu
+      belirtmiyor. Etkisi dusuk: olculen medyan 35,89 p/m2, esigin (10) cok
+      ustunde.
     also_reported:
       - p10_density
       - fraction_cells_below_hard_gate_pct
@@ -1027,6 +1061,11 @@ input_gate_ahn:
     source_verified_at: "2026-09-21"
     rationale: >
       AHN5 icin resmi spesifikasyon YOKTUR (belge yalnizca AHN1-AHN4'u kapsar).
+      [DUZELTME 2026-09-27, M-005 tekrari: bu cumle YANLIS cikti. Soylenen
+      "belge" (ahn.nl kwaliteitsbeschrijving) AHN5'i kapsamiyor olabilir ama
+      AHN5 bestek degerleri WP1: Inventarisatie van puntenwolken in Nederland, v1.0, 2024-08-20 (AHN CDN) icinde veriliyor (Tabel 5; yogunluk AHN4 ile
+      "veelal hetzelfde"). ESIK (10) ETKILENMEZ: regresyon alarmi olarak
+      konmustu ve AHN4/AHN5 asgari yogunlugu da 10 p/m2'dir.]
       Uygulanabilir tek belgelenmis sayi AHN4'un tabanidir ve AHN5'in ondan kotu
       olmasi beklenmez. Bu yuzden 10, gercek bir kapi degeri olarak degil
       REGRESYON ALARMI olarak konulmustur: altina duserse veri beklenmedik
@@ -1044,8 +1083,15 @@ input_gate_ahn:
     source: >
       BIZIM OLCUMUMUZ: kaartblad 37EN1 AHN5 tamami 917.040.516 nokta /
       (5000 m x 6250 m) = 29,3 nokta/m2 (lasinfo basligindan, 2026-09-21).
+    source_verified_at: "2026-09-21"   # kwaliteitsbeschrijving 0.3'te okundu; 2026-09-27'de sayfa JS nedeniyle yeniden okunamadi
     source_is_not: >
       AGENTS.md Bolum 2'deki "AHN5 Randstad: >=20 nokta/m2" ifadesi DEGILDIR.
+      [DUZELTME 2026-09-27: "kaynaksizdir" fazla guclu. WP1: Inventarisatie van puntenwolken in Nederland, v1.0, 2024-08-20 (AHN CDN): AHN4 icin
+      "In regio west is deze puntdichtheid verhoogd naar minstens 20 punten per
+      vierkante meter"; AHN5 bestek'i "veelal hetzelfde als in het AHN4".
+      Yani >=20 icin belgesel dayanak VAR (AHN4 icin acik, AHN5 icin
+      miras yoluyla — CIKARIM). Delft'in "regio west" icinde oldugu
+      DOGRULANMADI (belgedeki harita okunamadi). ESIK (20) ETKILENMEZ.]
       O ifade kaynaksizdir; resmi kwaliteitsbeschrijving AHN5'i hic kapsamaz
       (olculdu 2026-09-21). Kaynaksiz bir iddiayi esige cevirmek M-005'in
       yasakladigi seydir. 20 degeri, olculen 29,3'un altinda guvenli bir
@@ -1800,6 +1846,7 @@ storey_height_calibration:
         hoog:
           rule: "kat_sayisi >= 5"
           typology: "galerijflat / hoogbouw"
+      source_status: DOGRULANMADI      # 5 kat kesimi bir tipoloji VARSAYIMIDIR, yonetmelik degil
       cut_rationale: >
         Kesim noktasi SAYIMDAN ONCE secildi ve bir dagilima bakilarak
         belirlenmedi. Gerekce yapisal tipolojidir: NL konut stokunda 5 kat ve

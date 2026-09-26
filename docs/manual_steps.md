@@ -74,6 +74,27 @@ diyordu; 10 binanin 6'si ayni bandan cikti -> M-016, P-020.
 
 ---
 
+### MS-2 · Dis spesifikasyon ve negatif iddia kontrolu (M-005 tekrari)
+
+**Ne zaman:** config/AGENTS/DECISIONS'a bir belgeden sayi veya "X yok"
+turunde bir iddia yazilmadan once; ve `src/qa/check_claims.py` bir satir
+listelediginde.
+
+**Neden elle:** Bir cumlenin olgu mu, arama raporu mu oldugunu okumadan
+anlamak mumkun degil; script yalnizca supheli kaliplari bulur.
+
+**Adim:**
+1. Sayi bir dis belgeden geliyorsa: belge adi + bolum/tablo + dogrulama
+   tarihi ayni yerde yazili mi? Degilse `DOGRULANMADI` etiketi koy; esige
+   donusturme.
+2. "Kullanici yazdi" -> dogrulama degildir; kaynagi ara.
+3. Negatif iddiayi "aranan kaynaklar: … — bulunamadi" bicimine cevir.
+
+**Ornek (2026-09-27):** "AHN5 sigma <=3 cm" (dogrulanmamisti, dogru cikti) ve
+"hicbir AHN yayini AHN5 siniflandirmasini belgelemiyor" (yanlis cikti).
+
+---
+
 ## Tasinan adimlar (uc kez basarisiz olanlar)
 
 *(Asama 0.1 itibariyle yok.)*

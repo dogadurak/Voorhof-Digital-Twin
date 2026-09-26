@@ -19,7 +19,7 @@ yanlis attribution ve yayin hakki ihlali demektir.
 
 | # | Veri | Saglayici | Lisans | Attribution metni | Surum / tarih |
 |---|---|---|---|---|---|
-| 1 | AHN5 nokta bulutu, **GeoTiles alt-fayanslari** (`AHN5_T`) | AHN; dagitim: GeoTiles (TU Delft, Optical and Laser Remote Sensing) | **CC BY 4.0** (bizim dosyalarimiz icin; bkz. AHN notu) | "AHN5 puntenwolk — Actueel Hoogtebestand Nederland; sub-tiles: GeoTiles (TU Delft), CC BY 4.0" | AHN5, ucus 2023-02-08/14; 9 alt-fayans, sha256 DATA_LOG'da |
+| 1 | AHN5 nokta bulutu, **GeoTiles alt-fayanslari** (`AHN5_T`) | AHN; dagitim: GeoTiles (TU Delft, Optical and Laser Remote Sensing) | **CC BY 4.0** (NGR resmi kaydi + GeoTiles beyani) | "AHN5 puntenwolk — Actueel Hoogtebestand Nederland; sub-tiles: GeoTiles (TU Delft), CC BY 4.0" | AHN5, ucus 2023-02-08/14; 9 alt-fayans, sha256 DATA_LOG'da |
 | 2 | BAG (`bag:pand`, `bag:verblijfsobject`, PDOK WFS v2_0) | Kadaster / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "BAG — Kadaster, via PDOK" | anlik goruntu 2026-09 |
 | 3 | 3DBAG | 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI | **CC BY 4.0** | **ZORUNLU, verbatim:** "Naamensvermelding verplicht, 3DBAG door de 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI" [sic] | **v2025.09.03** (D-027) |
 | 3a | CBS Wijken en Buurten 2025 (AOI A ve B'nin kaynagi, PDOK WFS) | CBS / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "Wijk- en buurtkaart 2025 — CBS, via PDOK" | 2025 |
@@ -37,7 +37,9 @@ yanlis attribution ve yayin hakki ihlali demektir.
 meta verisinden **verbatim** alindi (data/raw/3dbag_v20250903/metadata.json -> identificationInfo.resourceConstraints[0].otherConstraints[0]). Kaynaktaki "Naamensvermelding"
 yazimi aynen korundu [sic]. Arayuzde gorunur atif olmadan yayin yapilamaz.
 
-**AHN notu — LISANS KAYNAKLARI CELISIYOR (2026-09-27):**
+**AHN notu — COZULDU (2026-09-27, ayni gun):** Birincil kaynak bulundu: Nationaal Georegister, "Actueel Hoogtebestand Nederland 5 (AHN5)", kayit 4995e338-fec7-425e-bb86-eea3875cf114, dateStamp 2025-11-19. Kayit `otherConstraints` alaninda `http://creativecommons.org/licenses/by/4.0/deed.nl` baglantisiyla "Naamsvermelding verplicht, organisatienaam" diyor. **AHN5 = CC BY 4.0, atif zorunlu.** PDOK AHN WCS'teki CC0 o **raster servisine** aittir. Asagidaki tablo, cozumden onceki durumu kayit icin korur.
+
+**AHN notu — ilk durum (celiski):**
 
 | Kaynak | Ne diyor |
 |---|---|

@@ -62,8 +62,13 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 
 - [ ] **F-1** AHN sınıf kodu yorumları `docs/ahn_class_codes.md`'ye dayanıyor
       mu; belgelenen (26) ile çıkarım olan (14) ayrı mı? (D-017)
-- [ ] **F-2** "Sınıf 6 = çatı" varsayımı yapılmış mı? (Yapılmamalı — cepheler
-      de sınıf 6'dır.)
+- [ ] **F-2** Sınıf 6'nın ne içerdiği **hangi AHN sürümüne göre** yazılmış?
+      AHN4'te cepheler sınıf 6'dır; **AHN5'te cepheler sınıf 1'dir** (WP1 2024).
+      Bizim verimizde hangisinin geçerli olduğu ölçüldü mü? (M-005 tekrarı)
+- [ ] **F-5** Dış bir spesifikasyondan gelen her sayının yanında belge + bölüm
+      + doğrulama tarihi var mı? "Kullanıcı yazdı" doğrulama sayılmış mı?
+      Negatif iddialar ("hiçbir belge yok") aranan kaynakları sayıyor mu?
+      (`python src/qa/check_claims.py`)
 - [ ] **F-3** `building_class_ratio` bağımsız doğrulama olarak kullanılmış mı?
       (Kullanılmamalı — sınıf 6 BAG'den türer, §12.10.)
 - [ ] **F-4** Girdi kalite kapısı (§12.12) ilgili aşamada **işlemeden önce**

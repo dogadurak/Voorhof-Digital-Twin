@@ -726,13 +726,13 @@ Ozet:
 | Kod | Anlam | Kanit |
 |---|---|---|
 | 1, 2, 6, 9, **26** | Overig, Maaiveld, Bebouwing, Water, **Kunstwerken** | **BELGELENMIS** — AHN4 Besteksvoorwaarden Bolum 9 |
-| **14** | hoogspanningsleiding (tel) | **CIKARIM** — AHN belgesinde yok; ASPRS LAS 1.4 + veri kaniti |
+| **14** | Hoogspanning | **BELGELENMIS** — WP1 2024 §3.1.1 (AHN CDN); 0.3'te cikarimdi, dogru cikti |
 
 **Iki uyari Asama 1 icin kritiktir:**
-- **Sinif 6 "cati" degildir** — cepheler, dakkapeller, balkonlar ve gunes
-  panelleri de 6'dir (sartname Bolum 9.2).
-- **AHN5 icin sinif spesifikasyonu yoktur.** Yorumlar AHN4'ten tasinmistir;
-  ahn.nl tanimlarin surumler arasi degistigini kendi dipnotunda soyluyor.
+- **Sinif 6'nin kapsami SURUME BAGLI.** AHN4'te cepheler 6'dir (sartname
+  Bolum 9.2); **AHN5'te yalnizca cati noktalari 6, cepheler overig (1)**
+  (WP1 2024, AHN CDN; duzeltme 2026-09-27, M-005 tekrari).
+- Hangi tanimin **bizim verimizde** gecerli oldugu olculmedi (P-012).
 """, encoding="utf-8")
 
     write_meta(report, run_id=run_id,

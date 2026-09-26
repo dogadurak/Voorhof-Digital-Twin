@@ -95,6 +95,13 @@ kwaliteitsbeschrijving duseyde stokastik sigma <=5 cm verirken AHN5 ihale belges
 sigma <=3 cm diyor. Bu celiski raporda acikca not dusulecek, sessizce tek deger
 secilmeyecek. Esik bu celiski cozulmeden sayisallastirilmaz.
 
+> **DUZELTME 2026-09-27 (M-005 tekrari):** "AHN5 ihale belgesi sigma <=3 cm"
+> iddiasi bu kayit yazildiginda kaynagi gorulmeden yazilmisti. Bugun AHN
+> programinin 2024 calisma raporunda (WP1, Tabel 5) dogrulandi: AHN5 yukseklik
+> stokastik <=3 cm, sistematik <=5 cm. <=5 cm AHN2-AHN4'un degeridir —
+> **celiski yoktu**, iki farkli surumdu. Ayrintilar: MISTAKES.md, config 1-C
+> `source_facts`.
+
 **Uygulama:** `src/common/config.py` icindeki `get_threshold()`, onaylanmamis bir
 esik okunmaya calisildiginda `PendingThresholdError` firlatir. Onaysiz esikle
 PASS/FAIL beyan etmek teknik olarak engellenmistir.
@@ -809,7 +816,9 @@ kalitesi"**. Bu yuzden karar olarak kaydedildi ve AGENTS.md'ye islendi.
 | Sert kapi | 0-E | medyan >= 10 p/m2 | ahn.nl resmi spec (AHN4 tabani) | **FAIL** — Asama 1'e gecilmez |
 | Beklenti | 0-F | medyan >= 20 p/m2 | kendi olcumumuz (37EN1 = 29,3) | **UYARI** — engellemez |
 
-**Gerekce:** AHN5 icin resmi spesifikasyon **yoktur**. Tek belgelenmis sayi
+**Gerekce:** AHN5 icin resmi spesifikasyon ~~**yoktur**~~ **[YANLIS — duzeltme
+2026-09-27: WP1 2024 Tabel 5 AHN5 bestek degerlerini veriyor; yogunluk AHN4 ile
+"veelal hetzelfde" = asgari 10 p/m2, regio west >= 20. Esik 10 ETKILENMEZ]**. Tek belgelenmis sayi
 AHN4'un tabanidir (10) ve gercek veriye gore cok gevsektir; bu yuzden bir kapi
 degil **regresyon alarmi** olarak konmustur. Ikinci kademe bu boslugu doldurur
 ama kaynagi kendi olcumumuz oldugu icin FAIL uretmez. AGENTS.md Bolum 2'deki
@@ -882,7 +891,7 @@ belgeden dogrulanarak kayda gecirilir. Kanit duzeyi **acikca ayrilir**:
 | Kod | Anlam | Kanit duzeyi |
 |---|---|---|
 | 0, 1, 2, 6, 9, **26** | nvt, Overig, Maaiveld, Bebouwing, Water, **Kunstwerken** | **BELGELENMIS** — AHN4 Besteksvoorwaarden Bolum 9 tablosu |
-| **14** | hoogspanningsleiding (tel) | **CIKARIM** — AHN belgesinde YOK |
+| **14** | hoogspanningsleiding (tel) | ~~**CIKARIM** — AHN belgesinde YOK~~ → **BELGELI** (duzeltme 2026-09-27: WP1 2024 §3.1.1 "Hoogspanning Label code 14"; cikarim dogruydu) |
 
 **Normatif kaynak:** *Besteksvoorwaarden inwinning landsdekkende dataset
 AHN2020-2022*, Definitief v1.0, 28-05-2019, Bolum 9. ahn.nl'in **web
@@ -895,8 +904,12 @@ Veri kaniti cikarimi guclu bicimde destekler: maaiveld ustu medyan 17,31 m,
 5 m hucre basina yalnizca 25,8 nokta, 407 x 1.235 m'lik dar bir koridor.
 Yine de bu **belge degil cikarimdir** ve oyle etiketlenir (M-005).
 
-**AHN5 SINIRLAMASI:** Hicbir kaynak **AHN5**'in siniflandirmasini
-belgelemiyor. Yukaridaki yorumlar AHN4'ten tasinmistir; onlari destekleyen sey
+**AHN5 SINIRLAMASI:** ~~Hicbir kaynak **AHN5**'in siniflandirmasini
+belgelemiyor.~~ **[YANLIS — duzeltme 2026-09-27, M-005 tekrari]** AHN
+programinin 2024 calisma raporu (WP1) AHN5 tanimlarini veriyor ve bina tanimi
+FARKLI: cepheler AHN5'te *overig* (sinif 1). O tarihte aranan kaynaklar:
+ahn.nl sayfalari + AHN4 besteksvoorwaarden — AHN CDN'indeki calisma
+raporlari aranmamisti. Yukaridaki yorumlar AHN4'ten tasinmistir; onlari destekleyen sey
 belge degil, kendi veri olcumumuzdur. `ahn.nl/kwaliteitsbeschrijving` ayrica
 "de definitie van de klasse gebouwen en de klasse kunstwerken in het AHN3 en
 het AHN4 niet identiek is" diye uyarir — tanimlar surumler arasi degisiyor.

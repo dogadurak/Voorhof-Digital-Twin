@@ -1005,3 +1005,67 @@ saglandi mi" testi yazilamaz cunku amac metindir — bu yuzden kural
 AGENTS.md Bolum 14.6'ya ve Bolum 10 kontrol listesine, elle kontrol
 `docs/manual_steps.md` MS-1'e eklendi; yayilim olcumu scripte gomuldu
 ("AMAC OLCUMU" logu).
+
+---
+
+## M-005 TEKRARI · [2026-09-27] · Asama 1 hazirligi · DORDUNCU TEKRAR (kok neden: dogrulanmadan yazmak)
+
+**Ne oldu — iki ayri iddia:**
+
+1. **"AHN5 ihale belgesi dusey sigma <= 3 cm veriyor."** Bu cumle AGENTS §4,
+   DECISIONS (D-003 civari), PENDING P-004 ve config `1-C.proposal_note`'ta
+   **olgu olarak** duruyordu. Kaynagi hicbir zaman gorulmemisti —
+   `docs/ahn_class_codes.md` bile "AHN5 ihale belgeleri tenderned.nl'de,
+   dogrudan PDF olarak yayinda degil" diyordu. Bugun **dogru cikti**
+   (kaynak asagida), ama dogru cikmasi hatayi ortadan kaldirmaz: yanlis
+   da cikabilirdi ve bir esik (1-C) ona dayandirilacakti.
+2. **"AHN'in hicbir yayini AHN5 nokta bulutu siniflandirmasini
+   belgelemiyor (dogrulandi 2026-09-21)."** AGENTS §5'te bir OLCUM gibi
+   yaziliydi. **Yanlis.** AHN'in kendi CDN'indeki 2024 calisma raporu
+   AHN5 sinif tanimlarini veriyor ve bina tanimi AHN4'ten FARKLI:
+   "Alle LiDAR-punten die een **dak** van een gebouw raken worden als gebouw
+   beschouwd, de rest van het gebouw (**gevels**, ect.) zijn **overig**."
+   Yani AHN5'te **cepheler sinif 6 degil**. Bizim "sinif 6 cepheleri de
+   icerir" iddiamiz AHN4 sartnamesinden tasinmisti — tasindigi acikca
+   yazilmisti, ama "AHN5 belgesi yok" cumlesi tasimayi dogrulanmis gibi
+   gosterdi.
+
+**Kok neden:** M-001, M-002, M-005 ile ayni — **dogrulanmadan yazmak.** Bu kez
+iki yeni bicimde:
+- (a) **Kullanicinin sartname metnindeki** bir sayi (AGENTS'in ilk surumu),
+  kaynagi aranmadan config'e ve kararlara tasindi. "Kullanici yazdi" ile
+  "kaynaktan dogrulandi" ayni sey sanildi.
+- (b) **Negatif bir iddia** ("hicbir yayin yok") eksik bir aramanin sonucu
+  olarak yazildi. Aranan yerler (ahn.nl sayfalari, AHN4 sartnamesi)
+  yazilmadi; "bulamadim" "yok" oldu.
+
+**Kural neden yetmedi (Bolum 14.5 soru 3):** M-005'in kurali ve otomasyonu
+yalnizca **sema** iddialarini (bir katmanda hangi oznitelik var) kapsiyordu.
+**Dis belge / spesifikasyon** iddialarini ve **negatif varlik** iddialarini
+kapsamiyordu. Kural yanlis degildi, **dar**di.
+
+**Guclendirilmis kural:**
+1. Bir dis spesifikasyondan (bestek, norm, yonetmelik) gelen her SAYI,
+   config'e veya karar kaydina ancak `source` (belge + bolum/tablo) ve
+   `source_verified_at` ile girer. Kaynagi gorulmemisse `DOGRULANMADI`
+   etiketi tasir ve esige donusturulemez.
+2. Kullanicinin sartname metnindeki bir olgu iddiasi da bu kurala tabidir.
+   "Kullanici yazdi" dogrulama degildir.
+3. Negatif varlik iddiasi ("X yok", "hicbir belge Y demiyor") yazilamaz;
+   yerine "**aranan kaynaklar: ... — bulunamadi**" yazilir. Negatif iddia
+   bir olgu degil, arama kapsaminin raporudur.
+
+**Nerede uygulanir:** config/acceptance_criteria.yml, AGENTS.md, DECISIONS.md,
+docs/*.md.
+
+**Otomatik kontrol (kismi):** `src/qa/check_claims.py` — (i) config'te
+`threshold` alani sayisal olan her kriterde `source` / `reference_note` /
+`rationale` alanlarindan biri var mi; (ii) md/yml dosyalarinda negatif varlik
+kaliplari ("hicbir ... yok", "belgelemiyor", "yayinlanmamis") geciyor mu —
+geciyorsa ayni paragrafta "aranan" kelimesi var mi. (ii) sezgiseldir;
+bulunanlar insan incelemesi icin listelenir (`docs/manual_steps.md` MS-2).
+
+**Durum:** KAPALI (iddialar duzeltildi, kural genisletildi, kontrol yazildi).
+**Kullaniciya bildirildi:** 2026-09-27.
+
+**Kaynaklar:** "WP1: Inventarisatie van puntenwolken in Nederland", versie 1.0, 20-08-2024 (D. van der Heide RWS/TUD, A. van Natijne HwH ve ark.), AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf; Nationaal Georegister, "Actueel Hoogtebestand Nederland 5 (AHN5)", kayit 4995e338-fec7-425e-bb86-eea3875cf114, dateStamp 2025-11-19.

@@ -254,8 +254,10 @@ A'nin konut stokunun **%{tr(100 * ug['belirsiz_konut_vbo'] / ug['A_konut_vbo'])}
 ## SINIRLAMALAR
 
 1. **Veri donemi farki 3,5 yil** — geometri 2023-02, oznitelik 2026-09 (D-020)
-2. **AHN5 icin siniflandirma spesifikasyonu yok** — yorumlar AHN4 ihale
-   sartnamesinden tasindi; kod 14 hicbir AHN belgesinde gecmiyor (D-017)
+2. **AHN5 sinif tanimlari AHN4'ten FARKLI** — AHN5'te cepheler *overig* (1),
+   yalnizca cati noktalari bebouwing (6); kod 14 = Hoogspanning belgeli
+   (WP1 2024, AHN CDN; duzeltme 2026-09-27, M-005 tekrari). Hangi tanimin
+   bizim verimizde gecerli oldugu olculmedi (P-012)
 3. **AHN sinif 6 BAG'den turer** — bagimsiz dogrulama olarak kullanilamaz (D-017)
 4. **3DBAG'in AHN5'i "yetersiz" bulmasi bir TANIM farkiydi** (D-026); "girdimiz
    saglam" sonucu **kosulludur** — Asama 1 yalnizca sinif 6 kullanirsa ayni

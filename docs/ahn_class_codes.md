@@ -71,7 +71,9 @@ seyi soyluyor.
 
 ---
 
-## 3. Kod 14 — **BELGEDE YOK, CIKARIM**
+## 3. Kod 14 — ~~BELGEDE YOK, CIKARIM~~ → **BELGELI (2026-09-27)**
+
+> ✅ **DUZELTME 2026-09-27:** *WP1: Inventarisatie van puntenwolken in Nederland*, v1.0, 2024-08-20 — AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf §3.1.1: "Hoogspanning Label code 14". AHN5 tanimi: "Voor de definitie van hoogspanning wordt de BGT ten tijde van de vlucht gehanteerd: Metalen mast of stellage ter ondersteuning van geleide draden voor het transport van elektriciteit met een hoog voltage. Hoogspanningsleidingen van en naar deze hoogspanningsmasten worden ook als hoogspanning geclassificeerd." Asagidaki cikarim **dogruydu**; bolum 0.3 kaydi olarak korunuyor. O tarihte aranan kaynaklar: ahn.nl sayfalari + AHN4 besteksvoorwaarden.
 
 **AHN'in hicbir belgesinde kod 14 gecmiyor.** Yukaridaki normatif tablo
 0/1/2/6/9/26 ile biter. Elimizdeki kanit:
@@ -112,7 +114,9 @@ bilinmeyen bir sinif) bina catisi degildir; dislanmasi guvenlidir.
 
 ---
 
-## 4. **AHN5 icin sinif spesifikasyonu YOKTUR**
+## 4. ~~AHN5 icin sinif spesifikasyonu YOKTUR~~ → **YANLIS (2026-09-27)**
+
+> ⚠️ **DUZELTME 2026-09-27 (M-005 tekrari):** *WP1: Inventarisatie van puntenwolken in Nederland*, v1.0, 2024-08-20 — AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf AHN5 bolumunde sinif tanimlarini veriyor ("De klasse labels binnen de dataset bestaan uit 6 klasse") ve **bina tanimi AHN4'ten farkli**: cepheler *overig*. Asagidaki arama listesi, 0.3'te NEREYE bakildigini gosterdigi icin korunuyor — eksik olan AHN CDN'indeki calisma raporlariydi.
 
 Bizim girdimiz **AHN5**'tir (D-013). Aranan hicbir kaynak AHN5'in nokta bulutu
 siniflandirmasini belgelemiyor — ne sayisal ne sozel:
@@ -134,7 +138,7 @@ Ayrica `ahn.nl/kwaliteitsbeschrijving` kendi dipnotunda uyariyor (aynen):
 > AHN3 en het AHN4 niet identiek is!"
 
 Tanimlar surumler arasinda **degisiyor**. AHN5'te tekrar degismis olabilir ve
-bunu dogrulayacak belge yok. Bu bir **sinirlamadir**, AGENTS.md Bolum 5'e
+~~bunu dogrulayacak belge yok~~ **[duzeltme 2026-09-27: degismis — WP1 2024, AHN5'te cepheler overig]**. Bu bir **sinirlamadir**, AGENTS.md Bolum 5'e
 islenmistir.
 
 ---
@@ -142,6 +146,14 @@ islenmistir.
 ## 5. Asama 1'i dogrudan etkileyen uc tanim (Bolum 9.2, aynen)
 
 ### 5.1 Sinif 6 "cati" DEGILDIR — cepheler de dahildir
+
+> ⚠️ **AHN5 ICIN GECERSIZ (2026-09-27, M-005 tekrari).** Asagidaki alinti **AHN4**
+> sartnamesinden. AHN programinin 2024 calisma raporu (*WP1: Inventarisatie van
+> puntenwolken in Nederland*, v1.0, AHN5 bolumu) AHN5 tanimini **degistiriyor**:
+> "Alle LiDAR-punten die een **dak** van een gebouw raken worden als gebouw
+> beschouwd, de rest van het gebouw (**gevels**, ect.) zijn **overig**."
+> Yani AHN5'te cepheler **sinif 1**. Hangi tanimin **bizim verimizde** gecerli
+> oldugu olculerek dogrulanacak (P-012). Bu bolum AHN4 kaydi olarak korunuyor.
 
 > "Alle laserpunten die een gebouw raken, **dus ook de zijkanten van een
 > gebouw**, dienen te worden geclassificeerd als bebouwing, ook dakkapellen en
