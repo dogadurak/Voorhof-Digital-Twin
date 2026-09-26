@@ -179,6 +179,12 @@ Kayit: `tools/MANIFEST.json` (git'te izlenir; ikili dosyalar izlenmez).
 | val3dity | `version: 2.7.0` | `cf8d3f025cd52aafc9ea370296a2430baa4aa39ce44a8b3ba1d8b3a540d8a5a7` | kuruldu, dogrulandi |
 | cjval | 0.10.0 | — | **KURULMADI** — Windows derlemesi yok; Rust (`cargo`) icin kullanici onayi bekleniyor |
 
+**roofer tuzagi (T-7):** roofer, **calisma dizinine** `roofer.log.json`
+yazar (cikti klasorune degil). Deneme kosusu depo kokunden calistirildigi icin
+kokte bu dosya olustu (2026-09-27; 16 satir, hepsi `info`) — scratchpad'e
+tasindi. Kural: roofer **cikti klasoru calisma dizini yapilarak** calistirilir;
+ek emniyet olarak `.gitignore`'a eklendi.
+
 **val3dity tuzagi (T-6):** `val3dity-win64.zip` icinden **yine
 `val3dity-win64.zip`** cikiyor. Script ic zip'i de acar ve ic zip'in
 SHA-256'sini (`ad9a1708…c27f5d`, yayinci ilan etmiyor) manifest'e yazar.

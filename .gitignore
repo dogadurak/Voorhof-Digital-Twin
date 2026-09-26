@@ -59,6 +59,10 @@ processor*/
 postProcessing/
 ENVImet_output/
 
+# --- roofer calisma dizinine log yazar (olculdu 2026-09-27) ---
+# Kosular cikti klasorunde calistirilir; yine de koke dusen log izlenmez.
+roofer.log.json
+
 # --- Isletim sistemi / editor ---
 .DS_Store
 Thumbs.db
