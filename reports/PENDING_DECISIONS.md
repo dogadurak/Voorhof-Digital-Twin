@@ -28,7 +28,7 @@
 | ~~P-018~~ | 1 | Buyuk (>=100 m2) ucus sonrasi yapilar | — | **KAPANDI -> D-029** (estimated_lod1) |
 | ~~P-019~~ | 1 | Kat yuksekligi degeri ve belirsizligi | — | **KAPANDI -> D-030** (yerel kalibrasyon + sayim kurali) |
 | ~~P-020~~ | 1 | Kalibrasyon orneklemi | — | **KAPANDI -> D-031** (yukseklik sinifi; desil superseded) |
-| P-021 | 0.3 | PDOK Luchtfoto (acik hava fotografi) gorsel kontrol icin yeni veri kaynagi olsun mu | Gorsel kontrolun ajan tarafindan on-gecisi | **Simdi** (kullanicinin isini azaltir) |
+| ~~P-021~~ | 0.3 | PDOK Luchtfoto ile ajan on-gecisi | — | **KAPANDI — secenek (b): gorsel kontrolu kullanici yapar** |
 | P-022 | 3 | Stedin SJV "normallestirilmis yil" — model hangi hava yiliyla, gaz m3->kWh hangi kaynakla | Asama 3 enerji karsilastirmasi | **Asama 3 oncesi** |
 | P-023 | 3 | PC6 uygunluk kurallari: gunes paneli salderen + toplu isitma (baglanti/konut orani) | Asama 3 | **Stedin verisine BAKMADAN once** |
 | P-024 | 3 | Hangi Stedin yili (peildatum 2024-01-01 = 2023 tuketimi mi, en guncel mi) | Asama 3 veri edinimi | **Stedin indirilmeden once** |
@@ -936,3 +936,17 @@ yapar (Singh 2021). Bizim urunumuz tek seferlik bir anlik goruntudur ->
 literatur diliyle "dijital model".
 **Oneri:** Baslik degismesin ama raporun ozetinde duzey acikca yazilsin:
 "statik, dogrulanmis bir kentsel dijital model; canli veri akisi yok".
+
+
+---
+
+## [2026-09-27] P-021 KAPANDI — secenek (b)
+
+**Kullanici karari:** "o zaman bu isi bana birak". Gorsel kontrol ve kat
+sayimi kullanici tarafindan yapilir; `storey_counting_rule.counted_by`
+("kullanici") DEGISMEDI, yani muhurlu kural aynen gecerli. PDOK Luchtfoto
+AGENTS Bolum 4'e EKLENMEDI.
+
+**Gerekce kaydi:** Ajan kendi fotograf okuma dogrulugunun olculmedigini ve
+cikarimlari kendisi yaptigi icin kor bir gozlemci olmadigini bildirdi; bir
+bilinen-cevapli sinav onerdi. Kullanici isi kendisi yapmayi secti.
