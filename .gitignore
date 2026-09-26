@@ -28,6 +28,13 @@ data/logs/*
 *.pcd
 *.ply
 
+# --- Harici araclar (ikili dosyalar repoya GIRMEZ; D-033) ---
+# Surum + yayinci checksum'i tools/MANIFEST.json'da izlenir; zip'ler oradan
+# yeniden indirilip dogrulanabilir.
+tools/*
+!tools/MANIFEST.json
+!tools/README.md
+
 # --- Kimlik bilgileri — ASLA repoya girmez (Bolum 8) ---
 .env
 .env.*

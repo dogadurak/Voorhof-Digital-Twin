@@ -165,12 +165,68 @@ Etkilenen         : sys.stdout (dosya logu UTF-8 oldugu icin etkilenmiyor)
 
 ---
 
-## 4. Docker image'lari (Asama 1+)
+## 4. Asama 1 araclari — Windows derlemeleri (Karar D-033)
+
+Docker yerine resmi Windows derlemeleri kullanilir. Kurulum:
+`python src/01_reconstruction/install_tools.py` — zip'i indirir, SHA-256'yi
+**yayincinin GitHub'da ilan ettigi** degerle karsilastirir, araci fiilen
+calistirip ciktisinda surum dizgisini arar (M-002: exit 0 kanit degildir).
+Kayit: `tools/MANIFEST.json` (git'te izlenir; ikili dosyalar izlenmez).
+
+| Arac | Surum (calistirilarak olculdu) | Yayinci SHA-256 | Durum (2026-09-27) |
+|---|---|---|---|
+| roofer | `roofer 1.0.0 (bb2a85a)` | `143413f13f347138dae731b345b8bcdc70f66e3f8bf77da260068f577b40ae7f` | kuruldu, dogrulandi |
+| val3dity | `version: 2.7.0` | `cf8d3f025cd52aafc9ea370296a2430baa4aa39ce44a8b3ba1d8b3a540d8a5a7` | kuruldu, dogrulandi |
+| cjval | 0.10.0 | — | **KURULMADI** — Windows derlemesi yok; Rust (`cargo`) icin kullanici onayi bekleniyor |
+
+**val3dity tuzagi (T-6):** `val3dity-win64.zip` icinden **yine
+`val3dity-win64.zip`** cikiyor. Script ic zip'i de acar ve ic zip'in
+SHA-256'sini (`ad9a1708…c27f5d`, yayinci ilan etmiyor) manifest'e yazar.
+
+### Deneme kosusu (smoke test) — 2026-09-27 · SONUC DEGILDIR
+
+Amac yalnizca "arac zinciri bu makinede calisiyor mu". Uretilen yuksekliklere
+**bakilmadi**, hicbir metrik hesaplanmadi.
+
+- **Binalar:** yalnizca **B\A** (dogrulama kumesi A'ya dokunulmadi). Kural,
+  sonuca bakilmadan: alcak (5-7 m) / orta (10-16 m) / yuksek (>= 20 m)
+  bantlarindan, dislama listelerinde olmayan, >= 500 sinif 6 noktali, ayni
+  alt-fayanstaki ilk bag_id: `0503100000001176`, `0503100000000023`,
+  `0503100000001178` (LAZ `37EN1_14`).
+- **Komut:** `roofer --lod12 --lod22 --id-attribute identificatie --srs EPSG:7415
+  --filter "identificatie IN (...)" <LAZ> bag_pand.geojson <cikti>` —
+  diger her parametre **varsayilan**.
+- **roofer:** 3/3 bina rekonstrukte edildi, ~30 s. Tam log 16 satir:
+  **0 uyari, 0 hata** (sayildi, filtrelenmedi — kural 12).
+- **val3dity:** 3/3 feature, 9/9 primitive **gecerli**.
+- Cikti depoya alinmadi (scratchpad).
+
+### Asama 1 oncesi MUHURLENMESI gereken roofer parametreleri
+
+`roofer --help-all` ile okundu. Varsayilanlar sonuca dogrudan etki eder; Asama
+1 kosusundan ONCE config'e yazilmalidir (Bolum 12.2):
+
+| Parametre | Varsayilan | Neden onemli |
+|---|---|---|
+| `--bld-class` | **6** | **TEK bir tam sayi** aliyor -> P-012 secenek (b) (sinif 1'i de kullanmak) roofer'a dogrudan verilemez; noktalarin onceden yeniden siniflandirilmasini gerektirir |
+| `--grnd-class` | 2 | zemin sinifi |
+| `--ceil-point-density` | **20** p/m2 | bizim yogunlugumuz ~30-36 p/m2; roofer bunu **20'ye inceltir** |
+| `--h-terrain-strategy` | `buffer_tile` | taban kotu: roofprint'in 4 m tamponundaki en dusuk %5'lik nokta |
+| `--complexity-factor` | 0.888 | cati ayrintisi |
+| `--plane-detect-epsilon` | 0.3 m | duzlem toleransi |
+| `--clear-insufficient` | true | yetersiz veride model URETMEZ -> `failed_buildings.csv` |
+| `--lod11-fallback-area` | 69000 m2 | bu alandan buyukse basit ekstruzyon |
+
+**3DBAG'in kullandigi degerler** sabitlenen surumun meta verisinde
+aranmali; 3DBAG ile ayni parametreleri kullanmak kriter 1-B'yi yazilim
+farkindan (D-033) sonra ikinci bir farktan da arindirir.
+
+## 4a. Docker image'lari (yalnizca geri donus / sonraki asamalar)
 
 | Amac | Image | Tag | Durum |
 |---|---|---|---|
-| LOD2 rekonstruksiyon | roofer / geoflow | `TODO_ASAMA_1` | Henuz cekilmedi |
-| Geometri QC | val3dity | `TODO_ASAMA_1` | Henuz cekilmedi |
+| LOD2 rekonstruksiyon | — | — | Gerekmiyor (D-033); Windows derlemesi calisiyor |
+| Geometri QC | — | — | Gerekmiyor (D-033) |
 | Veritabani | 3DCityDB v5 + PostGIS | `TODO_ASAMA_2` | Henuz cekilmedi |
 | CFD | OpenFOAM | `TODO_ASAMA_4` | Donanim karari bekliyor (P-001) |
 

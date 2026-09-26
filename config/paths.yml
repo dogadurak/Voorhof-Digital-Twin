@@ -68,6 +68,11 @@ documents:
   environment: ENVIRONMENT.md
   attribution: ATTRIBUTION.md
 
+# --- Harici araclar (D-033): Windows derlemeleri, checksum dogrulamali ---
+tools:
+  dir: tools
+  manifest: tools/MANIFEST.json
+
 # --- Config dosyalari (kendine referans; qa scriptleri diff icin kullanir) ---
 config:
   paths: config/paths.yml

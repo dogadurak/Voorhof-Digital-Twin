@@ -950,3 +950,23 @@ AGENTS Bolum 4'e EKLENMEDI.
 **Gerekce kaydi:** Ajan kendi fotograf okuma dogrulugunun olculmedigini ve
 cikarimlari kendisi yaptigi icin kor bir gozlemci olmadigini bildirdi; bir
 bilinen-cevapli sinav onerdi. Kullanici isi kendisi yapmayi secti.
+
+
+---
+
+## [2026-09-27] P-012'ye YENI OLGU — roofer tek bina sinifi aliyor
+
+**Olgu (`roofer 1.0.0 --help-all`, 2026-09-27):** `--bld-class <int>` —
+"LAS classification code that contains the building points", varsayilan **6**.
+**Tek bir tam sayi** aliyor; birden fazla sinif verilemiyor.
+
+**P-012 icin anlami:**
+- Secenek **(a)** (yalnizca sinif 6): roofer'in varsayilani, ek islem yok.
+- Secenek **(b)** (sinif 1'i de geometrik filtreyle katmak): roofer'a dogrudan
+  verilemez. Once noktalarin bir KOPYASI uzerinde (data/raw asla degismez)
+  secilen sinif 1 noktalari 6'ya yeniden siniflandirilmali, sonra roofer o
+  kopyayla calistirilmali. Bu bir **on-isleme adimidir**, kendi kurali ve
+  kendi dogrulamasi olmali (hangi sinif 1 noktasi "cati" sayilacak?).
+
+Karar hala gorsel kontrolu bekliyor; bu not karari degistirmez, (b)'nin
+maliyetini gorunur kilar.

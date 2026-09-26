@@ -1,0 +1,51 @@
+{
+  "decision_ref": "D-033",
+  "run_id": "RUN-2026-09-26-004",
+  "installed_at_utc": "2026-09-26T21:58:40+00:00",
+  "tools": [
+    {
+      "name": "roofer",
+      "version": "v1.0.0",
+      "url": "https://github.com/3DBAG/roofer/releases/download/v1.0.0/roofer-windows-x86_64-v1.0.0.zip",
+      "license": "GPLv3 (AGENTS Bolum 7)",
+      "publisher_sha256": "143413f13f347138dae731b345b8bcdc70f66e3f8bf77da260068f577b40ae7f",
+      "measured_sha256": "143413f13f347138dae731b345b8bcdc70f66e3f8bf77da260068f577b40ae7f",
+      "sha256_verified": true,
+      "inner_zip_sha256": {},
+      "exe": "tools/roofer/bin/roofer.exe",
+      "probe": {
+        "args": [
+          "--version"
+        ],
+        "returncode": 0,
+        "found_expected": true,
+        "first_lines": [
+          "roofer 1.0.0 (bb2a85a)"
+        ]
+      }
+    },
+    {
+      "name": "val3dity",
+      "version": "2.7.0",
+      "url": "https://github.com/tudelft3d/val3dity/releases/download/2.7.0/val3dity-win64.zip",
+      "license": "GPLv3 (AGENTS Bolum 7: acik kaynak)",
+      "publisher_sha256": "cf8d3f025cd52aafc9ea370296a2430baa4aa39ce44a8b3ba1d8b3a540d8a5a7",
+      "measured_sha256": "cf8d3f025cd52aafc9ea370296a2430baa4aa39ce44a8b3ba1d8b3a540d8a5a7",
+      "sha256_verified": true,
+      "inner_zip_sha256": {
+        "val3dity-win64.zip": "ad9a1708c7c1ad7da0eaf8a0b339bdaf521e854097eb1e3d327caa7a11c27f5d"
+      },
+      "exe": "tools/val3dity/val3dity-win64_inner/val3dity.exe",
+      "probe": {
+        "args": [
+          "--version"
+        ],
+        "returncode": 0,
+        "found_expected": true,
+        "first_lines": [
+          "C:\\Users\\PC\\Desktop\\projeler\\Voorhof_Digital_Twin\\tools\\val3dity\\val3dity-win64_inner\\val3dity.exe  version: 2.7.0"
+        ]
+      }
+    }
+  ]
+}

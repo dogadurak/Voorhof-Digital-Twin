@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-033**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-034**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1690,3 +1690,40 @@ bir sonucu degistirmenin yolu olurdu (Bolum 12.2). Devreye girmeyen yedek
 sayilmis olsa bile ortalamaya girmez, ayri listelenir.
 
 **Nerede:** `storey_height_calibration.selection.reserve`.
+
+---
+
+## D-033 · [2026-09-27] · Asama 1 araclari Docker'siz, Windows derlemeleriyle kurulur
+
+**Karar (kullanici, 2026-09-27 "tamam o zaman calisalim"):** AGENTS Bolum 6'daki
+"roofer / geoflow (Docker)" ifadesi bir **kurulum yolu** tercihiydi, yontem
+degil. Araclar resmi Windows derlemeleriyle kurulur.
+
+**Olculen (2026-09-26/27, GitHub releases API):**
+
+| Arac | Surum | Windows | Yayincinin SHA-256'si |
+|---|---|---|---|
+| roofer | v1.0.0 (2026-04-20) | `roofer-windows-x86_64-v1.0.0.zip` | `143413f1…40ae7f` |
+| val3dity | 2.7.0 (2026-08-25) | `val3dity-win64.zip` | `cf8d3f02…a8a5a7` |
+| cjval | 0.10.0 (2026-08-10) | **hazir derleme YOK**, PyPI'de yok | — |
+
+**Tekrarlanabilirlik Docker'siz nasil saglanir:** her zip'in SHA-256'si
+**yayincinin** GitHub'da ilan ettigi degerle karsilastirilir (3DBAG'de D-027'de
+yapilanin aynisi) ve surum + checksum `tools/MANIFEST.json`'a yazilir. Ayni
+dosya her makinede ayni checksum'la yeniden indirilebilir.
+
+**Docker'in VERMEYECEGI bir sey (kayit):** 3DBAG v2025.09.03'un meta verisine
+gore uretim **Linux'ta**, roofer'in bir gelistirme surumuyle
+(`f892da5`, **"dirty"** — kaydedilmemis degisiklikli) ve geoflow
+`building-reconstruction 0.4.8` ile yapilmis. Bu yazilim birebir yeniden
+uretilemez. Docker kullansak da 3DBAG'le ayni yazilimi calistirmazdik.
+-> Kriter 1-B'deki farkin bir kismi **yazilim surumu farkindan** gelebilir;
+Bolum 5'e sinirlama olarak eklendi.
+
+**cjval:** Rust (`cargo`) veya Docker gerektiriyor; bu makinede ikisi de
+kullanilabilir degil (cargo yok, Docker motoru kapali). Rust kurmak kullanicinin
+bilgisayarina sistem yazilimi ekler -> **ayri onay** gerekir. cjval Asama 1'in
+sonunda (CityJSON cikti dogrulamasi) gerekli; deneme kosusunu engellemez.
+
+**Geri donus kurali:** Windows derlemesi deneme kosusunda calismazsa Docker'a
+donulur ve bu da kayda gecer.
