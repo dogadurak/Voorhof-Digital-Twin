@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-032**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-033**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1664,3 +1664,29 @@ Bu bir **karar kurali** oldugu icin **sayimdan once** muhurlendi
   buyukse ayrim gercektir.
 
 **Onay:** Kullanici, 2026-09-22 (P-020).
+
+---
+
+## D-032 · [2026-09-26] · Kalibrasyon icin 3 yuksek YEDEK bina (sayimdan once)
+
+**Karar (kullanici, 2026-09-22):** hoog grubu (kat >= 5) sinirda oldugu icin
+26, 35 ve 37 m siniflarinin her birinden **bir yedek** bina secilir, sayimdan
+ONCE muhurlenir ve saha listesine "YEDEK — ancak asil orneklemden bina
+sayilamazsa doldurulur" etiketiyle eklenir. Amac: n < 3 durumunda **kurali
+degistirmek yerine onceden tanimlanmis yedege gecmek**.
+
+**Muhur zamani:** 2026-09-26. Saha listesi olculdu: **0 dolu satir** — hicbir
+sayim yapilmamisti. Talimat 2026-09-22'de verilmisti ama uygulanmamisti; bu
+gecikme kayda gecirilir, muhurun gecerliligini etkilemez cunku arada hicbir
+gozlem yapilmadi.
+
+**Secim:** Asil kuralin ayni sinifta bir sonraki adayi (sinif 6 orani
+azalan, esitlikte bag_id artan) — yeni bir kural degil.
+
+**Tetik — bilerek dar tutuldu:** Yedek yalnizca **kendi sinifinin asil binasi
+kullanilamazsa** devreye girer (KAT bos / R8 / R9). Asil binanin **degeri**
+(aykiri, beklenmedik) yedegi asla tetiklemez; aksi halde yedek, begenilmeyen
+bir sonucu degistirmenin yolu olurdu (Bolum 12.2). Devreye girmeyen yedek
+sayilmis olsa bile ortalamaya girmez, ayri listelenir.
+
+**Nerede:** `storey_height_calibration.selection.reserve`.

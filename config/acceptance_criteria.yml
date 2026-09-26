@@ -1751,6 +1751,41 @@ storey_height_calibration:
         2026-09-22). Bir sonuca bakilarak secilmedi; bir yontem hatasi
         gorulerek duzeltildi. Eski kural ve eski cikti SILINMEDI.
 
+    # --- YEDEK BINALAR (Karar D-032, kullanici talimati) ---
+    # MUHURLENDI 2026-09-26, HICBIR SAYIM YAPILMADAN (saha listesinde 0 dolu
+    # satir olculdu). Yedeklerin KIM oldugu bu blok commit edildikten SONRA
+    # hesaplanir.
+    reserve:
+      decision_ref: D-032
+      status: SEALED_BEFORE_OBSERVATION
+      sealed_at: "2026-09-26"
+      why: >
+        hoog grubu (kat >= 5) sinirda: tip bazli karar kurali her grupta
+        n >= 3 istiyor ve asil orneklemde yuksek sinif basina yalnizca 1 bina
+        var. Bir yuksek bina sayilamazsa kurali DEGISTIRMEK yerine ONCEDEN
+        TANIMLANMIS yedege gecilir (kullanici talimati 2026-09-22).
+      classes: [26, 35, 37]          # h sinifi (m); havuzda 9 + 3 + 10 = 22 bina
+      pick: >
+        Her siniftan, ASIL secimle AYNI siralamaya gore (building_class_ratio
+        azalan, esitlikte bag_id artan) IKINCI bina. Yani yedek, asil kuralin
+        o sinifta bir sonraki adayidir — yeni bir kural degildir.
+      activation:
+        trigger: >
+          Ayni h sinifindaki ASIL bina KULLANILAMAZ oldugunda: KAT bos
+          (R10 'sayilamadi') VEYA R8 (cepheler arasi fark) / R9 (ayni pandda
+          farkli yukseklik) nedeniyle kalibrasyondan cikarildiginda.
+        mapping: "Yedek YALNIZCA kendi sinifinin asil binasinin yerine gecer (26->26, 35->35, 37->37)."
+        not_a_trigger: >
+          Asil binanin kat yuksekligi DEGERI (aykiri gorunmesi, beklentiye
+          uymamasi) yedegi ASLA devreye sokmaz. Tetik yalnizca kullanilabilirlik,
+          deger degil — aksi halde yedek, sonucu begenmedigimiz binayi
+          degistirmenin yolu olurdu (Bolum 12.2).
+        unused_reserve: >
+          Devreye girmeyen bir yedek sayilmis olsa bile ORTALAMAYA GIRMEZ.
+          Raporda "sayildi, kural geregi kullanilmadi" olarak ayri listelenir.
+      output_csv: reports/storey_height_calibration_reserve.csv
+      field_list_label: "YEDEK — ancak asil orneklemden bina sayilamazsa doldurulur"
+
     # --- TIP BAZLI KIRILIM (kullanici talimati 2026-09-22, SAYIMDAN ONCE) ---
     type_breakdown:
       decision_ref: D-031

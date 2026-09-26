@@ -64,6 +64,8 @@ EXPECTED_PATHS: list[tuple[str, str]] = [
     ("storey_height_calibration.selection.stratification", "tabakalama (D-031)"),
     ("storey_height_calibration.selection.stratification_superseded_p020.status",
      "eski desil kurali — SILINMEMELI"),
+    ("storey_height_calibration.selection.reserve.activation.trigger",
+     "yedek bina tetigi (D-032)"),
     ("storey_height_calibration.selection.type_breakdown.decision_rule",
      "tip bazli kirilim karar kurali (D-031)"),
     ("storey_height_calibration.formula", "kat yuksekligi formulu"),
