@@ -11,7 +11,7 @@
 | P-001 | 4 | B ve D alan boyutlari | Asama 4 (CFD, mikroklima) | Asama 3 sonunda — **erteleme ONAYLANDI** |
 | P-002 | 4 | ENVI-met lisansi | Asama 4 mikroklima | Asama 3 sonunda |
 | ~~P-003~~ | 0.3 | ~~Disk alani yetersizligi~~ | — | **KAPANDI 2026-09-21** |
-| P-004 | 1 | AHN z-fark esigi (Kriter 1-C) | Asama 1 baslangici | Asama 0 sonunda |
+| P-004 | 1 | AHN z-fark esigi (Kriter 1-C) — **yapi KARARLASTI (D-034), SAYILAR onay bekliyor** | Asama 1 baslangici | Asama 0 sonunda |
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
 | ~~P-006~~ | 0.2a | ~~woonfunctie ve bina sayimi paydalari~~ | — | **KAPANDI 2026-09-21 (D-008)** |
 | P-007 | 2 | PDOK BAG WFS kismi — nevenadres yok | Asama 2 EP-Online eslestirmesi | Asama 1 sonunda |
@@ -155,6 +155,19 @@ olarak Asama 5'te mikroklima katmaninin yayini.
 ---
 
 ## [2026-09-21] [1] P-004 — AHN z-fark esigi (Kriter 1-C)
+
+> **GUNCELLEME 2026-09-27 — yapi kararlasti, sayilar onay bekliyor.**
+> Kullanici (a)+(b)+(c) yapisini onayladi -> **D-034**. Esik ONERILERI
+> `config/acceptance_criteria.yml` -> `stage_1` 1-C `components` altinda;
+> referans `reports/01_prep_3dbag_rmse_reference.md` (3DBAG'in kendi uyum artigi).
+>
+> **Kullanicidan istenen tek karar:** 1-C-a icin **R** (3DBAG'e gore goreli, katman
+> bazinda; ajanin onerisi) mi **A** (yalniz duz catilar, mutlak 0,10 / 0,25 m) mi;
+> ve 1-C-c icin onerilen |bias| <= 0,10 m + duz catilarda medyan <= 0,10 / p90 <= 0,25 m
+> onaylaniyor mu. Onaydan sonra LOCKED; Asama 1'in hicbir sonucu gorulmeden.
+>
+> Asagidaki "cozulmesi gereken celiski" metni ESKIDIR: celiski yoktu (5 cm AHN2-4,
+> 3 cm AHN5 — M-005 tekrari, 2026-09-27). Kayit icin korunuyor.
 
 **Soru:** `config/acceptance_criteria.yml` kriter 1-C'deki `ahn_z_diff_rmse_m` esigi
 hangi sayi olacak? (Karar D-003 geregi `TODO_ONAY_BEKLIYOR`)
@@ -468,7 +481,7 @@ Asama 4 mikroklima modulu. **Asama 0.3 ve Asama 1-3 etkilenmez.**
 
 | Kod | Oneri | Gerekce |
 |---|---|---|
-| 6 | **DAHIL** | bina. DIKKAT: cepheler de 6'dir, cati ayrimi dikeylik olcutuyle yapilmali |
+| 6 | **DAHIL** | bina. ~~DIKKAT: cepheler de 6'dir, cati ayrimi dikeylik olcutuyle yapilmali~~ **[AHN5 icin guncellendi 2026-09-27: cepheler agirlikla sinif 1 — D-017 EK 1]** |
 | 2 | **DAHIL**, yalniz zemin kotu referansi icin | bina yuksekligi maaiveld'e gore olculur |
 | 1 | **HARIC**, ama izlenir | bitki ortusu + siniflandirilamayan her sey |
 | 26 | **HARIC** | kunstwerk (kopru/vlonder) — bina degil |
@@ -489,6 +502,16 @@ Iki secenek:
 
 Secim **Asama 1'in ilk adiminda, hesaptan once** muhurlenmelidir (Bolum 12.2).
 Iki secenegi de calistirip iyi gorunen sonucu secmek **yasaktir**.
+
+> **YENI GIRDI (2026-09-27, D-017 EK 1):** AHN5'te cephe noktalari agirlikla
+> **sinif 1**. Olculen: 1.639 binanin cephe bandinda, ayakizinin **ic** yarisinda
+> 938.638 sinif 1 noktasi var ve bunlar duvar cizgisinde yogunlasiyor. Bu, (b)
+> secenegi icin **yeni bir risk**tir: "ayakizi icindeki sinif 1" roofer'a cephe
+> noktalarini tasir. (b) secilirse kenar tamponu (orn. sinirdan >= 0,5 m iceride)
+> veya cati kotuna yakinlik filtresi **hesaptan once** tanimlanmalidir. Buna karsilik
+> (a) icin eski "cepheler 6'dir, dikeylik filtresi gerekir" kaygisi AHN5'te
+> buyuk olcude ortadan kalkiyor (duz catilarda cephe bandinin %2-7'si sinif 6).
+> Egimli catilardaki sinif 6 fazlasinin kaynagi ayristirilmadi (CIKARIM: sacak).
 
 **Benim onerim:** (b), ama **her iki grup ayri raporlanarak** — sinif 6'dan
 kurulan binalar ana metrigi olusturur, sinif 1 katkisiyla kurtarilanlar ayri

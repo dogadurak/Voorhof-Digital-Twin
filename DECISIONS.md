@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-034**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-035**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -917,8 +917,9 @@ AGENTS.md Bolum 5'e sinirlama olarak islenmistir.
 
 **Asama 1'i dogrudan etkileyen uc tanim** (ayrinti: `docs/ahn_class_codes.md`
 Bolum 5):
-1. **Sinif 6 "cati" degildir** — cepheler, dakkapeller, balkonlar ve gunes
-   panelleri de 6'dir. Cati duzlemi ayrimi Asama 1'de yapilmalidir.
+1. ~~**Sinif 6 "cati" degildir** — cepheler, dakkapeller, balkonlar ve gunes
+   panelleri de 6'dir. Cati duzlemi ayrimi Asama 1'de yapilmalidir.~~
+   **[AHN4 icin dogru; AHN5 icin guncellendi 2026-09-27 — asagida EK 1]**
 2. **Sinif 6 noktalari ayakizinin disina dusebilir** — sartname bunu acikca
    soyler. Kati `within` olcumumuz onlari kaciriyor; M-007'nin kenar etkisine
    ikinci bir mekanizma ekler.
@@ -928,6 +929,28 @@ Bolum 5):
    olarak kullanilamaz (Bolum 12.10).
 
 **Asama 1 sinif secimi onerisi** P-012 olarak kayda alindi; **onaylanmamistir**.
+
+**EK 1 · 2026-09-27 · AHN5 cephe sinifi OLCULDU** (kullanici onayi: "Cephe noktasi
+sinif olcumu: onay ... D-017 ve P-012'deki ifadeler AHN5 icin guncellensin").
+Yontem olcumden once muhurlendi (`facade_class_measurement`, 4b6ad61/b353121).
+Kaynak: `reports/01_prep_facade_class_measurement.md`.
+
+| Olcu (1.639 bina, h >= 6 m) | Deger |
+|---|---|
+| Muhurlu karar | **MIXED** (WP1 esigi 0,20; dis yari 0,209 ile kil payi asildi) |
+| Kontrol: cati bolgesi sinif 6 payi | 0,975 (sinif eslemesi dogru) |
+| Cephe bandi sinif 1 / sinif 6 (havuz) | 0,764 / 0,235 |
+| Sinif 1'in duvar cizgisinde yogunlasmasi | 0,762 (duzgun dagilimda ~0,40) |
+| Bina basina sinif 6 medyani (SAYI) vs havuz (ETKI) | 0,397 vs 0,235 — **ayrisiyor (M-010)** |
+
+**Sonradan kesif analizi (ONERI, `reports/01_prep_facade_class_posthoc.md`):** 3DBAG `b3_dak_type`'a gore
+duz catili 155 binada cephe bandinin yalnizca %2,2 (ic) / %6,5 (dis) kadari sinif 6
+(bina basina medyan %0,8); egimli catili 1.302 binada %27,8 / %23,1.
+
+**AHN5 icin guncel ifade:** Cepheler **agirlikla sinif 1**'dir (duz catilarda
+olculdu). Egimli catili binalarda cephe bandindaki sinif 6 fazlasinin kaynagi
+(sacak/cati kenari mi, dakkapel/balkon mu) **ayristirilmadi** — sacak aciklamasi
+bir **CIKARIM**dir ve post-hoc analize dayanir.
 
 **Onay:** Kullanici talimati ("Sinif 26 ve 14'u de AHN belgelerinden dogrula,
 Asama 1 oncesi kapansin"), 2026-09-21.
@@ -1740,3 +1763,80 @@ sonunda (CityJSON cikti dogrulamasi) gerekli; deneme kosusunu engellemez.
 
 **Geri donus kurali:** Windows derlemesi deneme kosusunda calismazsa Docker'a
 donulur ve bu da kayda gecer.
+
+---
+
+## D-034 · [2026-09-27] · Kriter 1-C uc parcaya ayrilir: uyum artigi / holdout / AHN4 zamansal kontrol
+
+**Karar (kullanici, 2026-09-27):** "(a) + (b) onay. Ama ucuncu bir secenek ekle,
+bence en guclusu: (c) AHN4 ile zamansal bagimsiz kontrol ... (a) adi 'uyum
+artigi' olarak kalir, (b) holdout ek tanisal kontrol, (c) birincil bagimsiz
+kontrol olur. (b) icin not: yarim noktayla uretilen model nihai modelle ayni
+degildir, bunu raporda belirt. Esikleri 3DBAG b3_rmse_lod22 referansina bakarak
+oner, hesaptan once muhurle."
+
+**Neden (ajanin tespiti, 2026-09-27):** AGENTS Bolum 6 kriter 1-C'yi "AHN nokta
+bulutuna dogrudan z-fark analizi — *bagimsiz kontrol*" diye tanimliyordu. Model
+AHN5 noktalarindan uretilip **ayni noktalarla** karsilastirilirsa bu bir uyum
+artigidir, bagimsiz dogrulama degildir (Bolum 12.10). Eski etiket
+`config` icinde `description_superseded` olarak korunur.
+
+| Parca | Ad | Rol | Ne olcer |
+|---|---|---|---|
+| **1-C-a** | Uyum artigi | kabul kriteri (esik ONERILDI) | roofer `rmse_lod22` — 3DBAG `b3_rmse_lod22` ile ayni tanim ve kod ailesi |
+| **1-C-b** | Holdout | **tanisal**, karar: NONE | Seed'li %50 nokta ayrimi; modelin gormedigi noktalara uyum |
+| **1-C-c** | AHN4 zamansal kontrol | **birincil bagimsiz kontrol** (esik ONERILDI) | AHN5'ten uretilen catinin, farkli ucusun (AHN4) noktalarina dusey farki |
+
+**Dogrulanmis olgular (bu karardan once okundu):**
+- `b3_rmse_lod22`: "Root Mean Square Error of the 3D distances between the point
+  cloud and the LoD2.2 model" (docs.3dbag.nl/en/schema/attributes, 2026-09-27);
+  2024.12.16'dan beri "all the AHN building points" ile (release notes).
+- roofer `--ceil-point-density` varsayilani **20** p/m2 ("Enforce this point
+  density ceiling on each building pointcloud", `roofer --help-all`, v1.0.0).
+  Bizim AHN5 medyan yogunlugu 35,89 p/m2 (0.3). Yani nihai model zaten ~20 p/m2
+  ile kurulur; %50 holdout ~18 p/m2 verir. **(b)'nin "yarim model nihai modelle
+  ayni degil" notu gecerlidir ama girdi yogunlugu farki kucuktur (~18'e ~20).**
+- roofer `is_mutated` (3DBAG `b3_mutatie_ahn4_ahn5`'in kaynagi): 0,5 m hucrelerde
+  iki bulutun maksimum z'si karsilastirilir; `abs(b - a) > 1.2` m olan hucre payi
+  ayakizi hucrelerinin **>= %50**'si ise bina "degismis" sayilir. Esikler kodda
+  sabit (`select_pointcloud.hpp`: `threshold_mutation_fraction = 0.5`,
+  `threshold_mutation_difference = 1.2`), roofer v1.0.0 kaynagi 2026-09-27 okundu.
+  **Sonucu:** bayrak yalnizca kaba degisimi (yikim/yeniden yapim) yakalar.
+  (c)'de secim icin kullanilmasi desimetre olcegindeki hata dagilimini
+  **kesmez** (dongusellik ihmal edilebilir), ama gunes paneli / cati kati gibi
+  kucuk degisimleri de **ayiklamaz**.
+- A alaninda 3DBAG: 1.218 binanin 8'i `b3_mutatie_ahn4_ahn5 = True`;
+  `b3_pw_datum` bu bolgede AHN4 icin "2020" (beyan — ucus tarihi AHN4 gps_time'dan
+  olculecek).
+
+**(c) icin on-kayitli bilinen sapma (sonuctan ONCE):** Model AHN5'ten (2023)
+kurulur. 2020-2023 arasinda eklenen gunes panelleri ve cati katlari modelde
+**vardir**, AHN4'te **yoktur**. Beklenen yon: bu binalarda
+`dz = z_AHN4 - z_model` **negatif**. roofer'in mutasyon bayragi bunlari
+ayiklamaz (esigin altinda). Negatif kuyruk raporlanir; esik gecilmezse bu
+sapma gerekce olarak **sonradan** eklenemez — burada onceden yazildi.
+
+**(c) bagimsizlik etiketi:** "zamansal olarak bagimsiz olcum — farkli ucus,
+farkli sensor hatalari; ayni program ve siniflandirma kurallari (sinif 6 her
+iki surumde BAG'den turer)". "Tam bagimsiz ground truth" DENMEZ.
+
+**AHN4 verisi:** AGENTS Bolum 4'te yedek olarak listelidir; yeni kaynak degildir
+(kullanici). GeoTiles `AHN4_T`, ayni 9 alt-fayans (~4,4 GB), `download_ahn.py
+--version AHN4`. Kullanmadan once: girdi kalite kapisi (Bolum 12.12 — yogunluk,
+kapsama, ucus tarihi gps_time'dan) ve lisans (NGR AHN4 kaydindan).
+
+**Esikler:** config `stage_1.criteria[1-C].components` altinda **ONERI** olarak
+yazildi, `status: TODO_ONAY_BEKLIYOR`. Kullanici sayilari onaylayinca LOCKED
+olur — Asama 1'in hicbir sonucu gorulmeden (Bolum 12.2). Referans:
+`reports/01_prep_3dbag_rmse_reference.md` (3DBAG'in kendi uyum artigi — bizim
+sonucumuz degil).
+
+**Etkiledigi:** Asama 1 kabul (1-C), `reports/01_geometry_validation.md`
+yapisi, AGENTS Bolum 6 metni (1-C satiri), Reviewer listesi.
+
+**cjval (ayni gun, D-033 devami):** PyPI'de `cjvalpy`, `cjval`, `cjval-py`,
+`pycjval`, `cjvalidator` aranan adlar — **bulunamadi**; conda-forge'da `cjval`
+— **bulunamadi** (2026-09-27). Rust kullanici tarafindan onaylandi, ancak
+Windows'ta Rust'in varsayilan (MSVC) arac zinciri "Visual Studio Build Tools"
+gerektirir ve makinede **yok** (vswhere bulunamadi). Bu ayri bir sistem
+kurulumudur -> kullaniciya soruldu, kurulmadi.

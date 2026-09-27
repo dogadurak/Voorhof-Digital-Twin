@@ -249,3 +249,17 @@ Gercek degerler `.env` dosyasinda tutulur, **repoya girmez**. Sablon:
 
 Okuma: `src/common/config.py` → `env_secret(name)`. Degisken tanimsizsa acik hata
 verir, sessizce bos dizgiyle devam etmez.
+
+## 6. Git pre-commit kancasi (M-008 ikinci tekrari, 2026-09-27)
+
+Kontroller commit'i **mekanik olarak** durdurur. Kanca depoda surumlenir
+(`.githooks/pre-commit`); git onu kendiliginden kullanmaz, **her yeni klonda
+bir kez**:
+
+    git config core.hooksPath .githooks
+
+Calistirdiklari (biri basarisizsa commit DURUR): `src/qa/check_refs.py`,
+`src/qa/check_config_structure.py`, `src/qa/check_claims.py` —
+`conda run -n voorhof-twin` ile. Conda PATH'te degilse kanca basarisiz olur
+(commit durur); bu bilerek boyle — kontrolu sessizce atlamaktansa durmak.
+Staged icerik degil **calisma agaci** denetlenir (muhafazakar).

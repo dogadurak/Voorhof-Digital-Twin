@@ -1,0 +1,64 @@
+{
+  "run_id": "RUN-2026-09-27-001",
+  "git_commit": "7b2ca3f-dirty",
+  "created_utc": "2026-09-27T07:40:17Z",
+  "output": {
+    "path": "reports/01_prep_facade_class_posthoc.md",
+    "sha256": "c1ac947eba63e59e31148e8059a1d887003ab51a6620ece0092087174507f813",
+    "size_bytes": 1680
+  },
+  "inputs": [
+    {
+      "path": "reports/facade_class_measurement_ahn5.csv",
+      "sha256": "5ab26065f78097802fa3bf14948a3c57624dd69045d01908f2aa36320e4b9d1d",
+      "size_bytes": 161559
+    }
+  ],
+  "parameters": {
+    "stratifier": "3DBAG v2025.09.03 b3_dak_type",
+    "summary": {
+      "slanted": {
+        "n": 1302,
+        "s6_in": 0.2781481538621751,
+        "s6_out": 0.2306834983056558,
+        "median": 0.46109999999999995,
+        "wc1": 0.761134066220306
+      },
+      "multiple horizontal": {
+        "n": 179,
+        "s6_in": 0.1261132882080513,
+        "s6_out": 0.087181865299108,
+        "median": 0.3532,
+        "wc1": 0.7488457763290234
+      },
+      "horizontal": {
+        "n": 155,
+        "s6_in": 0.021893016127855214,
+        "s6_out": 0.06475359024692634,
+        "median": 0.0077,
+        "wc1": 0.7423255503223436
+      },
+      "unknown": {
+        "n": 2,
+        "s6_in": 0.2408896832489326,
+        "s6_out": 0.21503187763776227,
+        "median": 0.23515,
+        "wc1": 0.8337626066718387
+      },
+      "3DBAG'de yok": {
+        "n": 1,
+        "s6_in": 0.1968503937007874,
+        "s6_out": 0.11627906976744186,
+        "median": 0.1505,
+        "wc1": 0.34782608695652173
+      }
+    },
+    "label": "POST-HOC / ONERI — muhurlu karari degistirmez"
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "3DBAG fayanslari: data/raw/3dbag_v20250903 (checksum'lar D-027'de)."
+}

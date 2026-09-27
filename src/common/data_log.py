@@ -45,6 +45,7 @@ def append_entry(
     publication_date: str = MISSING,
     processing: str = "yok (ham indirme, degistirilmedi)",
     notes: str = "",
+    method: str = MISSING,
 ) -> None:
     """DATA_LOG.md'ye Bolum 12.7 formatinda bir kayit ekler.
 
@@ -52,6 +53,9 @@ def append_entry(
             path     — indirilen dosya (checksum ve boyut buradan olculur)
             run_id   — calistirma kimligi
             ...      — Bolum 12.7 alanlari
+            method   — indirme yontemi (cagiran ACIKCA verir). 2026-09-27'ye kadar
+                       burada 'WFS GetFeature' SABIT yaziliyordu ve WFS olmayan
+                       her kayit yanlisti (MISTAKES M-005 besinci tekrar).
     Cikti : None (dosyaya yazar)
     Birim : dosya boyutu bytes
 
@@ -82,7 +86,7 @@ def append_entry(
 | veri_uretim_tarihi | {data_production_date} |
 | yayin_tarihi | {publication_date} |
 | indirme_tarihi_utc | {downloaded_utc} |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | {method} |
 | sorgu_parametreleri | {query} |
 | crs | {crs} |
 | zaman_referansi | {time_reference} |

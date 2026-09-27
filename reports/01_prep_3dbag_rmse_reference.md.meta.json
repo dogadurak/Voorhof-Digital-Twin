@@ -1,0 +1,231 @@
+{
+  "run_id": "RUN-2026-09-26-009",
+  "git_commit": "7b2ca3f-dirty",
+  "created_utc": "2026-09-26T22:42:29Z",
+  "output": {
+    "path": "reports/01_prep_3dbag_rmse_reference.md",
+    "sha256": "77e172f61dc8f0e0da204c73bf0a2f2358c34f2021e704ef7c353236c19256d4",
+    "size_bytes": 1603
+  },
+  "inputs": [
+    {
+      "path": "reports/building_heights_ahn5.csv",
+      "sha256": "d5bae365953784da757fb489b53e99b10024df46d050977df92b30e8cb8e9ec7",
+      "size_bytes": 406993
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-280-560.city.json.gz",
+      "sha256": "a516ee3e8f073620cc5f9b9f10fc5ae0fc7cc91dd28692ee02e7a9d894d887ca",
+      "size_bytes": 2107641
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-280-562.city.json.gz",
+      "sha256": "1763a2974d282ebf90dde06627f0a774fddf653d43d13254cf16d243d1525809",
+      "size_bytes": 1980270
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-282-560.city.json.gz",
+      "sha256": "7c6619732eac17d54120f15e6f1d91991e139efa8a36395517115a2f6ec64487",
+      "size_bytes": 1354445
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-282-562.city.json.gz",
+      "sha256": "26aadeb42df62ca634e9d923f7349901bcdaf9ffc74123b8152dd5c2dea8b9d6",
+      "size_bytes": 1982490
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-284-560.city.json.gz",
+      "sha256": "6151172f10b584eedd1dd95a7c777601a69d192ab82aca85982a6703b1bf6b52",
+      "size_bytes": 652863
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-284-562.city.json.gz",
+      "sha256": "4e403314fe9d658c8a7a5cc75bbb20526370a34e09d76348d7536a1683a3570b",
+      "size_bytes": 1823822
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-286-560.city.json.gz",
+      "sha256": "da7eb5c5249055b3c47296aa02ac822c9b23c43ec30454e9e1ae17e4428b3381",
+      "size_bytes": 1011535
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/10-286-562.city.json.gz",
+      "sha256": "5779233d8078c176c014053e688b6f473ef166973cd5b892e0b561bc7dc5df10",
+      "size_bytes": 763743
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/8-288-544.city.json.gz",
+      "sha256": "e3398733bc1308e904b00caad22ba96ba00cefd30050bb7ba6a6587c0352bd65",
+      "size_bytes": 392400
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/8-288-560.city.json.gz",
+      "sha256": "aac1244fbddc6e2bf14d3bfbaa3f9c984fdd4b3081b61cb915bf6eaeffb11b77",
+      "size_bytes": 3067701
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-272-544.city.json.gz",
+      "sha256": "21e5cd890ca5afc0869537f898a3b9a0506073e7f6eb1f5d5b85cdc96f868ac8",
+      "size_bytes": 425954
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-272-548.city.json.gz",
+      "sha256": "7a14c58efb22a31e74eebd7916851edff6943407e7730159c83161adc556e203",
+      "size_bytes": 136539
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-272-552.city.json.gz",
+      "sha256": "44bb410a7e95a130d379491b918cd49a5f8dce6ee4df850c0b5191788ba22385",
+      "size_bytes": 150128
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-272-556.city.json.gz",
+      "sha256": "6263499b0a7c7bcb550c715e29ee103596aa37550815c7bd6ad11dd5958259d1",
+      "size_bytes": 2966478
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-272-560.city.json.gz",
+      "sha256": "2b594779d8427452cdb09d8d24affe74c781fcdf3dc554108024e4c48bac8686",
+      "size_bytes": 2506970
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-276-544.city.json.gz",
+      "sha256": "a3937ad4d030f09836234d9d0d09dd8823c298129bb511513bf1af97a3f9e647",
+      "size_bytes": 286101
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-276-548.city.json.gz",
+      "sha256": "39e8699881b55bd0a69f41f4cfc8ec851ef7a002a9ff7fe3206d8aa5990d643d",
+      "size_bytes": 3020092
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-276-552.city.json.gz",
+      "sha256": "10e5922491669cce73d3f0767fa51247077ab2c76e5539e6e741d9020b3bcd0b",
+      "size_bytes": 1470805
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-276-556.city.json.gz",
+      "sha256": "d2c0c29de280f1671475fb1b71ddf36b372799936ba3de7addb1517f53d35087",
+      "size_bytes": 3078904
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-276-560.city.json.gz",
+      "sha256": "9880ecd5d933b5cc98b38e98d0be05ac06faf36c3305d375e050a153a815458c",
+      "size_bytes": 2331375
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-280-544.city.json.gz",
+      "sha256": "8b203353dfd27617b9553a39bdf4f81f9a552f31b3a6da210436c32a50086dec",
+      "size_bytes": 90270
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-280-548.city.json.gz",
+      "sha256": "2805705040d9caaec883ff3a69d072f8e974a0ed7379674bb881fd03ee65f7e5",
+      "size_bytes": 3001428
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-280-552.city.json.gz",
+      "sha256": "42e1f496ae261657c8a0d05618ae75d563f73e67bcfd81dc5e80862511f23061",
+      "size_bytes": 1147068
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-280-556.city.json.gz",
+      "sha256": "b038699f6cf24150a9605a32e7e926e38664b28a6ff30c115e44b0330a5522d5",
+      "size_bytes": 1563635
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-284-544.city.json.gz",
+      "sha256": "0627a95a8f960d9397e2cc5c47262fa1ab02ca470f40f07d623fef1db90ac083",
+      "size_bytes": 9592
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-284-548.city.json.gz",
+      "sha256": "9e5106b5f2adbceaf5d1966297e0ab0e4f56b80ddeea982e3855d1688c7b7cb4",
+      "size_bytes": 1404633
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-284-552.city.json.gz",
+      "sha256": "a593d2defd9d8c4b9187fdb8a0bbe87bbaf6d9519341323c19983609d20050d0",
+      "size_bytes": 428242
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-284-556.city.json.gz",
+      "sha256": "fa1db6edac23c4cb09033f844c5fb1a4e8b020a88af2841fcd7480cee1927557",
+      "size_bytes": 1900526
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-288-552.city.json.gz",
+      "sha256": "e24bf7c46d0b6df71f1a7fba8d15e72947ca8712b42ecf50de0600c8a2a47fcf",
+      "size_bytes": 212583
+    },
+    {
+      "path": "data/raw/3dbag_v20250903/9-288-556.city.json.gz",
+      "sha256": "ca23fd17be0ba1dad8b9d38bed81d8b94f31024c0307f80579b31aa3103d7221",
+      "size_bytes": 1796576
+    }
+  ],
+  "parameters": {
+    "set": "A & b3_pw_bron == ahn5",
+    "stratifier": "b3_dak_type",
+    "stats": {
+      "TUMU (pw_bron=ahn5)": {
+        "n": 1174,
+        "p10": 0.017011957801878454,
+        "p25": 0.024530920665711164,
+        "p50": 0.05015520192682743,
+        "p75": 0.15818806737661362,
+        "p90": 0.7408611118793488,
+        "p95": 1.028628355264663,
+        "max": 4.445437908172607,
+        "rms_unweighted": 0.5221086079223606,
+        "share_le_0.10": 0.7052810902896082,
+        "share_le_0.25": 0.7964224872231687
+      },
+      "horizontal": {
+        "n": 748,
+        "p10": 0.014662166219204664,
+        "p25": 0.020271952729672194,
+        "p50": 0.031264977529644966,
+        "p75": 0.054995421320199966,
+        "p90": 0.08968080580234528,
+        "p95": 0.1298653021454811,
+        "max": 0.9373197555541992,
+        "rms_unweighted": 0.1203790623167032,
+        "share_le_0.10": 0.9264705882352942,
+        "share_le_0.25": 0.9652406417112299
+      },
+      "multiple horizontal": {
+        "n": 63,
+        "p10": 0.036219269037246704,
+        "p25": 0.05708737298846245,
+        "p50": 0.1654438078403473,
+        "p75": 0.8032518029212952,
+        "p90": 1.077062773704529,
+        "p95": 1.944838786125183,
+        "max": 3.4036779403686523,
+        "rms_unweighted": 0.8427152407680504,
+        "share_le_0.10": 0.4126984126984127,
+        "share_le_0.25": 0.5396825396825397
+      },
+      "slanted": {
+        "n": 363,
+        "p10": 0.046174997091293336,
+        "p25": 0.07114136591553688,
+        "p50": 0.25744056701660156,
+        "p75": 0.753401130437851,
+        "p90": 1.2718637228012084,
+        "p95": 2.089436197280883,
+        "max": 4.445437908172607,
+        "rms_unweighted": 0.8535283171391358,
+        "share_le_0.10": 0.3002754820936639,
+        "share_le_0.25": 0.4931129476584022
+      }
+    }
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "3DBAG v2025.09.03 sabitlenmis kopya (D-027)."
+}

@@ -224,6 +224,7 @@ def main() -> int:
         )
         append_entry(
             dataset=f"AOI — {label}",
+            method="YEREL URETIM (indirme degil) — build_aoi.py, CBS buurt poligonlarindan",
             path=path, run_id=run_id,
             source_url="turetilmis (CBS Wijken en Buurten 2025'ten)",
             provider="Voorhof Digital Twin / Karar D-009",

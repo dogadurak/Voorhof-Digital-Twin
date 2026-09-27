@@ -39,6 +39,31 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 
 ## Kayitlar
 
+## AHN4 LAZ nokta bulutu (GeoTiles alt-fayanslari)  ·  2026-09-27T07:45:15Z
+
+| Alan | Deger |
+|---|---|
+| dosya | `data/raw/ahn/AHN4_T/37EN1_14.LAZ` |
+| kaynak_url | https://geotiles.citg.tudelft.nl/AHN4_T |
+| saglayici | AHN (Rijkswaterstaat/provincies/waterschappen) - fayanslama: TU Delft GeoTiles |
+| surum | AHN4 (GeoTiles AHN4_T) |
+| veri_uretim_tarihi | TODO_OLCULECEK (gps_time) |
+| yayin_tarihi | TODO_DOLDURULACAK |
+| indirme_tarihi_utc | 2026-09-27T07:45:15Z |
+| indirme_yontemi | HTTP GET, alt-fayans LAZ + .txt (GeoTiles) — download_ahn.py |
+| sorgu_parametreleri | B bbox + 50 m (D-010); secilen alt-fayanslar: 37EN1_14, 37EN1_19, 37EN1_24, 37EN1_15, 37EN1_20, 37EN1_25, 37EN2_11, 37EN2_16, 37EN2_21 |
+| crs | EPSG:7415 |
+| zaman_referansi | TODO_OLCULECEK: ucus tarihi LAZ gps_time'dan girdi kapisinda olculecek (3DBAG b3_pw_datum bu bolgede '2020' diyor — karsilastirma icin, kanit degil). |
+| lisans | TODO: AHN4 lisansi Nationaal Georegister kaydindan dogrulanacak |
+| attribution_sarti | TODO |
+| sha256 | `6fc11d096301092b777ea904a854833d8a439480816e86fad8f65613b0592a3e` |
+| dosya_boyutu_bytes | 518306024 |
+| run_id | RUN-2026-09-27-002 |
+| uygulanan_islemler | yok (ham indirme). Alt-fayanslar 20 m ortusme tasir (GeoTiles tasarimi). |
+
+9 alt-fayans, toplam 450278172 nokta, 4.10 GB. Kapsama B+50 m icin DOGRULANDI. Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. LAS basligindan OKUNAN CRS: EPSG:7415 (Amersfoort / RD New + NAP height). LAS file creation (GeoTiles fayanslama, ucus DEGIL): 2021-06-24, 2021-06-29. KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; AHN4 LAZ icin GeoTiles kullanildi.
+
+---
 ## 3DBAG LOD2 — SABITLENMIS SURUM v2025.09.03  ·  2026-09-22T18:53:09Z
 
 | Alan | Deger |
@@ -50,7 +75,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-22T18:53:09Z |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | ~~WFS GetFeature (OGC Filter Encoding 2.0)~~ -> **HTTP GET, surum-sabit fayans dosyalari (data.3dbag.nl) — download_3dbag_pinned.py** [DUZELTME 2026-09-27, M-005 5. tekrar: data_log.py bu alani her kayda SABIT yaziyordu] |
 | sorgu_parametreleri | tile_index.fgb bbox=83323.9,444466.0,85102.5,446843.6 (EPSG:28992) = B + 50 m; 30 fayans |
 | crs | EPSG:7415 |
 | zaman_referansi | metadata.json: BAG 2.0 Extract ve AHN kaynak tarihleri yayin meta verisinde |
@@ -75,7 +100,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T14:59:55Z |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | ~~WFS GetFeature (OGC Filter Encoding 2.0)~~ -> **OGC API Features (api.3dbag.nl/collections/pand/items) — download_3dbag.py** [DUZELTME 2026-09-27, M-005 5. tekrar: data_log.py bu alani her kayda SABIT yaziyordu] |
 | sorgu_parametreleri | bbox=83323.9,444466.0,85102.5,446843.6 (EPSG:28992) = B + 50 m; sayfalama limit=1000 |
 | crs | EPSG:7415 |
 | zaman_referansi | b3_pw_datum dagilimi: {'2023': 6999, '2020': 116, '2014': 261} |
@@ -96,22 +121,22 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | dosya | `data/raw/ahn/AHN5_T/37EN1_14.LAZ` |
 | kaynak_url | https://geotiles.citg.tudelft.nl/AHN5_T |
 | saglayici | AHN (Rijkswaterstaat/provincies/waterschappen) - fayanslama: TU Delft GeoTiles |
-| surum | AHN5, kampanya etiketi '2023_C' (dosya adindan) |
-| veri_uretim_tarihi | 2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi) |
+| surum | ~~AHN5, kampanya etiketi '2023_C' (dosya adindan)~~ -> **AHN5 (GeoTiles AHN5_T)** [DUZELTME 2026-09-27: '2023_C' dosya adlarinda YOK (37EN1_14.LAZ ...); kaynagi izlenemedi] |
+| veri_uretim_tarihi | ~~2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi)~~ -> **ucus 2023-02-08/14 (gps_time, olculdu)**; LAS 'file creation' **2024-06-21/22** (laspy + diskteki .txt '173/2024', GeoTiles fayanslama tarihi) [DUZELTME 2026-09-27] |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T14:53:49Z |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | ~~WFS GetFeature (OGC Filter Encoding 2.0)~~ -> **HTTP GET, alt-fayans LAZ + .txt (GeoTiles) — download_ahn.py** [DUZELTME 2026-09-27, M-005 5. tekrar: data_log.py bu alani her kayda SABIT yaziyordu] |
 | sorgu_parametreleri | B bbox + 50 m (D-010); secilen alt-fayanslar: 37EN1_14, 37EN1_19, 37EN1_24, 37EN1_15, 37EN1_20, 37EN1_25, 37EN2_11, 37EN2_16, 37EN2_21 |
 | crs | EPSG:7415 |
-| zaman_referansi | CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi 'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu). |
-| lisans | CC BY 4.0 (GeoTiles alt-fayanslari icin, https://geotiles.citg.tudelft.nl/ (Small print, copyright & disclaimer)). AHN5'in kendi lisansi CELISKILI: PDOK AHN WCS CC0, 3DBAG lineage CC BY 4.0, ahn.nl okunamadi — bkz. ATTRIBUTION.md AHN notu (doldurma 2026-09-27) |
+| zaman_referansi | ~~CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi 'file creation day/year 347/2022' (13 Aralik 2022)...~~ **[YANLIS — DUZELTME 2026-09-27, M-005 5. tekrar]** '347/2022' scripte ELLE yazilmis bir sabitti; indirme aninda diske yazilan .txt (2026-09-21 17:49) ve LAS basligi **173/2024** diyor. Celiski yoktu. Ucus zamani: gps_time 2023-02-08/14. |
+| lisans | CC BY 4.0 (GeoTiles alt-fayanslari icin, https://geotiles.citg.tudelft.nl/ (Small print, copyright & disclaimer)). AHN5'in kendi lisansi CELISKILI: PDOK AHN WCS CC0, 3DBAG lineage CC BY 4.0, ahn.nl okunamadi — bkz. ATTRIBUTION.md AHN notu (doldurma 2026-09-27) **[GUNCELLEME 2026-09-27: celiski COZULDU — Nationaal Georegister AHN5 kaydi (4995e338-fec7-425e-bb86-eea3875cf114): CC BY 4.0, 'Naamsvermelding verplicht, organisatienaam'. Bkz. ATTRIBUTION.md]** |
 | attribution_sarti | TODO |
 | sha256 | `184a4c766f35642c1561681cac5ae63dc16c21420a1277d5c2047e2f7861594e` |
 | dosya_boyutu_bytes | 307816585 |
 | run_id | RUN-2026-09-21-012 |
 | uygulanan_islemler | yok (ham indirme). Alt-fayanslar 20 m ortusme tasir (GeoTiles tasarimi). |
 
-9 alt-fayans, toplam 420007378 nokta, 3.12 GB. Kapsama B+50 m icin DOGRULANDI. Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. CRS dosya ici WKT'den okundu: EPSG:7415 (RD New + NAP). KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; AHN5 LAZ icin GeoTiles kullanildi.
+9 alt-fayans, toplam 420007378 nokta, 3.12 GB. Kapsama B+50 m icin DOGRULANDI. Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. ~~CRS dosya ici WKT'den okundu: EPSG:7415 (RD New + NAP).~~ **[2026-09-27: bu cumle ELLE yazilmisti, okuma yapilmamisti. O TARIHTE OLCULDU: 9 dosyanin LAS basligi EPSG:7415 (Amersfoort / RD New + NAP height) — iddia dogru cikti.]** KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; AHN5 LAZ icin GeoTiles kullanildi.
 
 ---
 ## ON KOSUL OLCUMU — disk alani  ·  2026-09-21
@@ -148,7 +173,7 @@ kural 3). Disk doluysa indirme yarida kesilir ve bozuk dosya olusur.
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T12:08:36Z |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | ~~WFS GetFeature (OGC Filter Encoding 2.0)~~ -> **YEREL URETIM (indirme degil) — build_aoi.py, CBS buurt poligonlarindan** [DUZELTME 2026-09-27, M-005 5. tekrar: data_log.py bu alani her kayda SABIT yaziyordu] |
 | sorgu_parametreleri | A.buffer(300) |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (idari sinir, CBS 2025) |
@@ -173,7 +198,7 @@ A + 300 m tampon, programatik uretildi. Sanayi buurt'larinin 17.14 ha'i (100%) B
 | veri_uretim_tarihi | TODO_DOLDURULACAK |
 | yayin_tarihi | TODO_DOLDURULACAK |
 | indirme_tarihi_utc | 2026-09-21T12:08:36Z |
-| indirme_yontemi | WFS GetFeature (OGC Filter Encoding 2.0) |
+| indirme_yontemi | ~~WFS GetFeature (OGC Filter Encoding 2.0)~~ -> **YEREL URETIM (indirme degil) — build_aoi.py, CBS buurt poligonlarindan** [DUZELTME 2026-09-27, M-005 5. tekrar: data_log.py bu alani her kayda SABIT yaziyordu] |
 | sorgu_parametreleri | buurtcode in ['BU05032400', 'BU05032401', 'BU05032403', 'BU05032404', 'BU05032405', 'BU05032406', 'BU05032407'] |
 | crs | EPSG:28992 |
 | zaman_referansi | yok (idari sinir, CBS 2025) |

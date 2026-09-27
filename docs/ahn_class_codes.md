@@ -147,6 +147,10 @@ islenmistir.
 
 ### 5.1 Sinif 6 "cati" DEGILDIR — cepheler de dahildir
 
+> ⚠️ **YALNIZCA AHN4 icin.** AHN5'te cepheler agirlikla sinif 1'dir — WP1 (2024)
+> tanimi ve kendi olcumumuz (D-017 EK 1, 2026-09-27: muhurlu karar MIXED; duz
+> catilarda cephe bandinin %2-7'si sinif 6).
+
 > ⚠️ **AHN5 ICIN GECERSIZ (2026-09-27, M-005 tekrari).** Asagidaki alinti **AHN4**
 > sartnamesinden. AHN programinin 2024 calisma raporu (*WP1: Inventarisatie van
 > puntenwolken in Nederland*, v1.0, AHN5 bolumu) AHN5 tanimini **degistiriyor**:

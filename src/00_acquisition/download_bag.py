@@ -140,6 +140,7 @@ def main() -> int:
         )
         append_entry(
             dataset=f"BAG — {layer}",
+            method="WFS 2.0 GetFeature (OGC Filter Encoding 2.0) — download_bag.py",
             path=out_path,
             run_id=run_id,
             source_url=sources["wfs"],

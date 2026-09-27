@@ -53,6 +53,8 @@ from src.common.data_log import append_entry
 from src.common.logging_setup import setup_logging
 from src.common.meta import sha256, write_meta
 
+import laspy  # noqa: E402  (src.common'dan SONRA — M-003)
+
 GEOTILES = "https://geotiles.citg.tudelft.nl"
 BASE = f"{GEOTILES}/AHN5_T"      # main() --version ile yeniden baglar
 SAFETY_MARGIN_M = 50.0          # Karar D-010
@@ -60,12 +62,14 @@ SAFETY_MARGIN_M = 50.0          # Karar D-010
 # Surume ozgu DATA_LOG metinleri. AHN5 metinleri 0.3'teki ile AYNI birakildi.
 VERSION_TEXT = {
     "AHN5": {
-        "version": "AHN5, kampanya etiketi '2023_C' (dosya adindan)",
+        # 2026-09-27: onceki '2023_C' etiketi ve 'LAS basligi 347/2022' metni ELLE
+        # yazilmis sabitlerdi; diskteki .txt ve LAS basligi 173/2024 diyor (M-005
+        # besinci tekrar). Tarih artik dosyadan OKUNUR (asagida, main()).
+        "version": "AHN5 (GeoTiles AHN5_T)",
         "time_reference": (
-            "CELISKI: dosya adi kampanyasi '2023_C' ama LAS basligi "
-            "'file creation day/year 347/2022' (13 Aralik 2022). Ikisi de kaydedildi; "
-            "sessizce tek deger SECILMEDI (AGENTS.md Bolum 4 tutumu)."),
-        "production": "2023 kampanyasi (etiket) / 2022-12-13 (LAS basligi)",
+            "Ucus: 2023-02-08/14 (LAZ gps_time'dan olculdu, 0.3 girdi kapisi). "
+            "LAS 'file creation' GeoTiles fayanslama tarihidir, ucus tarihi DEGILDIR."),
+        "production": "ucus 2023-02 (gps_time); LAS basligi degeri notlarda (olculen)",
         "license": "TODO: AHN lisans kosulu ahn.nl'den dogrulanacak",
     },
     "AHN4": {
@@ -252,6 +256,18 @@ def main() -> int:
         logger.info("%s tamam | %.1f MB | sha256 %s...",
                     name, actual / 2**20, sha256(laz_path)[:16])
 
+    # --- CRS ve LAS olusturma tarihi DOSYADAN okunur (elle yazilmaz; M-005 5. tekrar) ---
+    crs_found: set[str] = set()
+    created: set[str] = set()
+    for name in downloaded:
+        with laspy.open(str(out_dir / f"{name}.LAZ")) as rd:
+            crs = rd.header.parse_crs()
+            crs_found.add("YOK" if crs is None else f"EPSG:{crs.to_epsg()} ({crs.name})")
+            created.add(str(rd.header.creation_date))
+    logger.info("LAS basligi | CRS: %s | file creation: %s", sorted(crs_found), sorted(created))
+    if crs_found != {f"{target_crs_z} (Amersfoort / RD New + NAP height)"}:
+        logger.warning("CRS beklenenden farkli: %s (beklenen %s)", sorted(crs_found), target_crs_z)
+
     logger.info("Toplam %d alt-fayans | %d nokta | %.2f GB",
                 len(downloaded), total_points, total / 2**30)
 
@@ -272,6 +288,7 @@ def main() -> int:
     )
     append_entry(
         dataset=f"{ver} LAZ nokta bulutu (GeoTiles alt-fayanslari)",
+        method="HTTP GET, alt-fayans LAZ + .txt (GeoTiles) — download_ahn.py",
         path=out_dir / f"{downloaded[0]}.LAZ",
         run_id=run_id,
         source_url=BASE,
@@ -289,7 +306,8 @@ def main() -> int:
             f"{len(downloaded)} alt-fayans, toplam {total_points} nokta, "
             f"{total/2**30:.2f} GB. Kapsama B+{SAFETY_MARGIN_M:.0f} m icin DOGRULANDI. "
             f"Her dosyanin boyutu indirme sonrasi Content-Length ile karsilastirildi. "
-            f"CRS dosya ici WKT'den okundu: EPSG:7415 (RD New + NAP). "
+            f"LAS basligindan OKUNAN CRS: {', '.join(sorted(crs_found))}. "
+            f"LAS file creation (GeoTiles fayanslama, ucus DEGIL): {', '.join(sorted(created))}. "
             f"KAYNAK NOTU: PDOK ATOM AHN4 RASTER sunar, LAZ sunmaz; {ver} LAZ icin "
             f"GeoTiles kullanildi."
         ),

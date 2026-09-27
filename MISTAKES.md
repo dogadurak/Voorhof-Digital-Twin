@@ -1069,3 +1069,101 @@ bulunanlar insan incelemesi icin listelenir (`docs/manual_steps.md` MS-2).
 **Kullaniciya bildirildi:** 2026-09-27.
 
 **Kaynaklar:** "WP1: Inventarisatie van puntenwolken in Nederland", versie 1.0, 20-08-2024 (D. van der Heide RWS/TUD, A. van Natijne HwH ve ark.), AHN CDN: https://cuatro.sim-cdn.nl/ahn/uploads/1_inventarisatie_van_puntenwolken_in_nederland_1.pdf; Nationaal Georegister, "Actueel Hoogtebestand Nederland 5 (AHN5)", kayit 4995e338-fec7-425e-bb86-eea3875cf114, dateStamp 2025-11-19.
+
+---
+
+## M-005 TEKRARI · [2026-09-27] · Asama 1 hazirligi · BESINCI TEKRAR (kok neden: dogrulanmadan yazmak)
+
+**Tekrar sayisi:** 5 (Bolum 14.5 — ucuncu ve sonrasi: adim otomatiklestirilir)
+
+**Ne oldu:** AHN4'u indirmek icin `download_ahn.py`'yi yeniden kullanirken
+DATA_LOG'a yazilan kaydi okudum ve **veriden okunmamis, elle yazilmis**
+provenance metinleri buldum:
+1. `src/common/data_log.py` `indirme_yontemi` alanina **her kayit icin** sabit
+   "WFS GetFeature" yaziyordu. WFS olmayan 5 kayit (AHN5, 3DBAG x2, AOI A/B)
+   2026-09-21'den beri yanlisti; bugun AHN4 icin altincisini ben urettim.
+2. `download_ahn.py` notlarinda "CRS dosya ici WKT'den okundu: EPSG:7415" —
+   **hicbir okuma yapilmiyordu**. Olculdu (2026-09-27): 18 dosyanin LAS basligi
+   EPSG:7415 — iddia **dogru cikti**, ama dogrulanmadan yazilmisti.
+3. AHN5 `zaman_referansi`: "LAS basligi 347/2022 ... CELISKI" — **yanlis**.
+   Indirme aninda diske yazilan `.txt` (2026-09-21 17:49) ve LAS basligi
+   **173/2024** diyor. Celiski yoktu. '347/2022' degerinin kaynagi izlenemedi.
+4. AHN5 `surum`: "kampanya etiketi '2023_C' (dosya adindan)" — dosya adlarinda
+   '2023_C' **yok**; kaynagi izlenemedi.
+5. Ayni oturumda AHN4 kaydini bu sablonla **yeniden urettim**
+   (commit edilmeden once fark edildi, kaldirildi, duzeltilmis kodla
+   yeniden uretildi).
+
+**Etki:** Olcum sonuclari etkilenmez (ucus tarihi gps_time'dan ayrica
+olculmustu: 2023-02-08/14; CRS dogru cikti). Etkilenen: DATA_LOG'un
+provenance guvenilirligi (Bolum 12.7) ve "ZAMAN CELISKISI" diye var olmayan
+bir bulgunun commit mesajina ve kayda girmesi.
+
+**Kural neden yetmedi (14.5 soru 3):** M-005 kurali "iddiayi kaynagindan
+dogrula" diyor ve bugunku tekrar dis-belge sayilari icin genisletildi. Ama
+**script'in icine gomulmus sabit metin** bir iddia olarak gorulmedi: kodun
+urettigi cikti "olculmus" gorunuyordu. Kural **yanlis yerde** duruyordu —
+insanin yazdigi metinde; kodun yazdigi metinde degil.
+
+**Guclendirilmis kural:**
+1. Provenance alanlari (yontem, CRS, tarih, surum etiketi) **veriden veya
+   cagiran koddan hesaplanir**; bir yardimci fonksiyon bu alanlari
+   **varsayilan sabit metinle** dolduramaz. Bilinmiyorsa `TODO_...` yazilir.
+2. "X okundu / olculdu" cumlesi yalnizca ayni kodun o okumayi YAPTIGI yerde
+   yazilir; okunan deger cumlenin icine **degisken olarak** girer.
+3. Mevcut bir script yeni bir veri icin yeniden kullanilmadan once urettigi
+   kayit metni okunur (bugun bu adim tekrari yakaladi).
+
+**Otomatik kontrol:**
+- `data_log.append_entry` artik `method` parametresi alir; verilmezse alan
+  `TODO_DOLDURULACAK` olur, asla "WFS" olmaz. 6 cagiran guncellendi.
+- `download_ahn.py` CRS'i ve LAS olusturma tarihini **her dosyanin
+  basligindan okur**, beklenen CRS'ten farkliysa WARNING basar; not metnine
+  okunan degerler yazilir. Sinandi: AHN4 kaydi yeniden uretildi.
+- Diger indirme scriptleri elle tarandi (2026-09-27, `grep
+  "okundu|olculdu|dogrulandi"`): 5 sabit iddia cumlesi bulundu, **5'i de
+  koda dayaniyor** — BAG/CBS `log_crs` ile CRS karsilastirmasi, 3DBAG
+  `b3_pw_bron` sayimi, sabitlenmis 3DBAG `cj_sha256` karsilastirmasi.
+- Bu taramanin tekrari Reviewer **J-5** olarak eklendi.
+- (Bu kaydin ilk taslagi "manual_steps'e ve J-3'e eklendi" diyordu — henuz
+  eklenmemisti; yazarken fark edildi ve bu satirlarla degistirildi.)
+
+**Durum:** KAPALI (kayitlar duzeltme isaretiyle guncellendi, kod duzeltildi).
+**Kullaniciya bildirildi:** 2026-09-27.
+
+---
+
+## M-008 TEKRARI · [2026-09-27] · Asama 1 hazirligi · IKINCI TEKRAR (tanimsiz kayda atif)
+
+**Tekrar sayisi:** 2 (M-008 + 2026-09-22 tekrari + bu). Bolum 14.5: ucuncu
+olay -> adim otomatiklestirilir.
+
+**Ne oldu:** `download_ahn.py` docstring'ine henuz yazilmamis **D-034**'e atif
+yazdim ve commit ettim (7b2ca3f). `check_refs.py` calistirildi ve atfi
+**yakaladi** ("COZULMEYEN ATIF: 1"), ama komutu `... | tail -3 && git commit`
+diye zincirlemistim: kontrolun cikis kodu `tail` tarafindan yutuldu, commit
+gecti. Ayrica D-031 icin ayni hata 2026-09-22'de de olmustu (o sefer commit
+oncesi yakalandi).
+
+**Kural neden yetmedi:** Kural ("her commit oncesi check_refs calistirilir")
+**uygulandi ama ciktisi kapi olarak kullanilmadi.** Kontrol calismak ile
+kontrolun commit'i durdurmasi ayni sey degildir.
+
+**Guclendirilmis kural:** Kontroller commit'i **mekanik olarak** durdurur;
+ajan ciktiyi okumayi unutsa bile.
+
+**Otomatik kontrol:** `.githooks/pre-commit` (surumlenir) — `check_refs`,
+`check_config_structure`, `check_claims` calistirir, biri basarisizsa commit
+DURUR. `git config core.hooksPath .githooks` ile etkin (bu depoda
+2026-09-27'de etkinlestirildi; yeni klonda bir kez calistirilir —
+ENVIRONMENT.md). Iki yonde sinandi: tanimsiz bir D ve bir P kimligi iceren gecici dosya
+ile cikis 1 (DURDURDU), dosya silinince cikis 0. Atif D-034 yazilarak
+cozuldu (sarkan atif gercek kayda baglandi).
+
+**Durum:** KAPALI
+**Kullaniciya bildirildi:** 2026-09-27.
+
+> Not (2026-09-27): kanca bu kaydin ilk halini commit ederken **durdurdu** —
+> kayit, testi anlatirken ornek olarak tanimsiz kimlikler yaziyordu. Kanca
+> ilk gercek kullaniminda calisti; metin kimlik bicimi kullanmayacak sekilde
+> duzeltildi.

@@ -227,6 +227,7 @@ def main() -> int:
     )
     append_entry(
         dataset="3DBAG LOD2 (CityJSONFeature)",
+        method="OGC API Features (api.3dbag.nl/collections/pand/items) — download_3dbag.py",
         path=jsonl_path, run_id=run_id,
         source_url=API,
         provider="TU Delft 3D geoinformation",

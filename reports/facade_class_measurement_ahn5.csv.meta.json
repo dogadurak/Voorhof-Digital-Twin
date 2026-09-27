@@ -1,0 +1,52 @@
+{
+  "run_id": "RUN-2026-09-26-008",
+  "git_commit": "7b2ca3f-dirty",
+  "created_utc": "2026-09-27T07:39:54Z",
+  "output": {
+    "path": "reports/facade_class_measurement_ahn5.csv",
+    "sha256": "5ab26065f78097802fa3bf14948a3c57624dd69045d01908f2aa36320e4b9d1d",
+    "size_bytes": 161559
+  },
+  "inputs": [
+    {
+      "path": "reports/building_heights_ahn5.csv",
+      "sha256": "d5bae365953784da757fb489b53e99b10024df46d050977df92b30e8cb8e9ec7",
+      "size_bytes": 406993
+    }
+  ],
+  "parameters": {
+    "wp1_max_class6_share": 0.2,
+    "ahn4_min_class6_share": 0.5,
+    "wp1_min_class1_wall_concentration": 0.6,
+    "control_min_class6_share": 0.8,
+    "wall_band_m": 0.2,
+    "band_half_width_m": 0.5,
+    "zone_bottom_above_ground_m": 1.5,
+    "zone_top_below_roof_p30_m": 1.0,
+    "min_h_measured_m": 6.0,
+    "min_zone_height_m": 2.0,
+    "control_inset_m": 1.0,
+    "buildings_selected": 1639,
+    "verdict": "MIXED",
+    "laz_files": [
+      "37EN1_14.LAZ",
+      "37EN1_15.LAZ",
+      "37EN1_19.LAZ",
+      "37EN1_20.LAZ",
+      "37EN1_24.LAZ",
+      "37EN1_25.LAZ",
+      "37EN2_11.LAZ",
+      "37EN2_16.LAZ",
+      "37EN2_21.LAZ"
+    ]
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "laspy": "2.7.0",
+    "shapely": "2.1.2",
+    "numpy": "2.5.3"
+  },
+  "random_seed": null,
+  "notes": "Muhurlu yontem: facade_class_measurement (commit 4b6ad61, b353121)."
+}

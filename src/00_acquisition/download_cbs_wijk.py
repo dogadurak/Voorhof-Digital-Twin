@@ -120,6 +120,7 @@ def main() -> int:
         )
         append_entry(
             dataset=f"CBS Wijken en Buurten {sources['dataset_year']} — {layer}",
+            method="WFS 2.0 GetFeature (OGC Filter Encoding 2.0) — download_cbs_wijk.py",
             path=path,
             run_id=run_id,
             source_url=sources["wfs"],

@@ -65,6 +65,10 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
 - [ ] **F-2** Sınıf 6'nın ne içerdiği **hangi AHN sürümüne göre** yazılmış?
       AHN4'te cepheler sınıf 6'dır; **AHN5'te cepheler sınıf 1'dir** (WP1 2024).
       Bizim verimizde hangisinin geçerli olduğu ölçüldü mü? (M-005 tekrarı)
+      → Ölçüldü 2026-09-27: **MIXED** (D-017 EK 1). Reviewer kontrol eder:
+      yöntem commit'i (4b6ad61, b353121) ölçüm commit'inden **önce** mi? Post-hoc
+      çatı-tipi analizi (`reports/01_prep_facade_class_posthoc.md`) mühürlü
+      kararın yerine **geçirilmiş mi**? (Geçirilmemeli.)
 - [ ] **F-5** Dış bir spesifikasyondan gelen her sayının yanında belge + bölüm
       + doğrulama tarihi var mı? "Kullanıcı yazdı" doğrulama sayılmış mı?
       Negatif iddialar ("hiçbir belge yok") aranan kaynakları sayıyor mu?
@@ -148,6 +152,16 @@ hesabına dayanarak "doğrulandı" ilan edemez. Bu liste, **ayrı bir oturumda**
       sayıyordu). Yeniden tasarım dosyanın docstring'inde yazılı; Reviewer
       yeni tasarımın gerçek hata biçimini (dış belgeye dayanan, doğrulama
       tarihi olmayan iddia) yakaladığını fikstürlerden teyit eder.
+
+- [ ] **J-5** Kodun içine gömülü **sabit iddia cümleleri** (M-005 5. tekrar,
+      2026-09-27): `grep -rn "okundu\|olculdu\|dogrulandi" src/` ile bulunan
+      her `notes=`/log metni için, iddia edilen okuma/karşılaştırma **aynı
+      kodda gerçekten yapılıyor mu**? `data_log.append_entry` çağrılarının
+      hepsi `method=` veriyor mu? (DATA_LOG'da AHN5 "347/2022 ÇELİŞKİ" ve
+      "WFS GetFeature" kayıtları bu yoldan yanlış yazılmıştı.)
+- [ ] **J-6** `.githooks/pre-commit` etkin mi (`git config --get
+      core.hooksPath` → `.githooks`)? Commit geçmişinde kanca sonrası
+      `--no-verify` izi var mı? (M-008 2. tekrar)
 
 ---
 

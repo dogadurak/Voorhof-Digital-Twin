@@ -190,6 +190,7 @@ def main() -> int:
                notes=f"CRS {crs_z}. Her fayansin SHA-256'si YAYINCININ indeksindeki degerle dogrulandi.")
     append_entry(
         dataset=f"3DBAG LOD2 — SABITLENMIS SURUM {VERSION}",
+        method="HTTP GET, surum-sabit fayans dosyalari (data.3dbag.nl) — download_3dbag_pinned.py",
         path=out_dir / "metadata.json", run_id=run_id,
         source_url=f"{BASE}/tiles/...",
         provider="TU Delft 3D geoinformation",
