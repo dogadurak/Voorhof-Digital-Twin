@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-035**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-036**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1840,3 +1840,42 @@ yapisi, AGENTS Bolum 6 metni (1-C satiri), Reviewer listesi.
 Windows'ta Rust'in varsayilan (MSVC) arac zinciri "Visual Studio Build Tools"
 gerektirir ve makinede **yok** (vswhere bulunamadi). Bu ayri bir sistem
 kurulumudur -> kullaniciya soruldu, kurulmadi.
+
+---
+
+## D-035 · [2026-09-27] · Kat yuksekligi kalibrasyonu islev + doneme gore tiplenir
+
+**Karar (kullanici, 2026-09-27):** "Kalibrasyon orneklemi agirlikla 1960'lar
+konutu. Ama estimated_lod1 uygulanacak binalar 2023 yapimi bloklar ve OKULLAR.
+Okul kat yuksekligi konuttan belirgin sekilde yuksektir; tek deger okullari
+sistematik kisa gosterir, golgeleri eksik kalir. ... (i) eski konut, (ii) yeni
+konut (bouwjaar >= 2000), (iii) okul/konut disi buyuk yapi ... her gruptan en az
+3 bina ... Bir tipte n<3 ise ... belirsizlik payi buyutulur ve sinirlama olarak
+raporlanir — baska tipin degeri sessizce kullanilmaz."
+
+**Zaman:** Hicbir kat sayimi yapilmadi; kural secimden ve sayimdan ONCE
+config'e muhurlendi (`storey_height_calibration.function_type_stratification`).
+D-031'in laag/hoog UYGULAMA kurali yerini bu karara birakti; metni silinmedi,
+T1 icinde yalniz raporlanir.
+
+**Olculen hedefler (post_flight_buildings.csv, >= 100 m2):** 2 okul
+(onderwijsfunctie, bouwjaar 2023/2024), 2 konut (2025/2026), 2 karma
+'kantoorfunctie,woonfunctie' (2026).
+
+**Ajanin verdigi uc tasarim karari (kullanici sayimdan once itiraz edebilir):**
+1. **T3 = okul.** Kullanicinin grubu "okul/konut disi buyuk yapi". Filtreler
+   sonrasi konut-disi havuz 69 bina: 23 industrie, 10 kantoor, 8 bijeenkomst,
+   7 onderwijs ... (olculdu). Sanayi halleri tek yuksek katlidir; karistirilirsa
+   deger okulu temsil etmez. Konut disi iki hedef de okul.
+2. **Karma yapilar T2.** Konut icerdikleri icin. Ticari zemin katli olanlar T2
+   ortalamasindan sapabilir -> sinirlama.
+3. **n<3 kurali:** havuz ortalamasi, "TIP DEGERI YOK, HAVUZ" etiketiyle;
+   sd = max(sd_havuz, tipler arasi gozlenen en buyuk ortalama farki). Carpan
+   keyfi secilmedi; formul sayimdan once.
+
+**B alani C4:** `building_class_ratio` yalniz A icin olculmustu. T2/T3 B'den
+secildigi icin oran esigi yerine siralama olcutu (sinif 6 nokta yogunlugu)
+kullanilir; yeni esik eklenmedi.
+
+**Etkiledigi:** kalibrasyon listesi, `docs/field_check_list.md` (yeni gruplar),
+estimated_lod1 yukseklikleri, Asama 3 golge girdisi.

@@ -1944,6 +1944,10 @@ storey_height_calibration:
         - "gruplar arasi fark (mean_hoog - mean_laag), m"
         - "havuzun tamami icin tek ortalama (karsilastirma icin)"
       decision_rule:
+        superseded_by: >
+          D-035 (2026-09-27, sayimdan ONCE): UYGULAMA kurali artik
+          function_type_stratification'dir. Asagidaki laag/hoog kurali T1 icinde
+          YALNIZ RAPORLANIR; hicbir hedefin degerini belirlemez. Metin silinmedi.
         use_per_type_if: >
           HER IKI grup da n >= 3 VE |mean_hoog - mean_laag| > sd_pooled
         else: >
@@ -2009,6 +2013,80 @@ storey_height_calibration:
   output_csv: reports/storey_height_calibration.csv
   output_csv_superseded: reports/storey_height_calibration_superseded_decile.csv
   field_list: docs/field_check_list.md
+
+  # --- 5) ISLEV + DONEM TIPLERI (D-035) — SAYIMDAN ve SECIMDEN ONCE muhurlendi ---
+  # Kullanici (2026-09-27): "Kalibrasyon orneklemi agirlikla 1960'lar konutu. Ama
+  # estimated_lod1 uygulanacak binalar 2023 yapimi bloklar ve OKULLAR ... tek deger
+  # okullari sistematik kisa gosterir." Hicbir kat sayimi yapilmadi (§12.2 ihlali yok).
+  function_type_stratification:
+    decision_ref: D-035
+    status: SEALED_BEFORE_OBSERVATION
+    sealed_at: "2026-09-27"
+    supersedes: >
+      type_breakdown.decision_rule (laag/hoog) ve applied_to — UYGULAMA kurali
+      olarak. laag/hoog kirilimi T1 icinde YALNIZ RAPORLANIR (silinmedi).
+    types:
+      T1_eski_konut:
+        rule: "gebruiksdoel 'woonfunctie' ICERIR VE bouwjaar < 2000"
+        members: "mevcut 10 kalibrasyon binasi + D-032 yedekleri (hepsi A, 1960-1975, saf woonfunctie)"
+      T2_yeni_konut:
+        rule: "gebruiksdoel 'woonfunctie' ICERIR VE bouwjaar >= 2000"
+        note: >
+          Karma yapilar (orn. 'kantoorfunctie,woonfunctie') konut icerdigi icin
+          T2'dir. AJAN KARARI, kullanici itiraz edebilir (sayimdan once).
+          Zemin kati ticari olan karma yapida kat yuksekligi T2 ortalamasindan
+          sapabilir -> SINIRLAMA olarak raporlanir.
+      T3_okul:
+        rule: "gebruiksdoel 'onderwijsfunctie' ICERIR VE 'woonfunctie' ICERMEZ VE ayakizi >= 100 m2"
+        why_school_only: >
+          Kullanicinin grubu "okul/konut disi buyuk yapi". Olculen havuz
+          (2026-09-27, filtreler sonrasi 69 bina): 23 industrie, 10 kantoor,
+          8 bijeenkomst, 7 onderwijs ... Sanayi halleri tek, cok yuksek
+          katlidir; karistirilirsa deger okulu temsil etmez. estimated_lod1
+          hedeflerinden konut disi olan ikisi de okul. -> T3 okulla sinirlandi
+          (filtreler sonrasi 8 aday). AJAN KARARI.
+        area_threshold_source: "building_lineage.assignment.post_flight_large ile ayni 100 m2 (yeni sayi degil)"
+      other: "Hicbir tipe girmeyen hedef bina -> tip degeri YOK -> small_n kurali."
+    targets:     # estimated_lod1 (D-029) — post_flight_buildings.csv, olculdu 2026-09-27
+      T3_okul: ["0503100000038250", "0503100000038184"]
+      T2_yeni_konut: ["0503100000038253", "0503100000040432", "0503100000038699", "0503100000038426"]
+    selection_new_types:
+      applies_to: [T2_yeni_konut, T3_okul]
+      pool: >
+        B alanindaki panden (building_heights_ahn5.csv) — tip kurali + C3 +
+        yuksekligi olculmus + sinif 6 >= 200 nokta + C5 + C6 + C7. Saha
+        listesinde zaten olan binalar disarida.
+      c4_note: >
+        building_class_ratio yalniz A icin olculdu; B'de yok. C4'un oran kismi
+        yerine SIRALAMA olcutu kullanilir (asagida) — yeni esik YOK.
+      n_primary_per_type: 3
+      rule: >
+        Havuz h_measured_m'ye gore uc esit sayili dilime (tertil) bolunur.
+        Her dilimde sinif 6 nokta yogunlugu (class6_points / footprint_area_m2)
+        en yuksek bina ASIL, ikinci YEDEK secilir. Esitlik: bag_id.
+      reserve_trigger: "Yalnizca asil KULLANILAMAZSA (R8/R9/R10) — D-032 ile ayni; degere bakilmaz."
+      deterministic: true
+      purpose_claim: >
+        (M-016) Secilen 3 asil bina uc farkli tertildedir VE secilenlerin
+        h araligi havuzun p10-p90 araliginin en az yarisini kapsar.
+        Secimden hemen sonra OLCULUR; tutmazsa kural degismez, ONERI ayri cikti.
+    min_usable_per_type: 3
+    min_usable_note: >
+      Tip degeri icin asgari 3 (kullanici). Havuz (tum tipler) ortalamasi icin
+      mevcut min_usable 6 gecerli kalir. n=3'ten turetilen sd cok belirsizdir
+      -> SINIRLAMA olarak raporlanir.
+    application: >
+      Her estimated_lod1 binaya KENDI tipinin ortalamasi uygulanir;
+      height_uncertainty_m = kat_sayisi * sd_tip.
+    small_n_rule:
+      when: "Hedefin tipinde kullanilabilir bina < 3"
+      value: "Havuz ortalamasi (tum kullanilabilir kalibrasyon binalari) — ACIKCA 'TIP DEGERI YOK, HAVUZ' etiketiyle"
+      sd_used: "max(sd_havuz, max_t |mean_t - mean_havuz|)  (t: n >= 3 olan tipler)"
+      why: >
+        Baska tipin degeri sessizce kullanilmaz (kullanici). Belirsizlik, tipler
+        arasinda GOZLENEN en buyuk farki kapsayacak kadar buyutulur; carpan
+        keyfi secilmedi. Formul sayimdan ONCE sabitlendi.
+      reported_as: SINIRLAMA
 
 # ============================================================================
 # CEPHE NOKTASI SINIF OLCUMU (Asama 1 hazirlik; P-012 ve D-017 girdisi)
