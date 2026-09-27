@@ -1,6 +1,6 @@
 # Saha kontrol listesi — Voorhof
 
-**Dolduracak:** kullanici · **Tarih:** _______ · **run_id:** `RUN-2026-09-26-002`
+**Dolduracak:** kullanici · **Tarih:** _______ · **run_id:** `RUN-2026-09-27-007`
 **Uretildi:** `src/00_acquisition/make_field_check_list.py` (elle yazilmadi)
 
 > **VERI DONEMI (D-020).** Geometri AHN5 **2023-02-08 / 02-14**; BAG
@@ -21,10 +21,13 @@
 | **buyuk ucus sonrasi** | Ayakizi >= 100 m2, ucustan sonra yapilmis (D-029) | 6 | 2023'te var miydi? **kat sayisi** |
 | **kalibrasyon** | Kat yuksekligini olcmek icin (D-030/D-031) | 10 | **yalnizca kat sayisi** |
 | **YEDEK** | Yuksek siniflarda (26/35/37 m) asil bina sayilamazsa yerine gecer (D-032) | 3 | kat sayisi — **yalnizca** asili sayilamazsa |
+| **kalibrasyon — yeni konut (T2)** | bouwjaar >= 2000 konut, B alani (D-035) | 3 | **yalnizca kat sayisi** |
+| **kalibrasyon — okul (T3)** | okul, B alani (D-035) | 3 | **yalnizca kat sayisi** |
+| **YEDEK yeni konut / okul** | Ayni tertildeki asil sayilamazsa (D-035) | 6 | kat sayisi — **yalnizca** asili sayilamazsa |
 | **ATLA** | Gecersiz kilinan eski orneklem (D-031) — sayma | 5 | — |
 | **sifir sinif-6 orneklemi** | AHN5'te cati noktasi olmayan yapilar (D-019) | 13 | bu ne? 2023'te var miydi? |
 
-Toplam **38 bina**. Ayni bina birden fazla gruptaysa **tek satir**
+Toplam **50 bina**. Ayni bina birden fazla gruptaysa **tek satir**
 yazildi.
 
 **Kucuk ucus sonrasi yapilar (24 adet) bu listede YOKTUR** — D-029
@@ -103,13 +106,29 @@ her siniftan bir **yedek** sayimdan ONCE muhurlendi.
 - Yedegi yine de saydiysan sorun yok: devreye girmeyen yedek ortalamaya
   **girmez**, raporda ayri yazilir.
 
-## Ek: kat yuksekligi bina tipine gore degisiyor mu? (D-031)
+## Kat yuksekligi TIPE gore (D-035, 2026-09-27 — sayimdan ONCE muhurlendi)
 
-Sonuc **iki grupta ayri** raporlanacak: `laag` (kat <= 4, sira ev/portiekflat)
-ve `hoog` (kat >= 5, galerijflat/hoogbouw). Tip bazli deger ancak **her iki
-grupta da n >= 3** ve **gruplar arasi fark, binalar arasi sacilmadan buyuk**
-ise kullanilir; aksi halde tek ortalama kullanilir ve fark **sinirlama**
-olarak yazilir. Bu kural da **sayimdan once** muhurlendi.
+Tahmini yukseklik (`estimated_lod1`) uygulanacak binalar 1960'lar konutu
+**degil**: 2 okul, 2 yeni konut, 2 karma (kantoor+woon) yapi. Bu yuzden
+kalibrasyon uc tipe ayrildi ve her hedefe **kendi tipinin** degeri uygulanir:
+
+| Tip | Kural | Kalibrasyon binalari |
+|---|---|---|
+| T1 eski konut | konut, bouwjaar < 2000 | yukaridaki `kalibrasyon` satirlari |
+| T2 yeni konut | konut (karma dahil), bouwjaar >= 2000 | `kalibrasyon — yeni konut (T2)` |
+| T3 okul | onderwijsfunctie, konut yok, >= 100 m2 | `kalibrasyon — okul (T3)` |
+
+Bir tipte 3'ten az bina sayilabilirse o tipin hedeflerine havuz ortalamasi
+**acikca etiketlenerek** ve **buyutulmus belirsizlikle** uygulanir; baska
+tipin degeri sessizce kullanilmaz.
+
+> **Okul (T3) icin karar bekliyor:** muhurlu secim yalnizca tek katli okullari
+> aldi (amac iddiasi TUTMADI, `reports/00_stage_0_3_type_calibration_ONERI.md`).
+> Onerilen alternatifin (b) uc binasi zaten bu listede `YEDEK okul` olarak var.
+> **Yeni konut (T2) icin de ONERI var:** secilenler 20-41 m2'lik tek evler;
+> hedefler 300-500 m2 bloklar. Ayni belgede (b'). Karar sayimdan ONCE verilir.
+
+Eski `laag`/`hoog` kirilimi (D-031) eski konut icinde **yalniz raporlanir**.
 
 ---
 
@@ -138,25 +157,37 @@ olarak yazilir. Bu kural da **sayimdan once** muhurlendi.
 | 17 | kalibrasyon | `0503100000010265` | 53 | 1969 | woonfunctie | 51.990137, 4.353666 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9901372,4.3536655) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9901372,4.3536655) | — | — |  |  |
 | 18 | kalibrasyon | `0503100000019104` | 53 | 1966 | woonfunctie | 51.991486, 4.359850 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9914856,4.3598500) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9914856,4.3598500) | — | — |  |  |
 | 19 | kalibrasyon | `0503100000018892` | 52 | 1966 | woonfunctie | 51.992115, 4.361096 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9921151,4.3610961) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9921151,4.3610961) | — | — |  |  |
-| 20 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#10 yerine) | `0503100000029407` | 809 | 1962 | woonfunctie | 52.000199, 4.351821 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.0001988,4.3518210) · [Harita](https://www.google.com/maps/search/?api=1&query=52.0001988,4.3518210) | — | — |  |  |
-| 21 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#12 yerine) | `0503100000019684` | 355 | 1971 | woonfunctie | 51.992094, 4.355087 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9920942,4.3550865) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9920942,4.3550865) | — | — |  |  |
-| 22 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#13 yerine) | `0503100000019379` | 209 | 1968 | woonfunctie | 51.989811, 4.357449 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9898108,4.3574485) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9898108,4.3574485) | — | — |  |  |
-| 23 | sifir sinif-6 orneklemi | `0503100000041285` | 1665 | 2026 | onderwijsfunctie,sportfunctie | 51.994720, 4.350444 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9947202,4.3504437) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9947202,4.3504437) |  |  |  |  |
-| 24 | sifir sinif-6 orneklemi | `0503100000039604` | 14 | 2020 | — | 51.990788, 4.362701 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9907885,4.3627008) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9907885,4.3627008) |  |  |  |  |
-| 25 | sifir sinif-6 orneklemi | `0503100000039608` | 14 | 2001 | — | 51.990575, 4.361834 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9905746,4.3618338) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9905746,4.3618338) |  |  |  |  |
-| 26 | sifir sinif-6 orneklemi | `0503100000039603` | 8 | 1988 | — | 51.990791, 4.362820 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9907913,4.3628204) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9907913,4.3628204) |  |  |  |  |
-| 27 | sifir sinif-6 orneklemi | `0503100000039621` | 5 | 1998 | — | 51.992559, 4.361258 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9925590,4.3612581) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9925590,4.3612581) |  |  |  |  |
-| 28 | sifir sinif-6 orneklemi | `0503100000039618` | 5 | 1997 | — | 51.992572, 4.361581 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9925718,4.3615815) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9925718,4.3615815) |  |  |  |  |
-| 29 | sifir sinif-6 orneklemi | `0503100000038679` | 4 | 2007 | — | 51.993098, 4.361731 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9930978,4.3617315) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9930978,4.3617315) |  |  |  |  |
-| 30 | sifir sinif-6 orneklemi | `0503100000038260` | 4 | 2023 | — | 51.999812, 4.351567 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9998121,4.3515669) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9998121,4.3515669) |  |  |  |  |
-| 31 | sifir sinif-6 orneklemi | `0503100000039626` | 3 | 2009 | — | 51.994442, 4.360563 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944424,4.3605626) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944424,4.3605626) |  |  |  |  |
-| 32 | sifir sinif-6 orneklemi | `0503100000039629` | 3 | 2022 | — | 51.994421, 4.360254 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944209,4.3602540) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944209,4.3602540) |  |  |  |  |
-| 33 | sifir sinif-6 orneklemi | `0503100000039630` | 2 | 2016 | — | 51.994447, 4.360078 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944466,4.3600779) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944466,4.3600779) |  |  |  |  |
-| 34 | **ATLA** (superseded) | `0503100000019296` | 302 | 1971 | woonfunctie | 51.989955, 4.355578 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9899548,4.3555781) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9899548,4.3555781) | — | — |  |  |
-| 35 | **ATLA** (superseded) | `0503100000018905` | 69 | 1966 | woonfunctie | 51.991066, 4.362030 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9910662,4.3620304) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9910662,4.3620304) | — | — |  |  |
-| 36 | **ATLA** (superseded) | `0503100000001547` | 53 | 1969 | woonfunctie | 51.990182, 4.353637 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9901824,4.3536367) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9901824,4.3536367) | — | — |  |  |
-| 37 | **ATLA** (superseded) | `0503100000019105` | 53 | 1966 | woonfunctie | 51.991463, 4.359768 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9914632,4.3597678) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9914632,4.3597678) | — | — |  |  |
-| 38 | **ATLA** (superseded) | `0503100000018987` | 52 | 1966 | woonfunctie | 51.991648, 4.361646 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9916485,4.3616460) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9916485,4.3616460) | — | — |  |  |
+| 20 | kalibrasyon — yeni konut (T2) | `0503100000034895` | 1166 | 2015 | overige gebruiksfunctie,winkelfunctie,woonfunctie | 51.997237, 4.353344 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9972375,4.3533440) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9972375,4.3533440) | — | — |  |  |
+| 21 | kalibrasyon — yeni konut (T2) | `0503100000033247` | 41 | 2011 | woonfunctie | 51.997339, 4.345970 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9973391,4.3459696) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9973391,4.3459696) | — | — |  |  |
+| 22 | kalibrasyon — yeni konut (T2) | `0503100000036839` | 20 | 2019 | woonfunctie | 51.993636, 4.362062 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9936362,4.3620622) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9936362,4.3620622) | — | — |  |  |
+| 23 | kalibrasyon — okul (T3) | `0503100000025340` | 1251 | 1974 | onderwijsfunctie | 51.989459, 4.348365 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9894593,4.3483652) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9894593,4.3483652) | — | — |  |  |
+| 24 | kalibrasyon — okul (T3) | `0503100000030808` | 833 | 1967 | onderwijsfunctie | 51.988975, 4.353806 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9889747,4.3538064) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9889747,4.3538064) | — | — |  |  |
+| 25 | kalibrasyon — okul (T3) | `0503100000018689` | 465 | 1967 | onderwijsfunctie | 51.993757, 4.357542 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9937565,4.3575417) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9937565,4.3575417) | — | — |  |  |
+| 26 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#10 yerine) | `0503100000029407` | 809 | 1962 | woonfunctie | 52.000199, 4.351821 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.0001988,4.3518210) · [Harita](https://www.google.com/maps/search/?api=1&query=52.0001988,4.3518210) | — | — |  |  |
+| 27 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#12 yerine) | `0503100000019684` | 355 | 1971 | woonfunctie | 51.992094, 4.355087 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9920942,4.3550865) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9920942,4.3550865) | — | — |  |  |
+| 28 | **YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur (#13 yerine) | `0503100000019379` | 209 | 1968 | woonfunctie | 51.989811, 4.357449 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9898108,4.3574485) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9898108,4.3574485) | — | — |  |  |
+| 29 | **YEDEK yeni konut** — ancak asil orneklemden bina sayilamazsa doldurulur (#20 yerine) | `0503100000035395` | 62 | 2017 | woonfunctie | 52.004325, 4.355475 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.0043254,4.3554747) · [Harita](https://www.google.com/maps/search/?api=1&query=52.0043254,4.3554747) | — | — |  |  |
+| 30 | **YEDEK yeni konut** — ancak asil orneklemden bina sayilamazsa doldurulur (#21 yerine) | `0503100000033250` | 41 | 2011 | woonfunctie | 51.997226, 4.346026 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9972257,4.3460265) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9972257,4.3460265) | — | — |  |  |
+| 31 | **YEDEK yeni konut** — ancak asil orneklemden bina sayilamazsa doldurulur (#22 yerine) | `0503100000036836` | 30 | 2019 | woonfunctie | 51.993564, 4.362373 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9935638,4.3623734) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9935638,4.3623734) | — | — |  |  |
+| 32 | **YEDEK okul** — ancak asil orneklemden bina sayilamazsa doldurulur (#23 yerine) | `0503100000018964` | 1614 | 1965 | kantoorfunctie,onderwijsfunctie | 51.999050, 4.357106 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9990498,4.3571060) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9990498,4.3571060) | — | — |  |  |
+| 33 | **YEDEK okul** — ancak asil orneklemden bina sayilamazsa doldurulur (#25 yerine) | `0503100000009020` | 895 | 1967 | onderwijsfunctie | 51.991272, 4.354641 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9912721,4.3546407) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9912721,4.3546407) | — | — |  |  |
+| 34 | **YEDEK okul** — ancak asil orneklemden bina sayilamazsa doldurulur (#24 yerine) | `0503100000001932` | 583 | 1969 | onderwijsfunctie | 51.992828, 4.355608 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9928277,4.3556080) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9928277,4.3556080) | — | — |  |  |
+| 35 | sifir sinif-6 orneklemi | `0503100000041285` | 1665 | 2026 | onderwijsfunctie,sportfunctie | 51.994720, 4.350444 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9947202,4.3504437) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9947202,4.3504437) |  |  |  |  |
+| 36 | sifir sinif-6 orneklemi | `0503100000039604` | 14 | 2020 | — | 51.990788, 4.362701 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9907885,4.3627008) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9907885,4.3627008) |  |  |  |  |
+| 37 | sifir sinif-6 orneklemi | `0503100000039608` | 14 | 2001 | — | 51.990575, 4.361834 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9905746,4.3618338) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9905746,4.3618338) |  |  |  |  |
+| 38 | sifir sinif-6 orneklemi | `0503100000039603` | 8 | 1988 | — | 51.990791, 4.362820 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9907913,4.3628204) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9907913,4.3628204) |  |  |  |  |
+| 39 | sifir sinif-6 orneklemi | `0503100000039621` | 5 | 1998 | — | 51.992559, 4.361258 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9925590,4.3612581) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9925590,4.3612581) |  |  |  |  |
+| 40 | sifir sinif-6 orneklemi | `0503100000039618` | 5 | 1997 | — | 51.992572, 4.361581 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9925718,4.3615815) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9925718,4.3615815) |  |  |  |  |
+| 41 | sifir sinif-6 orneklemi | `0503100000038679` | 4 | 2007 | — | 51.993098, 4.361731 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9930978,4.3617315) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9930978,4.3617315) |  |  |  |  |
+| 42 | sifir sinif-6 orneklemi | `0503100000038260` | 4 | 2023 | — | 51.999812, 4.351567 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9998121,4.3515669) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9998121,4.3515669) |  |  |  |  |
+| 43 | sifir sinif-6 orneklemi | `0503100000039626` | 3 | 2009 | — | 51.994442, 4.360563 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944424,4.3605626) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944424,4.3605626) |  |  |  |  |
+| 44 | sifir sinif-6 orneklemi | `0503100000039629` | 3 | 2022 | — | 51.994421, 4.360254 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944209,4.3602540) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944209,4.3602540) |  |  |  |  |
+| 45 | sifir sinif-6 orneklemi | `0503100000039630` | 2 | 2016 | — | 51.994447, 4.360078 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9944466,4.3600779) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9944466,4.3600779) |  |  |  |  |
+| 46 | **ATLA** (superseded) | `0503100000019296` | 302 | 1971 | woonfunctie | 51.989955, 4.355578 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9899548,4.3555781) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9899548,4.3555781) | — | — |  |  |
+| 47 | **ATLA** (superseded) | `0503100000018905` | 69 | 1966 | woonfunctie | 51.991066, 4.362030 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9910662,4.3620304) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9910662,4.3620304) | — | — |  |  |
+| 48 | **ATLA** (superseded) | `0503100000001547` | 53 | 1969 | woonfunctie | 51.990182, 4.353637 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9901824,4.3536367) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9901824,4.3536367) | — | — |  |  |
+| 49 | **ATLA** (superseded) | `0503100000019105` | 53 | 1966 | woonfunctie | 51.991463, 4.359768 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9914632,4.3597678) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9914632,4.3597678) | — | — |  |  |
+| 50 | **ATLA** (superseded) | `0503100000018987` | 52 | 1966 | woonfunctie | 51.991648, 4.361646 | [SV](https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.9916485,4.3616460) · [Harita](https://www.google.com/maps/search/?api=1&query=51.9916485,4.3616460) | — | — |  |  |
 
 ---
 
@@ -193,8 +224,10 @@ tarihi ve aklina takilan her sey.
 ## Bittiginde
 
 Bu dosyayi kaydet ve bana soyle. Ben:
-1. `KAT` sutununu `reports/storey_height_calibration.csv`'ye tasirim,
+1. `KAT` sutununu `reports/storey_height_calibration.csv` ve
+   `..._types.csv`'ye tasirim,
 2. kat yuksekligini ve standart sapmasini hesaplarim (D-030 formulu),
 3. 3 konut blogunu S1/S2/S3/karar-veremedim'e gore siniflarim (D-024/D-028),
-4. 9 binaya (`3 blok + 6 buyuk yapi`) `estimated_lod1` yuksekligi yazarim,
+4. 9 binaya (`3 blok + 6 buyuk yapi`) `estimated_lod1` yuksekligi yazarim —
+   her birine **kendi tipinin** kat yuksekligiyle (D-035),
 5. P-012'yi (hangi AHN siniflari Asama 1'e girecek) karara baglariz.

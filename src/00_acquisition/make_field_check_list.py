@@ -7,6 +7,8 @@ Kaynak: dort ayri grup TEK tabloda birlestirilir (kullanici talimati 2026-09-22)
   G3  buyuk (>=100 m2) ucus sonrasi yapilar  reports/post_flight_buildings.csv
   G4  kat yuksekligi kalibrasyonu            reports/storey_height_calibration.csv
                                              + ..._proposal_p020.csv (ONERI)
+  G5  kalibrasyon T2 yeni konut (D-035)     reports/storey_height_calibration_types.csv
+  G6  kalibrasyon T3 okul (D-035)           ayni dosya (+ G5r/G6r yedekleri)
 
 Ayni bina birden fazla gruba giriyorsa TEK SATIR yazilir ve gruplar birlestirilir
 (kullanici ayni binaya iki kez bakmasin).
@@ -53,7 +55,12 @@ GROUPS = {
     "G4": "kalibrasyon",
     "G4r": "YEDEK",
     "G4s": "kalibrasyon (ATLA - superseded)",
+    "G5": "kalibrasyon — yeni konut (T2)",
+    "G5r": "YEDEK T2",
+    "G6": "kalibrasyon — okul (T3)",
+    "G6r": "YEDEK T3",
 }
+TYPE_GROUP = {"T2_yeni_konut": "G5", "T3_okul": "G6"}
 
 
 def _read(path: Path) -> list[dict]:
@@ -126,6 +133,15 @@ def main() -> int:
     # Listede kalir cunku kullanici bir kismini zaten saymis olabilir.
     for r in _read(rep / "storey_height_calibration_superseded_decile.csv"):
         add(r["bag_id"], "G4s", desil=r["desil"])
+    # D-035: islev/donem tipleri. Yedek, ayni tip + ayni tertildeki ASIL yerine gecer.
+    types = _read(rep / "storey_height_calibration_types.csv")
+    prim = {(r["tip"], r["tertil"]): r["bag_id"] for r in types if r["rol"] == "ASIL"}
+    for r in types:
+        g = TYPE_GROUP[r["tip"]]
+        if r["rol"] == "ASIL":
+            add(r["bag_id"], g, tertil=r["tertil"])
+        else:
+            add(r["bag_id"], g + "r", yedek_asil=prim[(r["tip"], r["tertil"])])
 
     logger.info("Gruplar | G1=%d G2=%d G3=%d G4=%d G4s(atla)=%d | benzersiz bina=%d",
                 sum("G1" in r["groups"] for r in rows.values()),
@@ -148,7 +164,8 @@ def main() -> int:
                  gebruiksdoel=pr.get("gebruiksdoel") or "—",
                  lat=lat, lon=lon, x=c.x, y=c.y)
 
-    order = {"G2": 0, "G3": 1, "G4": 2, "G4r": 2.5, "G1": 3, "G4s": 4}
+    order = {"G2": 0, "G3": 1, "G4": 2, "G5": 2.1, "G6": 2.2, "G4r": 2.5, "G5r": 2.6,
+             "G6r": 2.7, "G1": 3, "G4s": 4}
     ordered = sorted(rows.values(),
                      key=lambda r: (min(order[g] for g in r["groups"]), -r["area"]))
 
@@ -165,9 +182,13 @@ def main() -> int:
                          for g in r["groups"])
         if "G4" in r["groups"]:
             grp = "kalibrasyon"
-        elif "G4r" in r["groups"]:
+        elif "G5" in r["groups"] or "G6" in r["groups"]:
+            grp = GROUPS["G5" if "G5" in r["groups"] else "G6"]
+        elif any(g in r["groups"] for g in ("G4r", "G5r", "G6r")):
             asil = next(i for i, x in enumerate(ordered, 1) if x["bag_id"] == r["yedek_asil"])
-            grp = (f"**YEDEK** — ancak asil orneklemden bina sayilamazsa doldurulur "
+            tip = ("" if "G4r" in r["groups"] else
+                   (" yeni konut" if "G5r" in r["groups"] else " okul"))
+            grp = (f"**YEDEK{tip}** — ancak asil orneklemden bina sayilamazsa doldurulur "
                    f"(#{asil} yerine)")
         elif "G4s" in r["groups"]:
             grp = "**ATLA** (superseded)"
@@ -207,6 +228,9 @@ def main() -> int:
 | **buyuk ucus sonrasi** | Ayakizi >= {LARGE_M2:.0f} m2, ucustan sonra yapilmis (D-029) | {n_large} | 2023'te var miydi? **kat sayisi** |
 | **kalibrasyon** | Kat yuksekligini olcmek icin (D-030/D-031) | {sum("G4" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
 | **YEDEK** | Yuksek siniflarda (26/35/37 m) asil bina sayilamazsa yerine gecer (D-032) | {sum("G4r" in r["groups"] for r in rows.values())} | kat sayisi — **yalnizca** asili sayilamazsa |
+| **kalibrasyon — yeni konut (T2)** | bouwjaar >= 2000 konut, B alani (D-035) | {sum("G5" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
+| **kalibrasyon — okul (T3)** | okul, B alani (D-035) | {sum("G6" in r["groups"] for r in rows.values())} | **yalnizca kat sayisi** |
+| **YEDEK yeni konut / okul** | Ayni tertildeki asil sayilamazsa (D-035) | {sum("G5r" in r["groups"] or "G6r" in r["groups"] for r in rows.values())} | kat sayisi — **yalnizca** asili sayilamazsa |
 | **ATLA** | Gecersiz kilinan eski orneklem (D-031) — sayma | {sum("G4s" in r["groups"] and "G4" not in r["groups"] for r in rows.values())} | — |
 | **sifir sinif-6 orneklemi** | AHN5'te cati noktasi olmayan yapilar (D-019) | {sum("G1" in r["groups"] for r in rows.values())} | bu ne? 2023'te var miydi? |
 
@@ -279,13 +303,29 @@ her siniftan bir **yedek** sayimdan ONCE muhurlendi.
 - Yedegi yine de saydiysan sorun yok: devreye girmeyen yedek ortalamaya
   **girmez**, raporda ayri yazilir.
 
-## Ek: kat yuksekligi bina tipine gore degisiyor mu? (D-031)
+## Kat yuksekligi TIPE gore (D-035, 2026-09-27 — sayimdan ONCE muhurlendi)
 
-Sonuc **iki grupta ayri** raporlanacak: `laag` (kat <= 4, sira ev/portiekflat)
-ve `hoog` (kat >= 5, galerijflat/hoogbouw). Tip bazli deger ancak **her iki
-grupta da n >= 3** ve **gruplar arasi fark, binalar arasi sacilmadan buyuk**
-ise kullanilir; aksi halde tek ortalama kullanilir ve fark **sinirlama**
-olarak yazilir. Bu kural da **sayimdan once** muhurlendi.
+Tahmini yukseklik (`estimated_lod1`) uygulanacak binalar 1960'lar konutu
+**degil**: 2 okul, 2 yeni konut, 2 karma (kantoor+woon) yapi. Bu yuzden
+kalibrasyon uc tipe ayrildi ve her hedefe **kendi tipinin** degeri uygulanir:
+
+| Tip | Kural | Kalibrasyon binalari |
+|---|---|---|
+| T1 eski konut | konut, bouwjaar < 2000 | yukaridaki `kalibrasyon` satirlari |
+| T2 yeni konut | konut (karma dahil), bouwjaar >= 2000 | `kalibrasyon — yeni konut (T2)` |
+| T3 okul | onderwijsfunctie, konut yok, >= 100 m2 | `kalibrasyon — okul (T3)` |
+
+Bir tipte 3'ten az bina sayilabilirse o tipin hedeflerine havuz ortalamasi
+**acikca etiketlenerek** ve **buyutulmus belirsizlikle** uygulanir; baska
+tipin degeri sessizce kullanilmaz.
+
+> **Okul (T3) icin karar bekliyor:** muhurlu secim yalnizca tek katli okullari
+> aldi (amac iddiasi TUTMADI, `reports/00_stage_0_3_type_calibration_ONERI.md`).
+> Onerilen alternatifin (b) uc binasi zaten bu listede `YEDEK okul` olarak var.
+> **Yeni konut (T2) icin de ONERI var:** secilenler 20-41 m2'lik tek evler;
+> hedefler 300-500 m2 bloklar. Ayni belgede (b'). Karar sayimdan ONCE verilir.
+
+Eski `laag`/`hoog` kirilimi (D-031) eski konut icinde **yalniz raporlanir**.
 
 ---
 
@@ -332,10 +372,12 @@ tarihi ve aklina takilan her sey.
 ## Bittiginde
 
 Bu dosyayi kaydet ve bana soyle. Ben:
-1. `KAT` sutununu `reports/storey_height_calibration.csv`'ye tasirim,
+1. `KAT` sutununu `reports/storey_height_calibration.csv` ve
+   `..._types.csv`'ye tasirim,
 2. kat yuksekligini ve standart sapmasini hesaplarim (D-030 formulu),
 3. 3 konut blogunu S1/S2/S3/karar-veremedim'e gore siniflarim (D-024/D-028),
-4. 9 binaya (`3 blok + 6 buyuk yapi`) `estimated_lod1` yuksekligi yazarim,
+4. 9 binaya (`3 blok + 6 buyuk yapi`) `estimated_lod1` yuksekligi yazarim —
+   her birine **kendi tipinin** kat yuksekligiyle (D-035),
 5. P-012'yi (hangi AHN siniflari Asama 1'e girecek) karara baglariz.
 """
     out.write_text(md, encoding="utf-8")
@@ -345,7 +387,8 @@ Bu dosyayi kaydet ve bana soyle. Ben:
                    "large_post_flight": n_large,
                    "sources": ["visual_check_sample.csv", "a_residential_uncertain.csv",
                                "post_flight_buildings.csv", "storey_height_calibration.csv",
-                               "storey_height_calibration_proposal_p020.csv"]},
+                               "storey_height_calibration_proposal_p020.csv",
+                               "storey_height_calibration_types.csv"]},
                notes=("Olculen yukseklik BILEREK yazilmadi (sayim demirlenmesin, "
                       "Bolum 12.10). Uzerine yazma korumasi: dolu hucre varsa durur."))
     logger.info("TAMAM | %s | %d bina", out, len(rows))

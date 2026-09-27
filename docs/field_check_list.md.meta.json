@@ -1,22 +1,26 @@
 {
-  "run_id": "RUN-2026-09-26-002",
-  "git_commit": "20ab104-dirty",
-  "created_utc": "2026-09-26T20:51:50Z",
+  "run_id": "RUN-2026-09-27-007",
+  "git_commit": "a20b15f-dirty",
+  "created_utc": "2026-09-27T08:05:09Z",
   "output": {
     "path": "docs/field_check_list.md",
-    "sha256": "431ab036f3b581d5b1d1428c0f0471b3e63cfeb600b12c6f536a2f9f2b9437b3",
-    "size_bytes": 19758
+    "sha256": "7e0bb9d337e56da7c017ff55276bbadc0b4190712815657e79092650628d2bef",
+    "size_bytes": 25059
   },
   "inputs": [],
   "parameters": {
-    "buildings": 38,
+    "buildings": 50,
     "groups": {
       "G1": 13,
       "G2": 3,
       "G3": 6,
       "G4": 10,
       "G4r": 3,
-      "G4s": 10
+      "G4s": 10,
+      "G5": 3,
+      "G5r": 3,
+      "G6": 3,
+      "G6r": 3
     },
     "large_post_flight": 6,
     "sources": [
@@ -24,7 +28,8 @@
       "a_residential_uncertain.csv",
       "post_flight_buildings.csv",
       "storey_height_calibration.csv",
-      "storey_height_calibration_proposal_p020.csv"
+      "storey_height_calibration_proposal_p020.csv",
+      "storey_height_calibration_types.csv"
     ]
   },
   "software": {

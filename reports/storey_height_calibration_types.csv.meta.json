@@ -1,0 +1,40 @@
+{
+  "run_id": "RUN-2026-09-27-003",
+  "git_commit": "a20b15f-dirty",
+  "created_utc": "2026-09-27T08:01:41Z",
+  "output": {
+    "path": "reports/storey_height_calibration_types.csv",
+    "sha256": "20fed2d1ec9ad1b5c7ba93e09f1d2693df693a4e89ba332159c1a9c0de5df817",
+    "size_bytes": 1623
+  },
+  "inputs": [
+    {
+      "path": "reports/building_heights_ahn5.csv",
+      "sha256": "d5bae365953784da757fb489b53e99b10024df46d050977df92b30e8cb8e9ec7",
+      "size_bytes": 406993
+    }
+  ],
+  "parameters": {
+    "T2_yeni_konut": {
+      "funnel": {
+        "T2_yeni_konut tip kurali": 278,
+        "C3 ucus sonrasi / yeniden yapim / senaryo listelerinde degil": 222,
+        "yuksekligi olculmus": 213,
+        "C4 sinif 6 >= 200 nokta": 213,
+        "C5 duz cati (span < 1.5 m)": 174,
+        "C6 halkada >= 50 zemin noktasi": 174,
+        "C7 h >= 3.0 m": 174,
+        "saha listesinde henuz yok": 174
+      },
+      "pool": 174,
+      "picked": [
+        "0503100000036839",
+        "0503100000033247",
+        "0503100000034895"
+      ],
+      "reserves": [
+        "0503100000036836",
+        "0503100000033250",
+        "0503100000035395"
+      ],
+      "purpose_claim_holds": 

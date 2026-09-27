@@ -1,0 +1,51 @@
+{
+  "run_id": "RUN-2026-09-27-006",
+  "git_commit": "a20b15f-dirty",
+  "created_utc": "2026-09-27T08:05:04Z",
+  "output": {
+    "path": "reports/00_stage_0_3_type_calibration_ONERI.md",
+    "sha256": "9e0e6f76787d733508eca714cedbf52e483aa7c82789d515376142ac7114ee0e",
+    "size_bytes": 5525
+  },
+  "inputs": [
+    {
+      "path": "reports/building_heights_ahn5.csv",
+      "sha256": "d5bae365953784da757fb489b53e99b10024df46d050977df92b30e8cb8e9ec7",
+      "size_bytes": 406993
+    },
+    {
+      "path": "reports/storey_height_calibration_types.csv",
+      "sha256": "20fed2d1ec9ad1b5c7ba93e09f1d2693df693a4e89ba332159c1a9c0de5df817",
+      "size_bytes": 1623
+    }
+  ],
+  "parameters": {
+    "eligible": [
+      "0503100000018964",
+      "0503100000018689",
+      "0503100000025340",
+      "0503100000009020",
+      "0503100000009022",
+      "0503100000000145",
+      "0503100000001932",
+      "0503100000030808"
+    ],
+    "alt_b": [
+      "0503100000001932",
+      "0503100000009020",
+      "0503100000018964"
+    ],
+    "t2_alt_b_prime": [
+      "0503100000032908",
+      "0503100000038135",
+      "0503100000034895"
+    ],
+    "label": "ONERI (M-016)"
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": null
+}

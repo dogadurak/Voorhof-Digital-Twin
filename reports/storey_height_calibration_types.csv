@@ -1,0 +1,13 @@
+tip,tertil,rol,bag_id,alan,footprint_area_m2,bouwjaar,gebruiksdoel,h_measured_m,roof_span_m,class6_points,class6_density_p_m2,tertil_aday_sayisi,KAT_SAYISI_kullanici,NOT_kullanici
+T2_yeni_konut,1,ASIL,0503100000036839,B,20.05,2019,woonfunctie,3.500,0.300,535,26.68,58,,
+T2_yeni_konut,2,ASIL,0503100000033247,B,41.49,2011,woonfunctie,8.900,0.100,1484,35.77,58,,
+T2_yeni_konut,3,ASIL,0503100000034895,A,1165.69,2015,"overige gebruiksfunctie,winkelfunctie,woonfunctie",43.000,0.300,57107,48.99,58,,
+T2_yeni_konut,1,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000036836,B,30.06,2019,woonfunctie,3.900,0.300,785,26.11,58,,
+T2_yeni_konut,2,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000033250,B,41.49,2011,woonfunctie,8.900,0.100,1475,35.55,58,,
+T2_yeni_konut,3,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000035395,B,61.53,2017,woonfunctie,12.100,0.800,2186,35.53,58,,
+T3_okul,1,ASIL,0503100000030808,A,832.84,1967,onderwijsfunctie,3.900,0.000,57631,69.20,3,,
+T3_okul,2,ASIL,0503100000018689,A,464.99,1967,onderwijsfunctie,4.300,0.100,15190,32.67,3,,
+T3_okul,3,ASIL,0503100000025340,B,1250.74,1974,onderwijsfunctie,4.300,0.100,51155,40.90,2,,
+T3_okul,1,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000001932,A,582.64,1969,onderwijsfunctie,3.900,0.000,14463,24.82,3,,
+T3_okul,2,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000009020,A,894.81,1967,onderwijsfunctie,4.100,0.100,22333,24.96,3,,
+T3_okul,3,YEDEK - yalnizca asil KULLANILAMAZSA (D-035/D-032),0503100000018964,A,1613.87,1965,"kantoorfunctie,onderwijsfunctie",9.500,0.100,51430,31.87,2,,

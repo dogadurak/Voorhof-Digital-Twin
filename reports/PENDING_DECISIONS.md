@@ -35,6 +35,7 @@
 | P-025 | 3 | Kalibrasyon ile dogrulama ayrimi (kalibrasyon yok mu / egitim-test ayrimi mi) | Asama 3 | **Asama 3 oncesi** |
 | P-026 | 3 | Gunes analizine agac golgesi (CDSM/TDSM, AHN sinif 1) girsin mi | Asama 3 gunes | **Asama 3 oncesi** |
 | P-027 | 5 | Raporda "dijital ikiz" teriminin duzeyi (model / golge / ikiz) | Nihai rapor basligi | Asama 5 oncesi |
+| P-028 | 0.3 | T2/T3 kalibrasyon secimi: muhurlu mu, ONERI (b)/(b') mi | Kat sayimi (T2/T3 satirlari) | **SAYIMDAN ONCE** |
 
 ---
 
@@ -993,3 +994,31 @@ bilinen-cevapli sinav onerdi. Kullanici isi kendisi yapmayi secti.
 
 Karar hala gorsel kontrolu bekliyor; bu not karari degistirmez, (b)'nin
 maliyetini gorunur kilar.
+
+---
+
+## [2026-09-27] [0.3] P-028 — T2 (yeni konut) ve T3 (okul) kalibrasyon binalari
+
+**Durum:** ACIK · **Engelledigi is:** saha listesindeki T2/T3 satirlarinin sayimi
+(T1 ve diger gruplar ETKILENMEZ — sayim onlarla baslayabilir).
+
+**Baglam:** D-035 muhurlu secimi calisti (`reports/storey_height_calibration_types.csv`).
+- **T3 okul:** amac iddiasi **TUTMADI** — secilen 3 okul h 3,9-4,3 m (tek katli).
+  Uygun havuzda cok katli tek okul var (9,5 m); C5 (duz cati) 9 okulu eledi, 6'si >= 7 m.
+- **T2 yeni konut:** iddia (h yayilimi) TUTTU ama asillar 20 m2 ve 41 m2'lik tek evler;
+  hedefler 300-500 m2 bloklar. Iddia hedef benzerligini olcmuyordu (ajanin tespiti).
+
+Ayrinti ve tablolar: `reports/00_stage_0_3_type_calibration_ONERI.md`.
+
+**Secenekler:**
+- **T3:** (a) muhurlu secim · (b) uygun havuzdan min/medyan/maks h — uc binasi
+  listede zaten `YEDEK okul` · (c) T3 icin C5'i gevset (egik cati sapmasini geri getirir).
+- **T2:** (a) muhurlu secim · (b') ayni kural, havuz >= 100 m2 (D-029 esigi) —
+  binalar listeye EKLENIR.
+
+**Ajanin onerisi:** T3 (b), T2 (b'). Ikisi de mevcut kurallarin gerekcesini korur,
+yeni esik getirmez. Karar -> yeni D kaydi + ayri commit, **sayimdan ONCE**.
+
+**Ek not:** 2026 yapimi ucuncu bir okul (`0503100000041285`, 1.665 m2, A) AHN5'te
+bina olarak yok ve 6 estimated_lod1 hedefinde degil; akibeti P-013'te acik.
+
