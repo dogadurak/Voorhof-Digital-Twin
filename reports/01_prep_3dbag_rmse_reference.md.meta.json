@@ -1,11 +1,11 @@
 {
-  "run_id": "RUN-2026-09-26-009",
-  "git_commit": "7b2ca3f-dirty",
-  "created_utc": "2026-09-26T22:42:29Z",
+  "run_id": "RUN-2026-09-27-011",
+  "git_commit": "efc9a6d-dirty",
+  "created_utc": "2026-09-27T08:10:37Z",
   "output": {
     "path": "reports/01_prep_3dbag_rmse_reference.md",
-    "sha256": "77e172f61dc8f0e0da204c73bf0a2f2358c34f2021e704ef7c353236c19256d4",
-    "size_bytes": 1603
+    "sha256": "0c247bd2361741973fd7f8729adebdf96930d92ea1a77703318cbb062e1dbbd5",
+    "size_bytes": 2187
   },
   "inputs": [
     {
@@ -220,7 +220,32 @@
         "share_le_0.10": 0.3002754820936639,
         "share_le_0.25": 0.4931129476584022
       }
-    }
+    },
+    "eval_set_n": 1170,
+    "frozen_R": {
+      "horizontal": {
+        "n": 747,
+        "ref_median": 0.031,
+        "ref_p90": 0.09,
+        "median_max": 0.081,
+        "p90_max": 0.19
+      },
+      "multiple_horizontal": {
+        "n": 63,
+        "ref_median": 0.165,
+        "ref_p90": 1.077,
+        "median_max": 0.215,
+        "p90_max": 1.177
+      },
+      "slanted": {
+        "n": 360,
+        "ref_median": 0.253,
+        "ref_p90": 1.271,
+        "median_max": 0.303,
+        "p90_max": 1.371
+      }
+    },
+    "config_mismatch": []
   },
   "software": {
     "python": "3.12.14",

@@ -149,48 +149,55 @@ stage_1:
         D-034 (2026-09-27): model AHN5'ten uretilip ayni noktalarla
         karsilastirildiginda sonuc bir UYUM ARTIGIDIR, bagimsiz kontrol degil
         (Bolum 12.10). Eski etiket silinmedi (Reviewer H-2).
-      metric: ahn_z_diff_rmse_m
-      comparator: "<="
-      threshold: TODO_ONAY_BEKLIYOR
+      metric: "components altinda (1-C-a, 1-C-c); 1-C-b tanisal"
+      comparator: "components altinda"
+      threshold: "components altinda"
       unit: m
-      status: TODO_ONAY_BEKLIYOR
-      decision_ref: [D-003, D-034]
+      status: LOCKED
+      locked_at: "2026-09-27"
+      decision_ref: [D-003, D-034, D-036]
       blocking_for: "Asama 1 baslangici"
       components:
-        status: ONERI_KULLANICI_ONAYI_BEKLIYOR   # sayilar onaylaninca LOCKED; Asama 1 sonucu gorulmeden
-        proposed_at: "2026-09-27"
+        status: LOCKED        # D-036 — kullanici onayi 2026-09-27; Asama 1'in HICBIR sonucu gorulmeden
         reference_report: reports/01_prep_3dbag_rmse_reference.md
         strata:
           source: "3DBAG v2025.09.03 b3_dak_type (horizontal / multiple horizontal / slanted)"
           why: >
             Olcumden once var olan sabit bir oznitelik; bizim ciktimiz degil.
-            3DBAG uyum artigi agir kuyruklu (A, pw_bron=ahn5: medyan 0,050 m,
-            p90 0,741 m); kuyruk egimli ve cok seviyeli catilardan gelir. Tek
-            havuz esigi 3DBAG'i bile kaldirirdi.
-          unmatched: "3DBAG'de olmayan veya pw_bron != ahn5 binalar AYRI satirda raporlanir, esige girmez"
+            3DBAG uyum artigi agir kuyruklu; kuyruk egimli ve cok seviyeli
+            catilardan gelir. Tek havuz esigi 3DBAG'i bile kaldirirdi.
+          unmatched: "Katmani olmayan (3DBAG'de yok / pw_bron != ahn5 / baska tip) binalar AYRI satirda raporlanir, esige girmez"
         a_fit_residual:
           name: "1-C-a uyum artigi"
           validation_label: fit_residual       # "bagimsiz" DENMEZ
           metric: "roofer rmse_lod22 (bina basina; 3B nokta-model uzakligi) — 3DBAG b3_rmse_lod22 ile ayni tanim"
           cross_check: >
             Bolum 13.2-5 capraz hesap: kendi kodumuzla sinif 6 noktalarinin
-            model cati yuzeyine DUSEY farki; roofer degeriyle fark raporlanir.
-          set: "A alani, 3DBAG pw_bron == ahn5 (n=1174)"
-          proposal_R_relative_to_3dbag:
-            rule: "Her katmanda bizim medyan <= 3DBAG medyan + 0,05 m VE bizim p90 <= 3DBAG p90 + 0,10 m"
+            model cati yuzeyine uzakligi; roofer degeriyle fark raporlanir.
+          eval_set:
+            file: reports/01_prep_1Ca_eval_set.csv
+            definition: >
+              Kullanici (D-036): "3DBAG referans degerleri bizim A alanindaki AYNI
+              binalar (measured_lod2 kumesi) uzerinden". = A & 3DBAG pw_bron==ahn5
+              EKSI lineage'i saha kontrolune bagli / ucus sonrasi binalar (3 konut
+              blogu, post_flight_buildings/_suspects, rebuild_suspects). Kume
+              bugun dondu (n=1170); bekleyenler AYRI raporlanir.
+            failed_reconstruction: >
+              Kumedeki bir binada rekonstruksiyon basarisizsa o bina RMSE = sonsuz
+              sayilir (medyan/p90'a GIRER). Hayatta-kalan yanliligi olmasin diye;
+              ayrica 1-D'de sayilir.
+          R_relative_to_3dbag:
+            rule: "Her katmanda bizim medyan <= esik_medyan VE bizim p90 <= esik_p90"
+            tolerance_m: {median: 0.05, p90: 0.10}
             tolerance_basis: >
-              AJAN YARGISI, belgeden alinmadi: yazilim surumu farki (D-033)
-              icin pay. Amac: ayni veri + ayni kod ailesiyle 3DBAG'den belirgin
-              kotu calismayi yakalamak.
-            frozen_values_m:          # referans raporundan, bu tarihte donduruldu
-              horizontal:          {median_max: 0.081, p90_max: 0.190}   # 3DBAG 0,031 / 0,090
-              multiple_horizontal: {median_max: 0.215, p90_max: 1.177}   # 3DBAG 0,165 / 1,077
-              slanted:             {median_max: 0.307, p90_max: 1.372}   # 3DBAG 0,257 / 1,272
+              AJAN YARGISI, belgeden alinmadi: yazilim surumu farki (D-033) icin
+              pay. Kullanici R'yi onayladi (D-036).
+            frozen_values_m:   # src/01_reconstruction/reference_rmse_3dbag.py hesaplar ve BU degerlerle karsilastirir
+              horizontal:          {median_max: 0.081, p90_max: 0.190}
+              multiple_horizontal: {median_max: 0.215, p90_max: 1.177}
+              slanted:             {median_max: 0.303, p90_max: 1.371}
             caveat: "Egimli/cok seviyeli p90 siniri (>1 m) yalnizca kaba basarisizligi yakalar."
-          proposal_A_absolute:
-            rule: "Yalniz horizontal katman: medyan <= 0,10 m VE p90 <= 0,25 m; diger katmanlar yalniz raporlanir"
-            basis: "AGENTS Bolum 2 hedefi 10-20 cm (Voorhof duz catilari) ve 1-B esigi 0,25 m"
-          agent_recommendation: proposal_R_relative_to_3dbag
+          rejected_option_A: "Yalniz duz catilar, mutlak 0,10 / 0,25 m — kullanici R'yi secti (D-036)"
           pooled_rms: "YALNIZ RAPORLANIR — agir kuyruk yuzunden esik olarak kullanilmaz"
         b_holdout:
           name: "1-C-b holdout"
@@ -212,28 +219,48 @@ stage_1:
           name: "1-C-c AHN4 zamansal kontrol"
           validation_label: temporal_independent_check   # farkli ucus/sensor; ayni program ve sinif kurallari
           role: "BIRINCIL bagimsiz kontrol (kullanici, D-034)"
-          points: "AHN4 sinif 6, footprint.buffer(-1,0 m) icinde (AHN4'te cepheler sinif 6 — iceriden kirpilir)"
-          per_building: "dz_b = medyan(z_AHN4 - z_model(x,y)); en az 20 nokta, yoksa OLCULEMEDI"
+          prerequisite: >
+            AHN4 girdi kalite kapisi (Bolum 12.12: ucus tarihi gps_time'dan,
+            yogunluk, kapsama, lisans) PASS olmadan 1-C-c HESAPLANMAZ (D-036).
+          points:
+            classes: [6]
+            footprint_inset_m: 1.0     # MUHURLU — sonuca gore DEGISTIRILMEZ (kullanici, D-036)
+            why_inset: >
+              AHN4'te cepheler sinif 6'dir (AHN4 besteksvoorwaarden §9.2);
+              AHN5'te degil. Iceriden 1,0 m daraltilmis ayakizi cephe/sacak
+              bandini disarida birakir; aksi halde cephe noktalari artigi sisirir.
+          distance:
+            definition: >
+              Her AHN4 noktasinin, bizim LoD2.2 modelimizin EN YAKIN cati
+              yuzeyine (RoofSurface poligonu) DIK (3B nokta-poligon) uzakligi;
+              isaret yuzey normaline gore: nokta yuzeyin USTUNDE ise pozitif.
+            why_orthogonal: >
+              Kullanici (D-036): AHN4 yatay hatasi (~5-8 cm) egimli catida dusey
+              farka donusur; dik uzaklik bunu yapmaz. Duz catida ikisi esittir.
+            superseded: "Onceki ONERI: dusey fark z_AHN4 - z_model(x,y) — D-036 ile degisti"
+          per_building: "dz_b = medyan(isaretli dik uzaklik); en az 20 nokta, yoksa OLCULEMEDI"
           set: >
             A alani; bouwjaar < AHN4 ucus yili (gps_time'dan olculecek);
-            3DBAG b3_mutatie_ahn4_ahn5 == False; ucus-sonrasi listeleri disarida.
+            3DBAG b3_mutatie_ahn4_ahn5 == False; ucus-sonrasi / lineage bekleyen
+            listeler disarida.
           selection_circularity: >
             Mutasyon bayragi (roofer: >= %50 hucrede abs(dz_max) > 1,2 m)
             yalniz kaba degisimi atar; desimetre olcegindeki dagilimi kesmez.
           known_bias_preregistered: >
-            2020-2023 arasi eklenen PV/cati kati modelde var, AHN4'te yok ->
-            bu binalarda dz_b NEGATIF beklenir. Sonuctan ONCE yazildi (D-034).
-          proposal:
-            bias_abs_max_m: 0.10        # medyan(dz_b), tum katmanlar
-            bias_basis: >
-              AHN4 sistematik <= 5 cm (ahn.nl kwaliteitsbeschrijving, okundu
-              2026-09-21) + AHN5 sistematik <= 5 cm (WP1 Tabel 5, okundu
-              2026-09-27); en kotu durum toplami.
-            source_verified_at: "2026-09-27"
-            horizontal: {median_abs_max: 0.10, p90_abs_max: 0.25}
-            horizontal_basis: "AGENTS Bolum 2 hedefi 10-20 cm ve 1-B esigi 0,25 m"
+            2020-2023 arasi eklenen gunes paneli, cati kati ve cati yalitimi
+            modelde (AHN5) var, AHN4'te yok -> bu binalarda dz_b NEGATIF
+            beklenir (AHN4 noktasi model yuzeyinin altinda). Sonuctan ONCE
+            yazildi (D-034, D-036). Negatif kuyruk ayrica raporlanir.
+          thresholds:           # LOCKED — kullanici onayi D-036
+            bias_abs_max_m: 0.10          # abs(medyan_b(dz_b)), tum katmanlar
+            horizontal: {median_abs_max_m: 0.10, p90_abs_max_m: 0.25}
             other_strata: "YALNIZ RAPORLANIR — capa olacak referans yok"
-          input_gate: "AHN4 icin Bolum 12.12 kapisi (yogunluk >= 10 p/m2, kapsama, ucus tarihi) KULLANIMDAN ONCE"
+          bias_basis: >
+            AHN4 sistematik <= 5 cm (ahn.nl kwaliteitsbeschrijving, okundu
+            2026-09-21) + AHN5 sistematik <= 5 cm (WP1 Tabel 5, okundu
+            2026-09-27); en kotu durum toplami.
+          source_verified_at: "2026-09-27"
+          horizontal_basis: "AGENTS Bolum 2 hedefi 10-20 cm ve 1-B esigi 0,25 m"
       proposal_note: >
         [ESKI METIN — M-005 tekrari, 2026-09-27] "resmi AHN kalite belgesi <=5 cm,
         AHN5 ihale belgesi sigma <=3 cm diyor; bu CELISKI ..." — 3 cm iddiasi o

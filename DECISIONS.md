@@ -7,7 +7,7 @@
 >
 > **Her onaylanan degisiklik buraya tarih ve gerekceyle yazilir.**
 
-> **SONRAKI BOS ID: D-036**  — yeni karar yazmadan once bu satiri oku ve guncelle.
+> **SONRAKI BOS ID: D-037**  — yeni karar yazmadan once bu satiri oku ve guncelle.
 > (Numara cakismasi iki kez yasandi; ID'yi gorunur tutmak bunun onlemidir.)
 
 | ID | Tarih | Konu | Durum |
@@ -1879,3 +1879,45 @@ kullanilir; yeni esik eklenmedi.
 
 **Etkiledigi:** kalibrasyon listesi, `docs/field_check_list.md` (yeni gruplar),
 estimated_lod1 yukseklikleri, Asama 3 golge girdisi.
+
+---
+
+## D-036 · [2026-09-27] · Kriter 1-C MUHURLENDI (1-C-a R esikleri, 1-C-c dik uzaklik + ic daraltma)
+
+**Karar (kullanici, 2026-09-27):**
+- "1-C-a: R onayli, ama 3DBAG referans degerleri bizim A alanindaki AYNI binalar
+  (measured_lod2 kumesi) uzerinden hesaplansin, ulusal dagilimdan degil."
+- 1-C-c icin "MANTIK HATASI 1": AHN4'te cepheler sinif 6'dir (AHN4 sartnamesi
+  §9.2). "AHN4 noktalari ayakizinin ice dogru 1,0 m daraltilmis halinden alinsin
+  ... Ice daraltma degerini muhurle ... Artik dikey fark degil, noktanin en yakin
+  cati duzlemine DIK uzakligi olarak olculsun ... AHN4 giris kalite kapisi (ucus
+  tarihi, yogunluk, lisans) bu kontrol kullanilmadan once tamamlansin. Bu
+  duzeltmelerle 1-C-c esikleri onayli: bias <= 10 cm, duz catida medyan <= 10 cm,
+  p90 <= 25 cm."
+
+**Ajanin notu (kayit icin):** 1,0 m ic daraltma D-034 ONERISINDE zaten vardi
+(`points: footprint.buffer(-1,0 m)`); simdi deger olarak MUHURLENDI. Dik uzaklik
+ve on-kosul olarak AHN4 kapisi kullanicinin eklemesidir. Cati yalitimi,
+beklenen negatif sapma kaynaklarina eklendi.
+
+**1-C-a kumesi (ulusal dagilim hic kullanilmadi):** Onceki referans da yalnizca A
+alanindandi (n=1174); simdi lineage'i saha kontrolune bagli / ucus sonrasi 4 bina
+cikarildi -> **n = 1170** (`reports/01_prep_1Ca_eval_set.csv`). Rekonstruksiyonu
+basarisiz bina RMSE = sonsuz sayilir (hayatta-kalan yanliligi olmasin).
+
+| Katman | n | 3DBAG medyan / p90 | ESIK medyan / p90 |
+|---|---|---|---|
+| horizontal | 747 | 0,031 / 0,090 | **0,081 / 0,190 m** |
+| multiple horizontal | 63 | 0,165 / 1,077 | **0,215 / 1,177 m** |
+| slanted | 360 | 0,253 / 1,271 | **0,303 / 1,371 m** |
+
+Tablo elle aktarilmadi: `reference_rmse_3dbag.py` degerleri hesaplar ve config'le
+karsilastirir; uyusmazlikta cikis 1 (negatif test: 0,001 m kaydirma YAKALANDI).
+
+**1-C-c esikleri (LOCKED):** |medyan_b(dz_b)| <= 0,10 m (tum katmanlar); duz
+catida medyan |dz_b| <= 0,10 m ve p90 |dz_b| <= 0,25 m; diger katmanlar yalniz
+raporlanir. dz_b = bina basina isaretli dik uzakliklarin medyani.
+
+**Zaman:** Asama 1'in hicbir sonucu yok (roofer yalnizca 3 tampon binada deneme
+kosusu yapti; A'ya dokunulmadi, yuksekliklere bakilmadi — D-033).
+

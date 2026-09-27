@@ -11,7 +11,7 @@
 | P-001 | 4 | B ve D alan boyutlari | Asama 4 (CFD, mikroklima) | Asama 3 sonunda — **erteleme ONAYLANDI** |
 | P-002 | 4 | ENVI-met lisansi | Asama 4 mikroklima | Asama 3 sonunda |
 | ~~P-003~~ | 0.3 | ~~Disk alani yetersizligi~~ | — | **KAPANDI 2026-09-21** |
-| P-004 | 1 | AHN z-fark esigi (Kriter 1-C) — **yapi KARARLASTI (D-034), SAYILAR onay bekliyor** | Asama 1 baslangici | Asama 0 sonunda |
+| P-004 | 1 | ~~AHN z-fark esigi (Kriter 1-C)~~ **KAPANDI 2026-09-27 (D-034, D-036)** | Asama 1 baslangici | Asama 0 sonunda |
 | P-005 | 3 | NMBE / CV(RMSE) esikleri (3-B, 3-C) | Asama 3 baslangici | Asama 2 sonunda |
 | ~~P-006~~ | 0.2a | ~~woonfunctie ve bina sayimi paydalari~~ | — | **KAPANDI 2026-09-21 (D-008)** |
 | P-007 | 2 | PDOK BAG WFS kismi — nevenadres yok | Asama 2 EP-Online eslestirmesi | Asama 1 sonunda |
@@ -157,6 +157,9 @@ olarak Asama 5'te mikroklima katmaninin yayini.
 
 ## [2026-09-21] [1] P-004 — AHN z-fark esigi (Kriter 1-C)
 
+> **KAPANDI 2026-09-27 -> D-036** (1-C MUHURLENDI: 1-C-a R esikleri A/measured_lod2
+> kumesinden; 1-C-c dik uzaklik + 1,0 m ic daraltma + AHN4 kapisi on-kosul).
+>
 > **GUNCELLEME 2026-09-27 — yapi kararlasti, sayilar onay bekliyor.**
 > Kullanici (a)+(b)+(c) yapisini onayladi -> **D-034**. Esik ONERILERI
 > `config/acceptance_criteria.yml` -> `stage_1` 1-C `components` altinda;
@@ -513,6 +516,10 @@ Iki secenegi de calistirip iyi gorunen sonucu secmek **yasaktir**.
 > (a) icin eski "cepheler 6'dir, dikeylik filtresi gerekir" kaygisi AHN5'te
 > buyuk olcude ortadan kalkiyor (duz catilarda cephe bandinin %2-7'si sinif 6).
 > Egimli catilardaki sinif 6 fazlasinin kaynagi ayristirilmadi (CIKARIM: sacak).
+
+> **KULLANICI NOTU (2026-09-27):** "(b) secilirse sinif 1 noktalari da ayakizinin ice
+> daraltilmis halinden alinsin — cephe sizmasini ayni mantikla azaltir. Karar yine
+> gorsel kontrolden sonra." -> (b) secilirse daraltma degeri HESAPTAN ONCE muhurlenir.
 
 **Benim onerim:** (b), ama **her iki grup ayri raporlanarak** — sinif 6'dan
 kurulan binalar ana metrigi olusturur, sinif 1 katkisiyla kurtarilanlar ayri

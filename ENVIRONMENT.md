@@ -139,6 +139,7 @@ Baska bir makinede farkli gorunebilirler; bu yuzden her biri icin kodda savunma 
 | T-3 | **`conda run` cok satirli `-c` desteklemiyor** | `NotImplementedError: arguments contain newlines` | Script dosyaya yazilir veya ortamin `python.exe`'si dogrudan cagrilir |
 | T-4 | **`conda env create` basarisiz olsa da cikis kodu 0** | Kurulum basarili sanilir | Kurulumdan sonra ortam FIILEN yoklanir (M-002) |
 | T-5 | **Conda ortam degiskenleri yalnizca aktivasyonla gelir** | `python.exe` dogrudan cagrilinca `PYTHONUTF8` uygulanmaz | Savunma tek katmanli birakilmadi: `logging_setup.py` kodda da duzeltiyor |
+| T-8 | **Git Bash heredoc'u ters egik cizgiyi bozar** (ajan araci) | `\b` -> 0x08 karakteri (check_claims regex'i, 2026-09-27); `"\n"` -> gercek satir sonu (reference_rmse_3dbag.py, 2026-09-27: SyntaxError) | Ters egik cizgi iceren HER yama/script heredoc ile degil **dosya yazma araciyla** olusturulur; yamadan sonra `py_compile` + 0x08 taramasi. (Bu tuzak 2026-09-27'ye kadar yalnizca oturum notundaydi, depoda degildi — ayni oturumda 3 kez tekrarlandi.) |
 
 ### T-1 ayrintisi — konsol kodlamasi
 

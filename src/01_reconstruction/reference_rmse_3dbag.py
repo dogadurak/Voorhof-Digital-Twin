@@ -31,12 +31,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import src.common  # noqa: E402,F401
 
-from src.common.config import resolve  # noqa: E402
+from src.common.config import load_acceptance_criteria, resolve  # noqa: E402
 from src.common.logging_setup import setup_logging  # noqa: E402
 from src.common.meta import git_commit, sha256, utc_now, write_meta  # noqa: E402
 
 PCTS = [10, 25, 50, 75, 90, 95]
 STRATA = ["horizontal", "multiple horizontal", "slanted"]
+# R kurali toleranslari (D-034 ONERI, D-036 ile kullanici onayladi): AJAN YARGISI.
+TOL_MEDIAN_M = 0.05
+TOL_P90_M = 0.10
 
 
 def summarize(v: np.ndarray) -> dict:
@@ -82,6 +85,53 @@ def main() -> int:
             r = recs[b]
             w.writerow([b, r.get("b3_dak_type"), r.get("b3_rmse_lod22"), r.get("b3_pw_bron"),
                         r.get("b3_mutatie_ahn4_ahn5"), r.get("b3_kwaliteitsindicator")])
+
+    # --- 1-C-a DEGERLENDIRME KUMESI (D-036): measured_lod2 olarak BILINEN A binalari ---
+    # Kullanici (2026-09-27): referans "bizim A alanindaki AYNI binalar (measured_lod2
+    # kumesi) uzerinden hesaplansin". Lineage'i saha kontroluyle belirlenecek binalar
+    # (3 konut blogu, ucus-sonrasi supheliler, yeniden yapim suphelileri) BUGUN
+    # kumeden cikarilir ki kume sonuctan once donsun; raporda ayri yazilir.
+    rep = resolve("reports.dir")
+    pending: set[str] = set(load_acceptance_criteria()["building_scenario_rule"]["applies_to"])
+    for name in ("post_flight_buildings.csv", "post_flight_suspects.csv", "rebuild_suspects.csv"):
+        with (rep / name).open(encoding="utf-8") as fh:
+            pending |= {r["bag_id"] for r in csv.DictReader(fh)}
+    eval_set = sorted(b for b in sel if b not in pending)
+    logger.info("1-C-a degerlendirme kumesi | A & pw_bron=ahn5: %d | lineage bekleyen/ucus sonrasi "
+                "cikarilan: %d | KUME: %d", len(sel), len(set(sel) & pending), len(eval_set))
+    eval_path = rep / "01_prep_1Ca_eval_set.csv"
+    with eval_path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["bag_id", "b3_dak_type", "b3_rmse_lod22_m"])
+        for b in eval_set:
+            w.writerow([b, sel[b].get("b3_dak_type"), sel[b].get("b3_rmse_lod22")])
+
+    frozen: dict[str, dict] = {}
+    for s in STRATA:
+        v = np.array([float(sel[b]["b3_rmse_lod22"]) for b in eval_set
+                      if sel[b].get("b3_dak_type") == s and sel[b].get("b3_rmse_lod22") is not None])
+        med, p90 = (float(x) for x in np.percentile(v, [50, 90]))
+        frozen[s.replace(" ", "_")] = {"n": int(v.size), "ref_median": round(med, 3),
+                                       "ref_p90": round(p90, 3),
+                                       "median_max": round(med + TOL_MEDIAN_M, 3),
+                                       "p90_max": round(p90 + TOL_P90_M, 3)}
+        logger.info("DONDURULAN (R) %s | n=%d | 3DBAG medyan %.3f p90 %.3f -> esik %.3f / %.3f",
+                    s, v.size, med, p90, med + TOL_MEDIAN_M, p90 + TOL_P90_M)
+
+    # --- Config ile tutarlilik (M-010: sayi elle aktarilmaz, makine karsilastirir) ---
+    comp = load_acceptance_criteria()["stage_1"]["criteria"]
+    c1c = next(c for c in comp if c["id"] == "1-C")["components"]["a_fit_residual"]
+    cfg_frozen = c1c.get("R_relative_to_3dbag", {}).get("frozen_values_m")
+    mismatch = []
+    if cfg_frozen:
+        for s, d in frozen.items():
+            for k in ("median_max", "p90_max"):
+                if abs(float(cfg_frozen[s][k]) - d[k]) > 1e-9:
+                    mismatch.append(f"{s}.{k}: config {cfg_frozen[s][k]} != hesap {d[k]}")
+        for m in mismatch:
+            logger.error("CONFIG UYUSMAZLIGI | %s", m)
+        logger.info("Config dondurulmus degerleri ile karsilastirma: %s",
+                    "UYUSMAZLIK" if mismatch else "AYNI")
 
     stats = {}
     groups = {"TUMU (pw_bron=ahn5)": list(sel)} | {
@@ -132,12 +182,32 @@ def main() -> int:
     ]
     out_md = resolve("reports.dir") / "01_prep_3dbag_rmse_reference.md"
     out_md.write_text("\n".join(md), encoding="utf-8")
-    params = {"set": "A & b3_pw_bron == ahn5", "stratifier": "b3_dak_type", "stats": stats}
+    ftab = ["| Katman | n | 3DBAG medyan | 3DBAG p90 | **esik medyan <=** | **esik p90 <=** |",
+            "|---|---|---|---|---|---|"]
+    for s, d in frozen.items():
+        ftab.append(f"| {s} | {d['n']} | {d['ref_median']:.3f} | {d['ref_p90']:.3f} | "
+                    f"**{d['median_max']:.3f}** | **{d['p90_max']:.3f}** |")
+    md[-1:-1] = [
+        "## 1-C-a degerlendirme kumesi ve DONDURULAN esikler (R, D-036)",
+        "",
+        f"Kume: A & pw_bron=ahn5 ({len(sel)}) eksi lineage'i bekleyen / ucus sonrasi "
+        f"binalar ({len(set(sel) & pending)}) = **{len(eval_set)}** bina "
+        "(`reports/01_prep_1Ca_eval_set.csv`). Tolerans: medyan +0,05 m, p90 +0,10 m.",
+        "",
+        *ftab,
+        "",
+        f"Config ile karsilastirma: **{'UYUSMAZLIK' if mismatch else ('AYNI' if cfg_frozen else 'config bos')}**.",
+        "",
+    ]
+    out_md.write_text("\n".join(md), encoding="utf-8")
+    params = {"set": "A & b3_pw_bron == ahn5", "stratifier": "b3_dak_type", "stats": stats,
+              "eval_set_n": len(eval_set), "frozen_R": frozen, "config_mismatch": mismatch}
     for t in (out_csv, out_md):
         write_meta(t, run_id=run_id, inputs=[hcsv, *tiles], parameters=params,
                    notes="3DBAG v2025.09.03 sabitlenmis kopya (D-027).")
+    write_meta(eval_path, run_id=run_id, inputs=[hcsv, *tiles], parameters={"n": len(eval_set)})
     logger.info("TAMAM | %s | %s", out_csv.name, out_md.name)
-    return 0
+    return 1 if mismatch else 0
 
 
 if __name__ == "__main__":
