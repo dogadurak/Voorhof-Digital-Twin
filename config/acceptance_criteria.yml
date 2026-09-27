@@ -2199,3 +2199,58 @@ facade_class_measurement:
     icin gunceller. P-012 sinif secimini KENDISI belirlemez (kullanici karari).
   output_csv: reports/facade_class_measurement_ahn5.csv
   output_report: reports/01_prep_facade_class_measurement.md
+
+# ============================================================================
+# AHN4 GIRDI KALITE KAPISI (Bolum 12.12) — kriter 1-C-c'nin ON-KOSULU (D-036)
+# Muhurlendi: 2026-09-27, OLCUMDEN ONCE, ayri commit. Esikler yeni sayi degildir:
+# AHN4 icin belgelenmis degerlerdir.
+# ============================================================================
+input_gate_ahn4:
+  decision_ref: D-036
+  status: SEALED_BEFORE_OBSERVATION
+  sealed_at: "2026-09-27"
+  applies_to: "data/raw/ahn/AHN4_T/*.LAZ"
+  evaluation_area: "B alani (AHN5 kapisiyla ayni)"
+  method: "input_gate_ahn.method ile AYNI (10 m hucre, medyan, merkezi B icinde kalan hucreler, TUM siniflar)"
+  checks:
+    G4-A_density_hard:
+      metric: median_point_density_pts_m2
+      comparator: ">="
+      threshold: 10.0
+      on_fail: "FAIL — 1-C-c HESAPLANMAZ"
+      source: >
+        ahn.nl kwaliteitsbeschrijving: AHN4 "ongeveer 10-14 punten per vierkante
+        meter" (okundu 2026-09-21); WP1 (2024): AHN4 asgari 10 p/m2.
+      source_verified_at: "2026-09-27"
+    G4-B_density_expectation:
+      metric: median_point_density_pts_m2
+      comparator: ">="
+      threshold: 20.0
+      on_fail: "UYARI — FAIL degil"
+      source: >
+        WP1 (2024): AHN4 icin "In regio west is deze puntdichtheid verhoogd naar
+        minstens 20 punten per vierkante meter". Delft'in regio west icinde
+        oldugu DOGRULANMADI -> yalniz uyari.
+      source_verified_at: "2026-09-27"
+    G4-C_flight_date:
+      metric: "gps_time -> UTC tarih araligi (Adjusted Standard GPS Time, AHN5 ile ayni cozum)"
+      rule: >
+        (i) tarih cozulebilir olmali (degerler hafta-zamani ust siniri 604800'un
+        ustunde); (ii) EN GEC AHN4 tarihi < AHN5 ucusu (2023-02-08). Ikisinden
+        biri tutmazsa FAIL (zamansal kontrol anlamsiz). Ucus yili 1-C-c kume
+        tanimindaki "bouwjaar < AHN4 ucus yili"na girer: tarih araligi birden
+        cok yila yayiliyorsa EN ERKEN yil kullanilir (muhafazakar: bouwjaar <
+        en erken yil olan bina, ucusun her gununde kesin vardi).
+    G4-D_class_distribution:
+      threshold: none
+      requirement: "Bulunan her sinif kodu ve sayisi raporlanir; sinif 6 yoksa FAIL (1-C-c sinif 6 kullanir)"
+    G4-E_coverage:
+      threshold: none
+      requirement: >
+        Sifir donuslu hucre orani raporlanir. Ayrica 1-C-a degerlendirme
+        kumesindeki binalar icin 1,0 m iceriden daraltilmis ayakizinda AHN4
+        sinif 6 nokta SAYISI (sonuc degil, yalnizca adet) ve >= 20 noktasi olan
+        bina sayisi raporlanir — 1-C-c'nin kac binada olculebilecegi.
+    G4-F_licence:
+      rule: "Lisans birincil kaynaktan (Nationaal Georegister AHN4 kaydi) okunmadan kapi PASS vermez."
+  output_report: reports/01_prep_ahn4_input_gate.md

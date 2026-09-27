@@ -86,6 +86,7 @@ EXPECTED_STATUS: dict[str, str] = {
     "storey_counting_rule": "SEALED_BEFORE_OBSERVATION",
     "storey_height_calibration": "SEALED_BEFORE_OBSERVATION",
     "facade_class_measurement": "SEALED_BEFORE_OBSERVATION",
+    "input_gate_ahn4": "SEALED_BEFORE_OBSERVATION",
 }
 
 
