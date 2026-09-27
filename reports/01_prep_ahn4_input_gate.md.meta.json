@@ -1,0 +1,81 @@
+{
+  "run_id": "RUN-2026-09-27-012",
+  "git_commit": "5342d47-dirty",
+  "created_utc": "2026-09-27T08:22:10Z",
+  "output": {
+    "path": "reports/01_prep_ahn4_input_gate.md",
+    "sha256": "fb72faf7321f2a5418509eb225d4ee3d960f9c63f1e66540dd1323c7f14ac368",
+    "size_bytes": 2025
+  },
+  "inputs": [
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_14.LAZ",
+      "sha256": "6fc11d096301092b777ea904a854833d8a439480816e86fad8f65613b0592a3e",
+      "size_bytes": 518306024
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_15.LAZ",
+      "sha256": "981e2bfbcd4dc35e895eba2aa0a5a7ee7021ce3ebc56843e5eeab05018aadb47",
+      "size_bytes": 437357616
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_19.LAZ",
+      "sha256": "bea35809a10bb4d295daa4541b4cb8f68ebb8183419d5ae983dba3b016d0d95a",
+      "size_bytes": 567096066
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_20.LAZ",
+      "sha256": "3fa9186e2058e92aedcd7b1bcf0d1f6302a3f1e9a3f58fcce76e727bb070cb49",
+      "size_bytes": 461390243
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_24.LAZ",
+      "sha256": "e10675a0b3e0a06249437e04ee2eda8f4e547b0c73f426d3ff1d437db41e218b",
+      "size_bytes": 474585671
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN1_25.LAZ",
+      "sha256": "da8e081f304dfa99ed98b4b0e5039c6e55455b48d6e7d7e2d087ba548e163b79",
+      "size_bytes": 500614972
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN2_11.LAZ",
+      "sha256": "e7ae8a73eff926d6fa4c7b4802bd64d74dd81c79b7fc100be995064dcd26fc28",
+      "size_bytes": 524414703
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN2_16.LAZ",
+      "sha256": "bfcdf44088c9e1f07770c75dd9085b51f7d0b0f374fdaf22a8da72a9c5dc2655",
+      "size_bytes": 484527512
+    },
+    {
+      "path": "data/raw/ahn/AHN4_T/37EN2_21.LAZ",
+      "sha256": "7bdd474f992c460b751e1436cd55697f97e10684d08d5a468c25a2c27ea58116",
+      "size_bytes": 437011015
+    }
+  ],
+  "parameters": {
+    "median_density": 36.58,
+    "p10_density": 23.88,
+    "zero_cells_pct": 0.06838468183126979,
+    "flight_first_utc": "2020-03-17T00:48:29.510762+00:00",
+    "flight_last_utc": "2020-04-07T10:25:45.994247+00:00",
+    "flight_year_used": 2020,
+    "classes": {
+      "1": 43139190,
+      "2": 82466029,
+      "6": 34994560,
+      "9": 352395,
+      "26": 584560
+    },
+    "set_1Cc": 1159,
+    "measurable_ge20": 950,
+    "overall": "PASS"
+  },
+  "software": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "random_seed": null,
+  "notes": "Muhurlu kural input_gate_ahn4 (5342d47)."
+}

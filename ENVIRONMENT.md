@@ -234,6 +234,8 @@ farkindan (D-033) sonra ikinci bir farktan da arindirir.
 |---|---|---|---|
 | LOD2 rekonstruksiyon | — | — | Gerekmiyor (D-033); Windows derlemesi calisiyor |
 | Geometri QC | — | — | Gerekmiyor (D-033) |
+| CityJSON sema (cjval) | `tudelft3d/cjval` | `0.10.0` = `sha256:9d9056c1d65f10c24150528320bc8dba34d714f23f1855f28c98595051dbaa25` | **CALISMIYOR** (olculdu 2026-09-27): taban Debian 12 / GLIBC 2.36, ikili GLIBC 2.39 istiyor -> `version 'GLIBC_2.39' not found`. Yayincinin paketleme hatasi. |
+| CityJSON sema (cjval) | `tudelft3d/cjval` | `0.8.2` = `sha256:038cd61367d670795fa5392c04607c86c6ee2fcebca8c45ecd5c1200ec28fe5f` | Calisiyor ama kendini **`cjval 0.8.1`** diye tanitiyor — etiket ile surum UYUSMUYOR (beyan != dogrulama, M-008 dersi). Secim kullaniciya soruldu. |
 | Veritabani | 3DCityDB v5 + PostGIS | `TODO_ASAMA_2` | Henuz cekilmedi |
 | CFD | OpenFOAM | `TODO_ASAMA_4` | Donanim karari bekliyor (P-001) |
 

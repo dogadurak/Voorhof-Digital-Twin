@@ -54,7 +54,7 @@ eklenecek. Her indirme scripti kendi kaydini yazar (`download_bag.py`,
 | sorgu_parametreleri | B bbox + 50 m (D-010); secilen alt-fayanslar: 37EN1_14, 37EN1_19, 37EN1_24, 37EN1_15, 37EN1_20, 37EN1_25, 37EN2_11, 37EN2_16, 37EN2_21 |
 | crs | EPSG:7415 |
 | zaman_referansi | TODO_OLCULECEK: ucus tarihi LAZ gps_time'dan girdi kapisinda olculecek (3DBAG b3_pw_datum bu bolgede '2020' diyor — karsilastirma icin, kanit degil). |
-| lisans | TODO: AHN4 lisansi Nationaal Georegister kaydindan dogrulanacak |
+| lisans | ~~TODO: AHN4 lisansi Nationaal Georegister kaydindan dogrulanacak~~ **[doldurma 2026-09-27] CC BY 4.0 uygulanir** — NGR kayitlari celiskili (RWS DTM kaydi CC0, PDOK ATOM PDM, Waterschapshuis indirme kaydi CC BY 4.0) ve GeoTiles alt-fayanslari CC BY 4.0; en kisitlayici. Ayrinti: ATTRIBUTION.md AHN4 notu |
 | attribution_sarti | TODO |
 | sha256 | `6fc11d096301092b777ea904a854833d8a439480816e86fad8f65613b0592a3e` |
 | dosya_boyutu_bytes | 518306024 |

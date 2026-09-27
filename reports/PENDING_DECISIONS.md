@@ -920,6 +920,57 @@ tanimi Stedin sayfasinda YOK -> kaynagi bulunmali.
 **Oneri:** Asama 3 oncesi NEDU/EDSN profil belgelerinden tanim dogrulanir,
 `docs/validation_protocol.md`'ye 12.4 kapsaminda yazilir, sonra karar.
 
+#### ARASTIRMA SONUCU · 2026-09-27 (tanim KAPANDI; karar ACIK)
+
+**Birincil kaynaklar (okundu 2026-09-27):**
+- **Informatiecode elektriciteit en gas** (ACM), BWBR0037934, "Geldend van
+  01-01-2025 t/m heden" (sayfada ayrica: "Wijziging(en) zonder datum
+  inwerkingtreding aanwezig"), https://wetten.overheid.nl/BWBR0037934/2025-01-01
+- **Begrippencode gas TSB en DSB**, BWBR0052329 (yururluk 21-02-2026)
+- **Begrippencode elektriciteit 2026**, BWBR0052320 (yururluk 09-07-2026)
+- Stedin, https://www.stedin.net/zakelijk/open-data/verbruiksgegevens
+
+**Olgular (verbatim, kisaltilmis):**
+
+| Konu | Kaynak | Metin |
+|---|---|---|
+| Standart yil | IC B3.2.4a | "Het standaard jaar is een jaar met gemiddelde klimaatcondities (temperatuur, zoninstraling en windsnelheid). Voor ieder uur ... het gemiddelde ... in een periode van 30 jaar." |
+| Kayan donem | IC B3.2.4b | "Het standaard jaar voor het kalenderjaar (t) is gebaseerd op de klimaatcondities van het kalenderjaar (t-31) tot en met het kalenderjaar (t-2)." |
+| Istasyonlar | IC B3.2.6 | "... één temperatuurgebied ... meteostations De Bilt, Beek, De Kooy, Eelde, Vlissingen en Twente." |
+| Agirliklar | IC B3.2.9c | "TAC uur = 0,28 x T factor [de Bilt] + 0,14 x [Eelde] + 0,15 x [Beek] + 0,15 x [de Kooy] + 0,12 x [Vlissingen] + 0,16 x [Twente]" |
+| SJV formulu (gaz) | IC B3.4.4 | "SJV = VVP/Σ VP PC" — verbruiksperiode tuketimi / o donemin profil fraksiyonlari toplami, "rekening houdend met het juiste temperatuurgebied" |
+| Guncelleme sarti | IC B3.4.2 | "tenminste 300 dagen ... en de volledige maanden januari en februari omvat, hierbij wordt uitsluitend gebruik gemaakt van afgelezen of uitgelezen meterstanden" |
+| Eski deger kalir | IC B3.4.3 | "... wordt het bestaande standaardjaarverbruik gehandhaafd." |
+| Ortalama ile doldurma | IC B3.4.5 | G1A'da gecerli donem yoksa "het gemiddelde ... van alle profielafnemers van de betreffende regionale netbeheerder in profielcategorie G1A" |
+| Toplu olcekleme | IC 5.4.1.2 / 5.4.1.2a | 1-1-2015: G1A/G2A SJV "vermenigvuldigen met 0,98408"; 1-1-2017: "delen door 1,008027" |
+| Birim (gaz) | Begrippencode gas | SJV "(uitgedrukt in m3(n; 35,17))"; m3(n;35,17) = 0 °C, 101,325 kPa, bovenwaarde 35,17 MJ |
+| Elektrik | Begrippencode elek. 2026 | SJV yerine SJA (afname) ve SJI (invoeding), "bij gestandaardiseerde condities en op basis van een genormaliseerd jaar" |
+| Dosya yili | Stedin | "Het ... (SJV) ... is gebaseerd op het verbruik in het voorafgaande jaar." ; peildatum 1 januari |
+| PV saldering | Stedin | Ferraris/draaistroommeter: "dan is het SJV gesaldeerd" |
+
+Aranan ama erisilemeyen: nedu.nl (sertifika suresi dolmus), edsn.nl (HTTP 401).
+
+**Karar icin sonuclar (CIKARIM — hicbiri henuz karar degil):**
+1. **Gaz SJV hava etkisinden arindirilmis bir BEKLENTIDIR**, olculen tuketim
+   degil. Model ayni buyukluge getirilmedikce (12.4) karsilastirma
+   "contextual comparison" olur. Iki yol: (a) modeli IC B3.2.4 standart yilina
+   esdeger bir iklimle kosturmak (KNMI 6 istasyon, 30 yil, agirlikli — insa
+   edilmesi gerekir); (b) TMYx/EPW ile kosup farki SINIRLAMA olarak raporlamak.
+2. Standart yil **her yil kayar** (t-31..t-2) -> farkli dosya yillarinin SJV'leri
+   ayni referansta DEGILDIR; tek bir dosya yili secilmeli (P-024 ile bagli).
+3. Sicaklik **ulusal agirlikli** (De Bilt %28); Delft kiyiya yakin — yerel iklim
+   farki bir sinirlama kaynagidir.
+4. SJV'nin bir kismi **olculmemis olabilir** (B3.4.3 eski deger, B3.4.5 ortalama)
+   -> Stedin dosyasi bu ayrimi VERMEZ; sinirlama olarak yazilir.
+5. Gaz birimi m3(n;35,17) -> kWh donusumu icin 35,17 MJ/m3 **bovenwaarde** (HHV)
+   kaynakli; modelin ciktisi LHV mi HHV mi, ayni buyukluk mu — 12.4 kontrolu.
+6. Elektrik ferraris sayaclarda PV ile netlenmis -> LEVERINGSRICHTING_PERC
+   dusuk PC6'lar P-023 dislama kuralina aday.
+
+**Sonraki adim:** bulgular `docs/validation_protocol.md`'ye 12.4 kapsaminda
+islenir; (a)/(b) karari kullanicinin — Asama 3 oncesi, Stedin degerleri
+GORULMEDEN.
+
 ### P-023 · PC6 uygunluk kurallari (VERIYE BAKMADAN muhurlenmeli)
 
 **Olgu:** (1) Eski sayaclarda elektrik SJV'si PV ile salderen edilmis olabilir;

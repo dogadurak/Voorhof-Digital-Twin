@@ -20,6 +20,7 @@ yanlis attribution ve yayin hakki ihlali demektir.
 | # | Veri | Saglayici | Lisans | Attribution metni | Surum / tarih |
 |---|---|---|---|---|---|
 | 1 | AHN5 nokta bulutu, **GeoTiles alt-fayanslari** (`AHN5_T`) | AHN; dagitim: GeoTiles (TU Delft, Optical and Laser Remote Sensing) | **CC BY 4.0** (NGR resmi kaydi + GeoTiles beyani) | "AHN5 puntenwolk — Actueel Hoogtebestand Nederland; sub-tiles: GeoTiles (TU Delft), CC BY 4.0" | AHN5, ucus 2023-02-08/14; 9 alt-fayans, sha256 DATA_LOG'da |
+| 1b | AHN4 nokta bulutu, **GeoTiles alt-fayanslari** (`AHN4_T`) — yalnizca kriter 1-C-c (D-034/D-036) | AHN; dagitim: GeoTiles (TU Delft) | **CC BY 4.0** (en kisitlayici uygulanir — asagida AHN4 notu) | "AHN4 puntenwolk — Actueel Hoogtebestand Nederland; sub-tiles: GeoTiles (TU Delft), CC BY 4.0" | AHN4; ucus tarihi girdi kapisinda olculur; 9 alt-fayans, sha256 DATA_LOG'da |
 | 2 | BAG (`bag:pand`, `bag:verblijfsobject`, PDOK WFS v2_0) | Kadaster / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "BAG — Kadaster, via PDOK" | anlik goruntu 2026-09 |
 | 3 | 3DBAG | 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI | **CC BY 4.0** | **ZORUNLU, verbatim:** "Naamensvermelding verplicht, 3DBAG door de 3D geoinformation onderzoeksgroep (TU Delft) en 3DGI" [sic] | **v2025.09.03** (D-027) |
 | 3a | CBS Wijken en Buurten 2025 (AOI A ve B'nin kaynagi, PDOK WFS) | CBS / PDOK | **CC0 1.0** | zorunlu degil; onerilen: "Wijk- en buurtkaart 2025 — CBS, via PDOK" | 2025 |
@@ -38,6 +39,22 @@ meta verisinden **verbatim** alindi (data/raw/3dbag_v20250903/metadata.json -> i
 yazimi aynen korundu [sic]. Arayuzde gorunur atif olmadan yayin yapilamaz.
 
 **AHN notu — COZULDU (2026-09-27, ayni gun):** Birincil kaynak bulundu: Nationaal Georegister, "Actueel Hoogtebestand Nederland 5 (AHN5)", kayit 4995e338-fec7-425e-bb86-eea3875cf114, dateStamp 2025-11-19. Kayit `otherConstraints` alaninda `http://creativecommons.org/licenses/by/4.0/deed.nl` baglantisiyla "Naamsvermelding verplicht, organisatienaam" diyor. **AHN5 = CC BY 4.0, atif zorunlu.** PDOK AHN WCS'teki CC0 o **raster servisine** aittir. Asagidaki tablo, cozumden onceki durumu kayit icin korur.
+
+**AHN4 notu (2026-09-27) — birincil kayitlar CELISKILI, en kisitlayici uygulanir:**
+Adinda "AHN4" gecen bir NGR kaydi **bulunamadi** (aranan: NGR arama API'si —
+HTTP 400; AHN5 kaydinin baglantilari; PDOK AHN sayfalari). AHN4'u icerigiyle
+tanimlayan kayitlar:
+
+| Kayit (Nationaal Georegister) | Ne diyor |
+|---|---|
+| 41daef8b-155e-4608-b49c-c87ea45d931c "Actueel Hoogtebestand Nederland (AHN) DTM" (RWS/PDOK, dateStamp 2026-05-26) — ozet: "Het huidige AHN is versie 4 ... ingewonnen over de jaren 2020, 2021 en 2022"; zamansal kapsam 2019-11-30 / 2022-03-25 | `creativecommons.org/publicdomain/zero/1.0` "Geen beperkingen" (**CC0**) — **DTM 0,5 m raster urunu** icin |
+| 2b087d2c-6a1c-4746-95c6-3d40bc4294f9 "AHN ATOM" (PDOK, dateStamp 2026-01-16) | `creativecommons.org/publicdomain/mark/1.0` (**Public Domain Mark**) |
+| e68e51b9-9061-4212-b83b-b7e81c2bf059 "AHN download services" (Het Waterschapshuis, dateStamp 2025-11-19) — "downloads van AHN2, 3, 4, 5 en 6" | `creativecommons.org/licenses/by/4.0` "Naamsvermelding verplicht, organisatienaam" (**CC BY 4.0**) |
+| GeoTiles (yukaridaki tablo) | alt-fayanslar **CC BY 4.0** |
+
+Bizim dosyalarimiz GeoTiles **alt-fayanslaridir** (nokta bulutu, raster degil).
+**CC BY 4.0 uygulanir**; fazla atif hicbir kaydi ihlal etmez. AHN4 yalnizca bir
+dogrulama girdisidir (1-C-c); arayuzde gosterilmese bile raporda atif yapilir.
 
 **AHN notu — ilk durum (celiski):**
 
