@@ -5,7 +5,7 @@
 # degil) — muhafazakar: commit'e girmeyen bir dosyadaki hata da durdurur.
 ENV_NAME=voorhof-twin
 fail=0
-for chk in src/qa/check_refs.py src/qa/check_config_structure.py src/qa/check_claims.py; do
+for chk in src/qa/check_refs.py src/qa/check_config_structure.py src/qa/check_claims.py src/qa/check_source_integrity.py; do
     out=$(conda run -n "$ENV_NAME" python "$chk" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then

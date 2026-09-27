@@ -1167,3 +1167,30 @@ cozuldu (sarkan atif gercek kayda baglandi).
 > kayit, testi anlatirken ornek olarak tanimsiz kimlikler yaziyordu. Kanca
 > ilk gercek kullaniminda calisti; metin kimlik bicimi kullanmayacak sekilde
 > duzeltildi.
+
+---
+
+## M-017 · [2026-09-27] · Asama 1 hazirligi · Ajan araci ters egik cizgiyi bozdu (4 olay, 1 oturum)
+
+**Ne oldu:** Yama scriptleri Git Bash heredoc'u veya `printf` ile yazildi;
+kabuk ters egik cizgiyi bozdu. Olaylar: (1) check_claims regex'inde bir
+kacis dizisi 0x08 kontrol karakterine dondu (sessiz — regex degisti);
+(2) selftest yamasi assert ile durdu; (3) reference_rmse_3dbag.py'de
+satir sonu kacisi gercek satir sonuna dondu (SyntaxError); (4) T-8
+ENVIRONMENT'a YAZILDIKTAN SONRA check_config_structure yamasi printf ile
+yine bozuldu (assert durdurdu, dosyaya yazilmadi).
+
+**Kok neden:** Kural yalnizca oturum notunda ("regex kodu icin dosya yazma
+araci kullan") duruyordu, depoda yoktu; ve kapsami dardi (yalniz regex).
+Depoya yazildiktan sonra da tekrarlandi -> insan disiplini yetmedi.
+
+**Guclendirilmis kural:** Ters egik cizgi iceren her yama/script dosya yazma
+araciyla olusturulur (ENVIRONMENT T-8). Kabuk borusunda (`| tail`, `| grep`)
+cikis kodu kaybolur — kontrol sonucu borusuz olculur.
+
+**Otomatik kontrol:** `src/qa/check_source_integrity.py` — src/ altindaki tum
+.py dosyalarini derler, src/config/kok ve docs metinlerinde C0 kontrol
+karakteri arar; pre-commit kancasina baglandi. Negatif test: 0x08 iceren ve
+SyntaxError iceren gecici dosyalarla cikis 1, temizken 0 (borusuz olculdu).
+
+**Durum:** KAPALI · **Kullaniciya bildirildi:** 2026-09-27.
